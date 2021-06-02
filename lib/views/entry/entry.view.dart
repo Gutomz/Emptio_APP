@@ -30,9 +30,7 @@ class EntryView extends StatelessWidget {
                           fontWeight: FontWeight.bold,
                         ),
                       ),
-                      SizedBox(
-                        height: 5,
-                      ),
+                      SizedBox(height: 5),
                       Text(
                         'Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero…',
                         style: TextStyle(
@@ -64,7 +62,7 @@ class EntryView extends StatelessWidget {
                                   primary: AppColors.orange,
                                   side: BorderSide(
                                     color: AppColors.orange,
-                                    width: 2,
+                                    width: 1,
                                   ),
                                   shape: RoundedRectangleBorder(
                                       borderRadius: BorderRadius.all(
@@ -73,9 +71,7 @@ class EntryView extends StatelessWidget {
                               ),
                             ),
                           ),
-                          SizedBox(
-                            width: 15,
-                          ),
+                          SizedBox(width: 15),
                           Expanded(
                             child: Container(
                               height: 50,
