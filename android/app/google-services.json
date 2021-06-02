@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "820681801791",
+    "project_id": "emptio-309403",
+    "storage_bucket": "emptio-309403.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:820681801791:android:ced823c40dc1ddec03f88a",
+        "android_client_info": {
+          "package_name": "com.gutomz.emptio"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "820681801791-l4iqqhbn1hsr51mep4tho4q4juuhq6j8.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAYMKJyfRbOSXgQY-wPnZo474gFDOwa584"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "820681801791-l4iqqhbn1hsr51mep4tho4q4juuhq6j8.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

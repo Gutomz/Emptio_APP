@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="104" height="124" viewBox="0 0 104 124">
+  <defs>
+    <linearGradient id="linear-gradient" x1="0.036" y1="0.07" x2="0.868" y2="1.492" gradientUnits="objectBoundingBox">
+      <stop offset="0" stop-color="#ffb215"/>
+      <stop offset="1" stop-color="#ffe2a8"/>
+    </linearGradient>
+  </defs>
+  <g id="Grupo_59" data-name="Grupo 59" transform="translate(-13 -21)">
+    <text id="Emptio" transform="translate(65 118)" fill="#ffb215" font-size="33" font-family="MyanmarText, Myanmar Text"><tspan x="-51.514" y="0">Emptio</tspan></text>
+    <path id="Icon_awesome-opencart" data-name="Icon awesome-opencart" d="M62.385,62.969a6.735,6.735,0,1,1-6.72-6.75A6.7,6.7,0,0,1,62.385,62.969Zm-37.419-6.75a6.735,6.735,0,1,0,6.75,6.75,6.733,6.733,0,0,0-6.75-6.75Zm42.99-39.792C23.418,16.427,12.07,14.54,0,1.807,5.07,9.426,7.855,23.752,54.987,23.059c49.121-.737,19.159,12.689,10.434,27.84C92.936,26.331,112.493,16.427,67.956,16.427Z" transform="translate(18.241 19.193)" fill="url(#linear-gradient)"/>
+  </g>
+</svg>
