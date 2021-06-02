@@ -1,4 +1,4 @@
-import 'package:emptio/views/splash.view.dart';
+import 'package:emptio/views/entry/entry.view.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 
@@ -31,7 +31,7 @@ class MyApp extends StatelessWidget {
             // TODO - Save data
           }
 
-          return SplashView();
+          return EntryView();
         },
       ),
     );
