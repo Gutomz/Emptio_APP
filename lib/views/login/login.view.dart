@@ -1,6 +1,7 @@
 import 'package:emptio/core/app_assets.dart';
 import 'package:emptio/core/app_colors.dart';
 import 'package:emptio/views/login/store/login.store.dart';
+import 'package:emptio/views/register/register.view.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -91,7 +92,8 @@ class LoginView extends StatelessWidget {
                   width: double.infinity,
                   child: Observer(builder: (_) {
                     return ElevatedButton(
-                      onPressed: loginStore.loginValid ? loginStore.login : null,
+                      onPressed:
+                          loginStore.loginValid ? loginStore.login : null,
                       child: Text(
                         'Entrar',
                         style: TextStyle(
@@ -104,7 +106,11 @@ class LoginView extends StatelessWidget {
                 ),
                 SizedBox(height: 30),
                 TextButton(
-                  onPressed: () {},
+                  onPressed: () {
+                    Navigator.of(context).push(
+                      MaterialPageRoute(builder: (context) => RegisterView()),
+                    );
+                  },
                   child: Text(
                     'Não tem uma conta?',
                     style: TextStyle(

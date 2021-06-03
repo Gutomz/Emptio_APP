@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="30.792" height="22.161" viewBox="0 0 30.792 22.161">
+  <defs>
+    <linearGradient id="linear-gradient" x1="0.036" y1="0.07" x2="0.868" y2="1.492" gradientUnits="objectBoundingBox">
+      <stop offset="0" stop-color="#ffb215"/>
+      <stop offset="1" stop-color="#ffe2a8"/>
+    </linearGradient>
+  </defs>
+  <g id="Grupo_62" data-name="Grupo 62" transform="translate(-18.241 -21)">
+    <path id="Icon_awesome-opencart" data-name="Icon awesome-opencart" d="M20.366,21.774a2.2,2.2,0,1,1-2.194-2.2A2.187,2.187,0,0,1,20.366,21.774ZM8.15,19.571a2.2,2.2,0,1,0,2.2,2.2,2.2,2.2,0,0,0-2.2-2.2ZM22.185,6.58C7.645,6.58,3.941,5.964,0,1.807,1.655,4.295,2.564,8.971,17.951,8.745c16.036-.241,6.255,4.143,3.406,9.089C30.34,9.813,36.725,6.58,22.185,6.58Z" transform="translate(18.241 19.193)" fill="url(#linear-gradient)"/>
+  </g>
+</svg>

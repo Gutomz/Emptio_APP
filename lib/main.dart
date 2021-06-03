@@ -1,5 +1,6 @@
 import 'package:emptio/core/app_colors.dart';
 import 'package:emptio/views/login/login.view.dart';
+import 'package:emptio/views/register/register.view.dart';
 import 'package:emptio/views/splash/splash.view.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -76,7 +77,7 @@ class MyApp extends StatelessWidget {
             print('You have an error! ${snapshot.error.toString()}');
             return Text('Something went wrong');
           } else if (snapshot.hasData) {
-            return LoginView();
+            return RegisterView();
           }
 
           return SplashView();
