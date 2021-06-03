@@ -143,7 +143,10 @@ class RegisterView extends StatelessWidget {
                       errorText: registerStore.passwordError,
                     ),
                     textInputAction: TextInputAction.next,
-                    onEditingComplete: () => node.nextFocus(),
+                    onEditingComplete: () {
+                      node.nextFocus();
+                      node.nextFocus();
+                    },
                     obscureText: !registerStore.passwordVisible,
                     onChanged: registerStore.setPassword,
                   );
