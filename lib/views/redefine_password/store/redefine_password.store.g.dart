@@ -23,12 +23,26 @@ mixin _$RedefinePasswordStore on _RedefinePasswordStoreBase, Store {
       (_$passwordValidComputed ??= Computed<bool>(() => super.passwordValid,
               name: '_RedefinePasswordStoreBase.passwordValid'))
           .value;
+  Computed<String?>? _$passwordErrorComputed;
+
+  @override
+  String? get passwordError =>
+      (_$passwordErrorComputed ??= Computed<String?>(() => super.passwordError,
+              name: '_RedefinePasswordStoreBase.passwordError'))
+          .value;
   Computed<bool>? _$confirmPasswordValidComputed;
 
   @override
   bool get confirmPasswordValid => (_$confirmPasswordValidComputed ??=
           Computed<bool>(() => super.confirmPasswordValid,
               name: '_RedefinePasswordStoreBase.confirmPasswordValid'))
+      .value;
+  Computed<String?>? _$confirmPasswordErrorComputed;
+
+  @override
+  String? get confirmPasswordError => (_$confirmPasswordErrorComputed ??=
+          Computed<String?>(() => super.confirmPasswordError,
+              name: '_RedefinePasswordStoreBase.confirmPasswordError'))
       .value;
   Computed<bool>? _$redefinePasswordValidComputed;
 
@@ -41,13 +55,13 @@ mixin _$RedefinePasswordStore on _RedefinePasswordStoreBase, Store {
   final _$codeAtom = Atom(name: '_RedefinePasswordStoreBase.code');
 
   @override
-  String get code {
+  String? get code {
     _$codeAtom.reportRead();
     return super.code;
   }
 
   @override
-  set code(String value) {
+  set code(String? value) {
     _$codeAtom.reportWrite(value, super.code, () {
       super.code = value;
     });
@@ -56,13 +70,13 @@ mixin _$RedefinePasswordStore on _RedefinePasswordStoreBase, Store {
   final _$passwordAtom = Atom(name: '_RedefinePasswordStoreBase.password');
 
   @override
-  String get password {
+  String? get password {
     _$passwordAtom.reportRead();
     return super.password;
   }
 
   @override
-  set password(String value) {
+  set password(String? value) {
     _$passwordAtom.reportWrite(value, super.password, () {
       super.password = value;
     });
@@ -72,13 +86,13 @@ mixin _$RedefinePasswordStore on _RedefinePasswordStoreBase, Store {
       Atom(name: '_RedefinePasswordStoreBase.confirmPassword');
 
   @override
-  String get confirmPassword {
+  String? get confirmPassword {
     _$confirmPasswordAtom.reportRead();
     return super.confirmPassword;
   }
 
   @override
-  set confirmPassword(String value) {
+  set confirmPassword(String? value) {
     _$confirmPasswordAtom.reportWrite(value, super.confirmPassword, () {
       super.confirmPassword = value;
     });
@@ -186,7 +200,9 @@ passwordVisible: ${passwordVisible},
 confirmPasswordVisible: ${confirmPasswordVisible},
 codeValid: ${codeValid},
 passwordValid: ${passwordValid},
+passwordError: ${passwordError},
 confirmPasswordValid: ${confirmPasswordValid},
+confirmPasswordError: ${confirmPasswordError},
 redefinePasswordValid: ${redefinePasswordValid}
     ''';
   }

@@ -1,4 +1,6 @@
 import 'package:emptio/core/app_colors.dart';
+import 'package:emptio/views/login/login.view.dart';
+import 'package:emptio/views/register/register.view.dart';
 import 'package:flutter/material.dart';
 import 'widgets/entry_header.widget.dart';
 
@@ -50,7 +52,13 @@ class EntryView extends StatelessWidget {
                             child: Container(
                               height: 50,
                               child: OutlinedButton(
-                                onPressed: () {},
+                                onPressed: () {
+                                  Navigator.of(context).push(
+                                    MaterialPageRoute(
+                                      builder: (_ctx) => RegisterView(),
+                                    ),
+                                  );
+                                },
                                 child: Text(
                                   'Cadastrar',
                                   style: TextStyle(
@@ -76,7 +84,13 @@ class EntryView extends StatelessWidget {
                             child: Container(
                               height: 50,
                               child: OutlinedButton(
-                                onPressed: () {},
+                                onPressed: () {
+                                  Navigator.of(context).push(
+                                    MaterialPageRoute(
+                                      builder: (_ctx) => LoginView(),
+                                    ),
+                                  );
+                                },
                                 child: Text(
                                   'Entrar',
                                   style: TextStyle(
@@ -106,7 +120,7 @@ class EntryView extends StatelessWidget {
                         style: TextButton.styleFrom(
                           primary: AppColors.lightGrey,
                           textStyle: TextStyle(
-                            fontWeight: FontWeight.normal,
+                            fontWeight: FontWeight.w600,
                             fontSize: 14,
                           ),
                         ),

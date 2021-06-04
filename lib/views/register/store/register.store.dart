@@ -1,5 +1,7 @@
 import 'dart:io';
 import 'package:emptio/helpers/extensions.dart';
+import 'package:emptio/repositories/user.repository.dart';
+import 'package:emptio/view-models/register.view-model.dart';
 import 'package:mobx/mobx.dart';
 part 'register.store.g.dart';
 
@@ -10,22 +12,25 @@ abstract class _RegisterStoreBase with Store {
   File? photo;
 
   @observable
-  String name = "";
+  String? name;
 
   @observable
-  String email = "";
+  String? email;
 
   @observable
-  String password = "";
+  String? password;
 
   @observable
-  String confirmPassword = "";
+  String? confirmPassword;
 
   @observable
   bool passwordVisible = false;
 
   @observable
   bool confirmPasswordVisible = false;
+
+  @observable
+  bool loading = false;
 
   @action
   void setPhoto(File? _value) => photo = _value;
@@ -49,29 +54,111 @@ abstract class _RegisterStoreBase with Store {
   void toggleConfirmPasswordVisible() =>
       confirmPasswordVisible = !confirmPasswordVisible;
 
-  @computed
-  bool get nameValid => name.isNotEmpty && name.length >= 3;
-  String? get nameError =>
-      name.isEmpty || nameValid ? null : 'Campo Obrigatório';
+  @action
+  Future<void> register() async {
+    loading = true;
+
+    File? _photo = photo;
+
+    RegisterViewModel userModel = RegisterViewModel(
+      name: name ?? "",
+      email: email ?? "",
+      password: password ?? "",
+      photo: _photo != null ? _photo.parseToBase64() : "",
+    );
+
+    await UserRepository().register(userModel);
+
+    loading = false;
+  }
 
   @computed
-  bool get emailValid => email.isNotEmpty && email.isEmailValid();
-  String? get emailError =>
-      email.isEmpty || emailValid ? null : 'Campo Obrigatório';
+  bool get nameValid {
+    String _name = name ?? "";
+
+    return _name.isNotEmpty && _name.length >= 3;
+  }
 
   @computed
-  bool get passwordValid => password.isNotEmpty && password.length >= 6;
-  String? get passwordError =>
-      password.isEmpty || passwordValid ? null : 'Campo Obrigatório';
+  String? get nameError {
+    String _name = name ?? "";
+
+    if (name == null || nameValid) {
+      return null;
+    } else if (_name.isEmpty) {
+      return "Campo obrigatório!";
+    }
+
+    return "Nome muito curto";
+  }
 
   @computed
-  bool get confirmPasswordValid => confirmPassword == password;
-  String? get confirmPasswordError =>
-      confirmPassword.isEmpty || confirmPasswordValid
-          ? null
-          : 'Campo Obrigatório';
+  bool get emailValid {
+    String _email = email ?? "";
+
+    return _email.isNotEmpty && _email.isEmailValid();
+  }
 
   @computed
-  bool get registerValid =>
-      nameValid && emailValid && passwordValid && confirmPasswordValid;
+  String? get emailError {
+    String _email = email ?? "";
+
+    if (email == null || emailValid) {
+      return null;
+    } else if (_email.isEmpty) {
+      return 'Campo obrigatório!';
+    }
+
+    return "E-mail inválido!";
+  }
+
+  @computed
+  bool get passwordValid {
+    String _password = password ?? "";
+
+    return _password.isNotEmpty && _password.length >= 6;
+  }
+
+  @computed
+  String? get passwordError {
+    String _password = password ?? "";
+    if (password == null || passwordValid) {
+      return null;
+    } else if (_password.isEmpty) {
+      return "Campo obrigatório!";
+    }
+
+    return "Senha muito curta!";
+  }
+
+  @computed
+  bool get confirmPasswordValid {
+    String _confirmPassword = confirmPassword ?? "";
+
+    return _confirmPassword.isNotEmpty &&
+        passwordValid &&
+        confirmPassword == password;
+  }
+
+  @computed
+  String? get confirmPasswordError {
+    //confirmPassword.isEmpty || confirmPasswordValid ? null : 'Campo Obrigatório';
+    String _confirmPassword = confirmPassword ?? "";
+
+    if (confirmPassword == null || confirmPasswordValid) {
+      return null;
+    } else if (_confirmPassword.isEmpty) {
+      return "Campo obrigatório!";
+    }
+
+    return "As senhas não coincidem!";
+  }
+
+  @computed
+  bool get isFormValid =>
+      !loading &&
+      nameValid &&
+      emailValid &&
+      passwordValid &&
+      confirmPasswordValid;
 }

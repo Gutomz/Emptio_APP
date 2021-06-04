@@ -76,24 +76,25 @@ class RegisterView extends StatelessWidget {
             child: Column(
               children: [
                 Observer(builder: (_ctx) {
-                  return GestureDetector(
-                    onTap: () => _selectImage(_ctx, registerStore.photo),
-                    child: CircleAvatar(
-                      radius: 53,
-                      backgroundColor: AppColors.darkOrange,
-                      child: buildImage(registerStore.photo),
-                    ),
+                  return CircleAvatar(
+                    radius: 53,
+                    backgroundColor: AppColors.darkOrange,
+                    child: buildImage(registerStore.photo),
                   );
                 }),
                 Observer(builder: (_ctx) {
                   return TextButton(
-                    onPressed: () => _selectImage(_ctx, registerStore.photo),
+                    onPressed: registerStore.loading
+                        ? null
+                        : () => _selectImage(_ctx, registerStore.photo),
                     child: Text(
                       registerStore.photo != null
                           ? 'Alterar imagem'
                           : 'Selecionar imagem',
                       style: TextStyle(
-                        color: AppColors.orange,
+                        color: registerStore.loading
+                            ? AppColors.grey
+                            : AppColors.orange,
                       ),
                     ),
                   );
@@ -101,6 +102,7 @@ class RegisterView extends StatelessWidget {
                 SizedBox(height: 50),
                 Observer(builder: (_) {
                   return TextField(
+                    enabled: !registerStore.loading,
                     decoration: InputDecoration(
                       prefixIcon: Icon(Icons.person, color: AppColors.orange),
                       hintText: 'Name',
@@ -114,6 +116,7 @@ class RegisterView extends StatelessWidget {
                 SizedBox(height: 25),
                 Observer(builder: (_) {
                   return TextField(
+                    enabled: !registerStore.loading,
                     decoration: InputDecoration(
                       prefixIcon: Icon(Icons.email, color: AppColors.orange),
                       hintText: 'E-mail',
@@ -127,6 +130,7 @@ class RegisterView extends StatelessWidget {
                 SizedBox(height: 25),
                 Observer(builder: (_) {
                   return TextField(
+                    enabled: !registerStore.loading,
                     decoration: InputDecoration(
                       prefixIcon: Icon(Icons.vpn_key, color: AppColors.orange),
                       suffixIcon: IconButton(
@@ -154,6 +158,7 @@ class RegisterView extends StatelessWidget {
                 SizedBox(height: 25),
                 Observer(builder: (_) {
                   return TextField(
+                    enabled: !registerStore.loading,
                     decoration: InputDecoration(
                       prefixIcon: Icon(Icons.shield, color: AppColors.orange),
                       suffixIcon: IconButton(
@@ -181,14 +186,21 @@ class RegisterView extends StatelessWidget {
                   width: double.infinity,
                   child: Observer(builder: (_) {
                     return ElevatedButton(
-                      onPressed: registerStore.registerValid ? () {} : null,
-                      child: Text(
-                        'Cadastrar',
-                        style: TextStyle(
-                          fontSize: 16,
-                          fontWeight: FontWeight.w600,
-                        ),
-                      ),
+                      onPressed: registerStore.isFormValid
+                          ? registerStore.register
+                          : null,
+                      child: registerStore.loading
+                          ? CircularProgressIndicator(
+                              color: Colors.white,
+                              strokeWidth: 2,
+                            )
+                          : Text(
+                              'Cadastrar',
+                              style: TextStyle(
+                                fontSize: 16,
+                                fontWeight: FontWeight.w600,
+                              ),
+                            ),
                     );
                   }),
                 ),

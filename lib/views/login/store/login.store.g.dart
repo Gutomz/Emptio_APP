@@ -16,12 +16,26 @@ mixin _$LoginStore on _LoginStoreBase, Store {
       (_$emailValidComputed ??= Computed<bool>(() => super.emailValid,
               name: '_LoginStoreBase.emailValid'))
           .value;
+  Computed<String?>? _$emailErrorComputed;
+
+  @override
+  String? get emailError =>
+      (_$emailErrorComputed ??= Computed<String?>(() => super.emailError,
+              name: '_LoginStoreBase.emailError'))
+          .value;
   Computed<bool>? _$passwordValidComputed;
 
   @override
   bool get passwordValid =>
       (_$passwordValidComputed ??= Computed<bool>(() => super.passwordValid,
               name: '_LoginStoreBase.passwordValid'))
+          .value;
+  Computed<String?>? _$passwordErrorComputed;
+
+  @override
+  String? get passwordError =>
+      (_$passwordErrorComputed ??= Computed<String?>(() => super.passwordError,
+              name: '_LoginStoreBase.passwordError'))
           .value;
   Computed<bool>? _$loginValidComputed;
 
@@ -34,13 +48,13 @@ mixin _$LoginStore on _LoginStoreBase, Store {
   final _$emailAtom = Atom(name: '_LoginStoreBase.email');
 
   @override
-  String get email {
+  String? get email {
     _$emailAtom.reportRead();
     return super.email;
   }
 
   @override
-  set email(String value) {
+  set email(String? value) {
     _$emailAtom.reportWrite(value, super.email, () {
       super.email = value;
     });
@@ -49,13 +63,13 @@ mixin _$LoginStore on _LoginStoreBase, Store {
   final _$passwordAtom = Atom(name: '_LoginStoreBase.password');
 
   @override
-  String get password {
+  String? get password {
     _$passwordAtom.reportRead();
     return super.password;
   }
 
   @override
-  set password(String value) {
+  set password(String? value) {
     _$passwordAtom.reportWrite(value, super.password, () {
       super.password = value;
     });
@@ -130,7 +144,9 @@ email: ${email},
 password: ${password},
 visible: ${visible},
 emailValid: ${emailValid},
+emailError: ${emailError},
 passwordValid: ${passwordValid},
+passwordError: ${passwordError},
 loginValid: ${loginValid}
     ''';
   }

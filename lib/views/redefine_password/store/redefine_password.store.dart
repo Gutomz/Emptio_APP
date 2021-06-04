@@ -6,13 +6,13 @@ class RedefinePasswordStore = _RedefinePasswordStoreBase
 
 abstract class _RedefinePasswordStoreBase with Store {
   @observable
-  String code = "";
+  String? code;
 
   @observable
-  String password = "";
+  String? password;
 
   @observable
-  String confirmPassword = "";
+  String? confirmPassword;
 
   @observable
   bool passwordVisible = false;
@@ -37,21 +37,64 @@ abstract class _RedefinePasswordStoreBase with Store {
       confirmPasswordVisible = !confirmPasswordVisible;
 
   @computed
-  bool get codeValid => code.isNotEmpty && code.length == 6;
-  String? get codeError =>
-      code.isEmpty || codeValid ? null : 'Campo Obrigatório';
+  bool get codeValid {
+    String _code = code ?? "";
+    return _code.isNotEmpty && _code.length == 6;
+  }
+
+  String? get codeError {
+    String _code = code ?? "";
+
+    if (code == null || codeValid) {
+      return null;
+    } else if (_code.isEmpty) {
+      return "Campo obrigatório!";
+    }
+
+    return "Código inválido!";
+  }
 
   @computed
-  bool get passwordValid => password.isNotEmpty && password.length >= 6;
-  String? get passwordError =>
-      password.isEmpty || passwordValid ? null : 'Campo Obrigatório';
+  bool get passwordValid {
+    String _password = password ?? "";
+
+    return _password.isNotEmpty && _password.length >= 6;
+  }
 
   @computed
-  bool get confirmPasswordValid => confirmPassword == password;
-  String? get confirmPasswordError =>
-      confirmPassword.isEmpty || confirmPasswordValid
-          ? null
-          : 'Campo Obrigatório';
+  String? get passwordError {
+    String _password = password ?? "";
+    if (password == null || passwordValid) {
+      return null;
+    } else if (_password.isEmpty) {
+      return "Campo obrigatório!";
+    }
+
+    return "Senha muito curta!";
+  }
+
+  @computed
+  bool get confirmPasswordValid {
+    String _confirmPassword = confirmPassword ?? "";
+
+    return _confirmPassword.isNotEmpty &&
+        passwordValid &&
+        confirmPassword == password;
+  }
+
+  @computed
+  String? get confirmPasswordError {
+    //confirmPassword.isEmpty || confirmPasswordValid ? null : 'Campo Obrigatório';
+    String _confirmPassword = confirmPassword ?? "";
+
+    if (confirmPassword == null || confirmPasswordValid) {
+      return null;
+    } else if (_confirmPassword.isEmpty) {
+      return "Campo obrigatório!";
+    }
+
+    return "As senhas não coincidem!";
+  }
 
   @computed
   bool get redefinePasswordValid =>
