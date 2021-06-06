@@ -197,6 +197,36 @@ mixin _$RegisterStore on _RegisterStoreBase, Store {
     });
   }
 
+  final _$errorAtom = Atom(name: '_RegisterStoreBase.error');
+
+  @override
+  String get error {
+    _$errorAtom.reportRead();
+    return super.error;
+  }
+
+  @override
+  set error(String value) {
+    _$errorAtom.reportWrite(value, super.error, () {
+      super.error = value;
+    });
+  }
+
+  final _$loggedAtom = Atom(name: '_RegisterStoreBase.logged');
+
+  @override
+  bool get logged {
+    _$loggedAtom.reportRead();
+    return super.logged;
+  }
+
+  @override
+  set logged(bool value) {
+    _$loggedAtom.reportWrite(value, super.logged, () {
+      super.logged = value;
+    });
+  }
+
   final _$registerAsyncAction = AsyncAction('_RegisterStoreBase.register');
 
   @override
@@ -295,6 +325,8 @@ confirmPassword: ${confirmPassword},
 passwordVisible: ${passwordVisible},
 confirmPasswordVisible: ${confirmPasswordVisible},
 loading: ${loading},
+error: ${error},
+logged: ${logged},
 nameValid: ${nameValid},
 nameError: ${nameError},
 emailValid: ${emailValid},

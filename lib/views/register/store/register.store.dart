@@ -1,7 +1,11 @@
 import 'dart:io';
 import 'package:emptio/helpers/extensions.dart';
+import 'package:emptio/models/auth.model.dart';
 import 'package:emptio/repositories/user.repository.dart';
+import 'package:emptio/stores/auth.store.dart';
 import 'package:emptio/view-models/register.view-model.dart';
+import 'package:get_it/get_it.dart';
+import 'package:location/location.dart';
 import 'package:mobx/mobx.dart';
 part 'register.store.g.dart';
 
@@ -32,6 +36,12 @@ abstract class _RegisterStoreBase with Store {
   @observable
   bool loading = false;
 
+  @observable
+  String error = "";
+
+  @observable
+  bool logged = false;
+
   @action
   void setPhoto(File? _value) => photo = _value;
 
@@ -57,17 +67,30 @@ abstract class _RegisterStoreBase with Store {
   @action
   Future<void> register() async {
     loading = true;
+    error = "";
 
     File? _photo = photo;
 
+    Location location = Location();
+    LocationData userLocation = await location.getLocation();
+
     RegisterViewModel userModel = RegisterViewModel(
-      name: name ?? "",
-      email: email ?? "",
-      password: password ?? "",
+      name: name!,
+      email: email!,
+      password: password!,
       photo: _photo != null ? _photo.parseToBase64() : "",
+      location: '${userLocation.latitude},${userLocation.longitude}',
     );
 
-    await UserRepository().register(userModel);
+    try {
+      AuthModel auth = await UserRepository().register(userModel);
+      GetIt.I<AuthStore>().setAuth(auth);
+      logged = true;
+    } catch (_error) {
+      if (_error is String) {
+        error = _error;
+      }
+    }
 
     loading = false;
   }
@@ -142,7 +165,6 @@ abstract class _RegisterStoreBase with Store {
 
   @computed
   String? get confirmPasswordError {
-    //confirmPassword.isEmpty || confirmPasswordValid ? null : 'Campo Obrigatório';
     String _confirmPassword = confirmPassword ?? "";
 
     if (confirmPassword == null || confirmPasswordValid) {

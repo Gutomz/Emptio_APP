@@ -4,15 +4,57 @@ import 'package:emptio/core/app_assets.dart';
 import 'package:emptio/core/app_colors.dart';
 import 'package:emptio/helpers/pick_image.dart';
 import 'package:emptio/views/register/store/register.store.dart';
+import 'package:emptio/views/splash/splash.view.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:mobx/mobx.dart';
 
-class RegisterView extends StatelessWidget {
+class RegisterView extends StatefulWidget {
+  RegisterView({Key? key}) : super(key: key);
+
+  @override
+  _RegisterViewState createState() => _RegisterViewState();
+}
+
+class _RegisterViewState extends State<RegisterView> {
   final RegisterStore registerStore = RegisterStore();
+
   final PickImage picker = PickImage();
 
-  RegisterView({Key? key}) : super(key: key);
+  late ReactionDisposer errorDisposer;
+  late ReactionDisposer loggedDisposer;
+
+  @override
+  initState() {
+    super.initState();
+
+    errorDisposer = reaction((_) => registerStore.error, (String error) {
+      if (error.isNotEmpty) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(error),
+          ),
+        );
+      }
+    });
+
+    loggedDisposer = reaction((_) => registerStore.logged, (bool logged) {
+      if (logged) {
+        print(logged);
+        Navigator.of(context).pushAndRemoveUntil(
+            MaterialPageRoute(builder: (ctx) => SplashView()),
+            (route) => false);
+      }
+    });
+  }
+
+  @override
+  void dispose() {
+    errorDisposer();
+
+    super.dispose();
+  }
 
   buildImage(File? _image) {
     if (_image == null) {
@@ -103,6 +145,7 @@ class RegisterView extends StatelessWidget {
                 Observer(builder: (_) {
                   return TextField(
                     enabled: !registerStore.loading,
+                    keyboardType: TextInputType.name,
                     decoration: InputDecoration(
                       prefixIcon: Icon(Icons.person, color: AppColors.orange),
                       hintText: 'Name',
@@ -117,6 +160,7 @@ class RegisterView extends StatelessWidget {
                 Observer(builder: (_) {
                   return TextField(
                     enabled: !registerStore.loading,
+                    keyboardType: TextInputType.emailAddress,
                     decoration: InputDecoration(
                       prefixIcon: Icon(Icons.email, color: AppColors.orange),
                       hintText: 'E-mail',
@@ -131,6 +175,7 @@ class RegisterView extends StatelessWidget {
                 Observer(builder: (_) {
                   return TextField(
                     enabled: !registerStore.loading,
+                    keyboardType: TextInputType.visiblePassword,
                     decoration: InputDecoration(
                       prefixIcon: Icon(Icons.vpn_key, color: AppColors.orange),
                       suffixIcon: IconButton(
@@ -159,6 +204,7 @@ class RegisterView extends StatelessWidget {
                 Observer(builder: (_) {
                   return TextField(
                     enabled: !registerStore.loading,
+                    keyboardType: TextInputType.visiblePassword,
                     decoration: InputDecoration(
                       prefixIcon: Icon(Icons.shield, color: AppColors.orange),
                       suffixIcon: IconButton(
