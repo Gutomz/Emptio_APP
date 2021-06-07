@@ -53,4 +53,26 @@ class AppApiErrors {
 
     return description;
   }
+
+  static bool isError(Object error) {
+    if (error is Map<String, dynamic>) {
+      String code = error['code'] ?? "";
+
+      if (code.isNotEmpty) {
+        return true;
+      }
+    }
+
+    return false;
+  }
+
+  static String getCode(Object error) {
+    String code = "";
+
+    if (error is Map<String, dynamic>) {
+      code = error['code'] ?? "";
+    }
+
+    return code;
+  }
 }

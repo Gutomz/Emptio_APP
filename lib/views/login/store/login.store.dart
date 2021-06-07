@@ -1,3 +1,8 @@
+import 'package:emptio/models/auth.model.dart';
+import 'package:emptio/repositories/user.repository.dart';
+import 'package:emptio/stores/auth.store.dart';
+import 'package:emptio/view-models/login.view-model.dart';
+import 'package:get_it/get_it.dart';
 import 'package:mobx/mobx.dart';
 import 'package:emptio/helpers/extensions.dart';
 part 'login.store.g.dart';
@@ -14,6 +19,18 @@ abstract class _LoginStoreBase with Store {
   @observable
   bool visible = false;
 
+  @observable
+  bool loginLoading = false;
+
+  @observable
+  bool forgotPasswordLoading = false;
+
+  @observable
+  String error = "";
+
+  @observable
+  bool logged = false;
+
   @action
   void setEmail(String _value) => email = _value;
 
@@ -24,8 +41,23 @@ abstract class _LoginStoreBase with Store {
   void toggleVisible() => visible = !visible;
 
   @action
-  void login() {
-    print('login');
+  Future<void> login() async {
+    loginLoading = true;
+    error = "";
+
+    final model = LoginViewModel(email: email!, password: password!);
+
+    try {
+      AuthModel auth = await UserRepository().login(model);
+      GetIt.I<AuthStore>().setAuth(auth);
+      logged = true;
+    } catch (_error) {
+      if (_error is String) {
+        error = _error;
+      }
+    }
+
+    loginLoading = false;
   }
 
   @computed
@@ -38,7 +70,7 @@ abstract class _LoginStoreBase with Store {
   String? get emailError {
     String _email = email ?? "";
 
-    if(email == null || emailValid) {
+    if (email == null || emailValid) {
       return null;
     } else if (_email.isEmpty) {
       return "Campo obrigatório!";
@@ -46,7 +78,7 @@ abstract class _LoginStoreBase with Store {
 
     return "E-mail inválido";
   }
-      
+
   @computed
   bool get passwordValid {
     String _password = password ?? "";
@@ -57,7 +89,7 @@ abstract class _LoginStoreBase with Store {
   String? get passwordError {
     String _password = password ?? "";
 
-    if(password == null || _password.isNotEmpty || passwordValid){
+    if (password == null || _password.isNotEmpty || passwordValid) {
       return null;
     }
 
@@ -65,5 +97,11 @@ abstract class _LoginStoreBase with Store {
   }
 
   @computed
-  bool get loginValid => emailValid && passwordValid;
+  bool get loginValid => !loading && emailValid && passwordValid;
+
+    @computed
+  bool get forgotPaswordValid => !loading && emailValid;
+
+  @computed
+  bool get loading => loginLoading || forgotPasswordLoading;
 }

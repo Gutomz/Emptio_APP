@@ -31,6 +31,7 @@ class _RegisterViewState extends State<RegisterView> {
 
     errorDisposer = reaction((_) => registerStore.error, (String error) {
       if (error.isNotEmpty) {
+        ScaffoldMessenger.of(context).hideCurrentSnackBar();
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
             content: Text(error),
@@ -41,7 +42,6 @@ class _RegisterViewState extends State<RegisterView> {
 
     loggedDisposer = reaction((_) => registerStore.logged, (bool logged) {
       if (logged) {
-        print(logged);
         Navigator.of(context).pushAndRemoveUntil(
             MaterialPageRoute(builder: (ctx) => SplashView()),
             (route) => false);
@@ -52,7 +52,7 @@ class _RegisterViewState extends State<RegisterView> {
   @override
   void dispose() {
     errorDisposer();
-
+    loggedDisposer();
     super.dispose();
   }
 

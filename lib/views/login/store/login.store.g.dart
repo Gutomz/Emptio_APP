@@ -44,6 +44,19 @@ mixin _$LoginStore on _LoginStoreBase, Store {
       (_$loginValidComputed ??= Computed<bool>(() => super.loginValid,
               name: '_LoginStoreBase.loginValid'))
           .value;
+  Computed<bool>? _$forgotPaswordValidComputed;
+
+  @override
+  bool get forgotPaswordValid => (_$forgotPaswordValidComputed ??=
+          Computed<bool>(() => super.forgotPaswordValid,
+              name: '_LoginStoreBase.forgotPaswordValid'))
+      .value;
+  Computed<bool>? _$loadingComputed;
+
+  @override
+  bool get loading => (_$loadingComputed ??=
+          Computed<bool>(() => super.loading, name: '_LoginStoreBase.loading'))
+      .value;
 
   final _$emailAtom = Atom(name: '_LoginStoreBase.email');
 
@@ -90,6 +103,75 @@ mixin _$LoginStore on _LoginStoreBase, Store {
     });
   }
 
+  final _$loginLoadingAtom = Atom(name: '_LoginStoreBase.loginLoading');
+
+  @override
+  bool get loginLoading {
+    _$loginLoadingAtom.reportRead();
+    return super.loginLoading;
+  }
+
+  @override
+  set loginLoading(bool value) {
+    _$loginLoadingAtom.reportWrite(value, super.loginLoading, () {
+      super.loginLoading = value;
+    });
+  }
+
+  final _$forgotPasswordLoadingAtom =
+      Atom(name: '_LoginStoreBase.forgotPasswordLoading');
+
+  @override
+  bool get forgotPasswordLoading {
+    _$forgotPasswordLoadingAtom.reportRead();
+    return super.forgotPasswordLoading;
+  }
+
+  @override
+  set forgotPasswordLoading(bool value) {
+    _$forgotPasswordLoadingAtom.reportWrite(value, super.forgotPasswordLoading,
+        () {
+      super.forgotPasswordLoading = value;
+    });
+  }
+
+  final _$errorAtom = Atom(name: '_LoginStoreBase.error');
+
+  @override
+  String get error {
+    _$errorAtom.reportRead();
+    return super.error;
+  }
+
+  @override
+  set error(String value) {
+    _$errorAtom.reportWrite(value, super.error, () {
+      super.error = value;
+    });
+  }
+
+  final _$loggedAtom = Atom(name: '_LoginStoreBase.logged');
+
+  @override
+  bool get logged {
+    _$loggedAtom.reportRead();
+    return super.logged;
+  }
+
+  @override
+  set logged(bool value) {
+    _$loggedAtom.reportWrite(value, super.logged, () {
+      super.logged = value;
+    });
+  }
+
+  final _$loginAsyncAction = AsyncAction('_LoginStoreBase.login');
+
+  @override
+  Future<void> login() {
+    return _$loginAsyncAction.run(() => super.login());
+  }
+
   final _$_LoginStoreBaseActionController =
       ActionController(name: '_LoginStoreBase');
 
@@ -127,27 +209,22 @@ mixin _$LoginStore on _LoginStoreBase, Store {
   }
 
   @override
-  void login() {
-    final _$actionInfo = _$_LoginStoreBaseActionController.startAction(
-        name: '_LoginStoreBase.login');
-    try {
-      return super.login();
-    } finally {
-      _$_LoginStoreBaseActionController.endAction(_$actionInfo);
-    }
-  }
-
-  @override
   String toString() {
     return '''
 email: ${email},
 password: ${password},
 visible: ${visible},
+loginLoading: ${loginLoading},
+forgotPasswordLoading: ${forgotPasswordLoading},
+error: ${error},
+logged: ${logged},
 emailValid: ${emailValid},
 emailError: ${emailError},
 passwordValid: ${passwordValid},
 passwordError: ${passwordError},
-loginValid: ${loginValid}
+loginValid: ${loginValid},
+forgotPaswordValid: ${forgotPaswordValid},
+loading: ${loading}
     ''';
   }
 }

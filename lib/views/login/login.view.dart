@@ -2,12 +2,53 @@ import 'package:emptio/core/app_assets.dart';
 import 'package:emptio/core/app_colors.dart';
 import 'package:emptio/views/login/store/login.store.dart';
 import 'package:emptio/views/register/register.view.dart';
+import 'package:emptio/views/splash/splash.view.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:mobx/mobx.dart';
 
-class LoginView extends StatelessWidget {
+class LoginView extends StatefulWidget {
+  @override
+  _LoginViewState createState() => _LoginViewState();
+}
+
+class _LoginViewState extends State<LoginView> {
   final LoginStore loginStore = LoginStore();
+
+  late ReactionDisposer errorDisposer;
+  late ReactionDisposer loggedDisposer;
+
+  @override
+  initState() {
+    super.initState();
+
+    errorDisposer = reaction((_) => loginStore.error, (String error) {
+      if (error.isNotEmpty) {
+        ScaffoldMessenger.of(context).hideCurrentSnackBar();
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(error),
+          ),
+        );
+      }
+    });
+
+    loggedDisposer = reaction((_) => loginStore.logged, (bool logged) {
+      if (logged) {
+        Navigator.of(context).pushAndRemoveUntil(
+            MaterialPageRoute(builder: (ctx) => SplashView()),
+            (route) => false);
+      }
+    });
+  }
+
+  @override
+  void dispose() {
+    errorDisposer();
+    loggedDisposer();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -72,20 +113,36 @@ class LoginView extends StatelessWidget {
                   );
                 }),
                 SizedBox(height: 10),
-                Container(
-                  child: Align(
-                    alignment: Alignment.centerRight,
-                    child: TextButton(
-                      onPressed: () {},
-                      child: Text(
-                        'Esqueceu sua senha?',
-                        style: TextStyle(
-                          color: AppColors.orange,
+                Observer(builder: (_) {
+                  return Row(
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    children: [
+                      TextButton(
+                        onPressed: loginStore.forgotPaswordValid
+                            ? () {}
+                            : () {
+                                ScaffoldMessenger.of(context)
+                                    .hideCurrentSnackBar();
+                                ScaffoldMessenger.of(context)
+                                    .showSnackBar(SnackBar(
+                                  content: Text("Digite seu E-mail!"),
+                                ));
+                              },
+                        child: Text(
+                          'Esqueceu sua senha?',
+                          style: TextStyle(
+                            color: AppColors.orange,
+                          ),
                         ),
                       ),
-                    ),
-                  ),
-                ),
+                      if (loginStore.forgotPasswordLoading)
+                        CircularProgressIndicator(
+                          color: Colors.white,
+                          strokeWidth: 2,
+                        )
+                    ],
+                  );
+                }),
                 SizedBox(height: 50),
                 Container(
                   height: 50,
@@ -94,30 +151,41 @@ class LoginView extends StatelessWidget {
                     return ElevatedButton(
                       onPressed:
                           loginStore.loginValid ? loginStore.login : null,
-                      child: Text(
-                        'Entrar',
-                        style: TextStyle(
-                          fontSize: 16,
-                          fontWeight: FontWeight.w600,
-                        ),
-                      ),
+                      child: loginStore.loginLoading
+                          ? CircularProgressIndicator(
+                              color: Colors.white,
+                              strokeWidth: 2,
+                            )
+                          : Text(
+                              'Cadastrar',
+                              style: TextStyle(
+                                fontSize: 16,
+                                fontWeight: FontWeight.w600,
+                              ),
+                            ),
                     );
                   }),
                 ),
                 SizedBox(height: 30),
-                TextButton(
-                  onPressed: () {
-                    Navigator.of(context).push(
-                      MaterialPageRoute(builder: (context) => RegisterView()),
-                    );
-                  },
-                  child: Text(
-                    'Não tem uma conta?',
-                    style: TextStyle(
-                      color: AppColors.lightGrey,
+                Observer(builder: (_) {
+                  return TextButton(
+                    onPressed: loginStore.loading
+                        ? null
+                        : () {
+                            Navigator.of(context).push(
+                              MaterialPageRoute(
+                                builder: (context) => RegisterView(),
+                              ),
+                            );
+                          },
+                    child: Text(
+                      'Não tem uma conta?',
+                      style: TextStyle(
+                        color: AppColors.lightGrey,
+                      ),
                     ),
-                  ),
-                ),
+                  );
+                }),
               ],
             ),
           ),
