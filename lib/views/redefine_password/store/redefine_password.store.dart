@@ -1,3 +1,8 @@
+import 'package:emptio/models/auth.model.dart';
+import 'package:emptio/repositories/user.repository.dart';
+import 'package:emptio/stores/auth.store.dart';
+import 'package:emptio/view-models/redefine_password.view-model.dart';
+import 'package:get_it/get_it.dart';
 import 'package:mobx/mobx.dart';
 part 'redefine_password.store.g.dart';
 
@@ -20,6 +25,15 @@ abstract class _RedefinePasswordStoreBase with Store {
   @observable
   bool confirmPasswordVisible = false;
 
+  @observable
+  bool loading = false;
+
+  @observable
+  bool logged = false;
+
+  @observable
+  String error = "";
+
   @action
   void setCode(String _value) => code = _value;
 
@@ -35,6 +49,30 @@ abstract class _RedefinePasswordStoreBase with Store {
   @action
   void toggleConfirmPasswordVisible() =>
       confirmPasswordVisible = !confirmPasswordVisible;
+
+  @action
+  Future<void> redefinePassword(String email) async {
+    loading = true;
+    error = "";
+
+    RedefinePasswordViewModel model = RedefinePasswordViewModel(
+      code: code!,
+      email: email,
+      password: password!,
+    );
+
+    try {
+      AuthModel auth = await UserRepository().redefinePassword(model);
+      GetIt.I<AuthStore>().setAuth(auth);
+      logged = true;
+    } catch (_error) {
+      if (_error is String) {
+        error = _error;
+      }
+    }
+
+    loading = false;
+  }
 
   @computed
   bool get codeValid {
@@ -98,5 +136,5 @@ abstract class _RedefinePasswordStoreBase with Store {
 
   @computed
   bool get redefinePasswordValid =>
-      codeValid && passwordValid && confirmPasswordValid;
+      !loading && codeValid && passwordValid && confirmPasswordValid;
 }

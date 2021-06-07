@@ -131,6 +131,60 @@ mixin _$RedefinePasswordStore on _RedefinePasswordStoreBase, Store {
     });
   }
 
+  final _$loadingAtom = Atom(name: '_RedefinePasswordStoreBase.loading');
+
+  @override
+  bool get loading {
+    _$loadingAtom.reportRead();
+    return super.loading;
+  }
+
+  @override
+  set loading(bool value) {
+    _$loadingAtom.reportWrite(value, super.loading, () {
+      super.loading = value;
+    });
+  }
+
+  final _$loggedAtom = Atom(name: '_RedefinePasswordStoreBase.logged');
+
+  @override
+  bool get logged {
+    _$loggedAtom.reportRead();
+    return super.logged;
+  }
+
+  @override
+  set logged(bool value) {
+    _$loggedAtom.reportWrite(value, super.logged, () {
+      super.logged = value;
+    });
+  }
+
+  final _$errorAtom = Atom(name: '_RedefinePasswordStoreBase.error');
+
+  @override
+  String get error {
+    _$errorAtom.reportRead();
+    return super.error;
+  }
+
+  @override
+  set error(String value) {
+    _$errorAtom.reportWrite(value, super.error, () {
+      super.error = value;
+    });
+  }
+
+  final _$redefinePasswordAsyncAction =
+      AsyncAction('_RedefinePasswordStoreBase.redefinePassword');
+
+  @override
+  Future<void> redefinePassword(String email) {
+    return _$redefinePasswordAsyncAction
+        .run(() => super.redefinePassword(email));
+  }
+
   final _$_RedefinePasswordStoreBaseActionController =
       ActionController(name: '_RedefinePasswordStoreBase');
 
@@ -198,6 +252,9 @@ password: ${password},
 confirmPassword: ${confirmPassword},
 passwordVisible: ${passwordVisible},
 confirmPasswordVisible: ${confirmPasswordVisible},
+loading: ${loading},
+logged: ${logged},
+error: ${error},
 codeValid: ${codeValid},
 passwordValid: ${passwordValid},
 passwordError: ${passwordError},

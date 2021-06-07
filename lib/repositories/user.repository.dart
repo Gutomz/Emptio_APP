@@ -2,6 +2,7 @@ import 'package:emptio/core/app_api-errors.dart';
 import 'package:emptio/core/app_api.dart';
 import 'package:emptio/models/auth.model.dart';
 import 'package:emptio/view-models/login.view-model.dart';
+import 'package:emptio/view-models/redefine_password.view-model.dart';
 import 'package:emptio/view-models/register.view-model.dart';
 
 class UserRepository {
@@ -39,6 +40,42 @@ class UserRepository {
           return Future.error("E-mail e/ou senha inválidos!");
         }
       }
+
+      return Future.error(AppApiErrors.handleError(error));
+    }
+  }
+
+  Future<void> forgotPassword(String email) async {
+    try {
+      await api.post('/users/forgot-password', {"email": email});
+    } catch (error) {
+      if (AppApiErrors.isError(error)) {
+        String code = AppApiErrors.getCode(error);
+
+        if (code.contains("user_not_found_error") ||
+            code.contains("invalid_field_error")) {
+          return Future.error("E-mail não cadastrado!");
+        }
+      }
+
+      return Future.error(AppApiErrors.handleError(error));
+    }
+  }
+
+  Future<AuthModel> redefinePassword(RedefinePasswordViewModel model) async {
+    try {
+      dynamic data = await api.post('/users/redefine-password', model.toJson());
+      return AuthModel.fromJson(data);
+    } catch (error) {
+      if (AppApiErrors.isError(error)) {
+        String code = AppApiErrors.getCode(error);
+
+        if (code.contains("user_not_found_error") ||
+            code.contains("invalid_field_error")) {
+          return Future.error("Código inválido!");
+        }
+      }
+
       return Future.error(AppApiErrors.handleError(error));
     }
   }

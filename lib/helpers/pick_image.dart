@@ -7,15 +7,20 @@ class PickImage {
   final _picker = ImagePicker();
 
   Future<File?> pickFromCamera() async {
-    PickedFile? pickedFile = await _picker.getImage(source: ImageSource.camera);
+    PickedFile? pickedFile = await _picker.getImage(
+      source: ImageSource.camera,
+      imageQuality: 50,
+    );
     final File? file = pickedFile != null ? File(pickedFile.path) : null;
 
     return file;
   }
 
   Future<File?> pickFromGallery() async {
-    PickedFile? pickedFile =
-        await _picker.getImage(source: ImageSource.gallery);
+    PickedFile? pickedFile = await _picker.getImage(
+      source: ImageSource.gallery,
+      imageQuality: 50,
+    );
     final File? file = pickedFile != null ? File(pickedFile.path) : null;
 
     return file;

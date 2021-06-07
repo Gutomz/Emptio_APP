@@ -1,14 +1,57 @@
 import 'package:emptio/core/app_assets.dart';
 import 'package:emptio/core/app_colors.dart';
 import 'package:emptio/views/redefine_password/store/redefine_password.store.dart';
+import 'package:emptio/views/splash/splash.view.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:mobx/mobx.dart';
 
-class RedefinePasswordView extends StatelessWidget {
+class RedefinePasswordView extends StatefulWidget {
+  final String email;
+
+  RedefinePasswordView({Key? key, required this.email}) : super(key: key);
+
+  @override
+  _RedefinePasswordViewState createState() => _RedefinePasswordViewState();
+}
+
+class _RedefinePasswordViewState extends State<RedefinePasswordView> {
   final RedefinePasswordStore redefinePasswordStore = RedefinePasswordStore();
 
-  RedefinePasswordView({Key? key}) : super(key: key);
+  late ReactionDisposer errorDisposer;
+  late ReactionDisposer loggedDisposer;
+
+  @override
+  void initState() {
+    errorDisposer = reaction((_) => redefinePasswordStore.error, (String error) {
+      if (error.isNotEmpty) {
+        ScaffoldMessenger.of(context).hideCurrentSnackBar();
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(error),
+          ),
+        );
+      }
+    });
+
+    loggedDisposer = reaction((_) => redefinePasswordStore.logged, (bool logged) {
+      if (logged) {
+        Navigator.of(context).pushAndRemoveUntil(
+            MaterialPageRoute(builder: (ctx) => SplashView()),
+            (route) => false);
+      }
+    });
+
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    loggedDisposer();
+    errorDisposer();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -50,6 +93,7 @@ class RedefinePasswordView extends StatelessWidget {
                 SizedBox(height: 50),
                 Observer(builder: (_) {
                   return TextField(
+                    enabled: !redefinePasswordStore.loading,
                     decoration: InputDecoration(
                       prefixIcon: Icon(
                         Icons.confirmation_number,
@@ -66,6 +110,7 @@ class RedefinePasswordView extends StatelessWidget {
                 SizedBox(height: 25),
                 Observer(builder: (_) {
                   return TextField(
+                    enabled: !redefinePasswordStore.loading,
                     decoration: InputDecoration(
                       prefixIcon: Icon(Icons.vpn_key, color: AppColors.orange),
                       suffixIcon: IconButton(
@@ -93,6 +138,7 @@ class RedefinePasswordView extends StatelessWidget {
                 SizedBox(height: 25),
                 Observer(builder: (_) {
                   return TextField(
+                    enabled: !redefinePasswordStore.loading,
                     decoration: InputDecoration(
                       prefixIcon: Icon(Icons.shield, color: AppColors.orange),
                       suffixIcon: IconButton(
@@ -122,15 +168,21 @@ class RedefinePasswordView extends StatelessWidget {
                   child: Observer(builder: (_) {
                     return ElevatedButton(
                       onPressed: redefinePasswordStore.redefinePasswordValid
-                          ? () {}
+                          ? () => redefinePasswordStore
+                              .redefinePassword(this.widget.email)
                           : null,
-                      child: Text(
-                        'Redefinir Senha',
-                        style: TextStyle(
-                          fontSize: 16,
-                          fontWeight: FontWeight.w600,
-                        ),
-                      ),
+                      child: redefinePasswordStore.loading
+                          ? CircularProgressIndicator(
+                              color: Colors.white,
+                              strokeWidth: 2,
+                            )
+                          : Text(
+                              'Redefinir Senha',
+                              style: TextStyle(
+                                fontSize: 16,
+                                fontWeight: FontWeight.w600,
+                              ),
+                            ),
                     );
                   }),
                 ),

@@ -165,11 +165,34 @@ mixin _$LoginStore on _LoginStoreBase, Store {
     });
   }
 
+  final _$emailSentAtom = Atom(name: '_LoginStoreBase.emailSent');
+
+  @override
+  bool get emailSent {
+    _$emailSentAtom.reportRead();
+    return super.emailSent;
+  }
+
+  @override
+  set emailSent(bool value) {
+    _$emailSentAtom.reportWrite(value, super.emailSent, () {
+      super.emailSent = value;
+    });
+  }
+
   final _$loginAsyncAction = AsyncAction('_LoginStoreBase.login');
 
   @override
   Future<void> login() {
     return _$loginAsyncAction.run(() => super.login());
+  }
+
+  final _$forgotPasswordAsyncAction =
+      AsyncAction('_LoginStoreBase.forgotPassword');
+
+  @override
+  Future<void> forgotPassword() {
+    return _$forgotPasswordAsyncAction.run(() => super.forgotPassword());
   }
 
   final _$_LoginStoreBaseActionController =
@@ -218,6 +241,7 @@ loginLoading: ${loginLoading},
 forgotPasswordLoading: ${forgotPasswordLoading},
 error: ${error},
 logged: ${logged},
+emailSent: ${emailSent},
 emailValid: ${emailValid},
 emailError: ${emailError},
 passwordValid: ${passwordValid},

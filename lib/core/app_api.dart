@@ -6,7 +6,7 @@ import 'package:get_it/get_it.dart';
 import 'package:http/http.dart' as http;
 
 class AppApi {
-  final String _url = '192.168.100.106:3000';
+  final String _url = '192.168.0.194:3000';
 
   String _getPath(String? pathExtension) {
     String path = "/api";

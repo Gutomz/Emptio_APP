@@ -31,6 +31,9 @@ abstract class _LoginStoreBase with Store {
   @observable
   bool logged = false;
 
+  @observable
+  bool emailSent = false;
+
   @action
   void setEmail(String _value) => email = _value;
 
@@ -58,6 +61,24 @@ abstract class _LoginStoreBase with Store {
     }
 
     loginLoading = false;
+  }
+
+  @action
+  Future<void> forgotPassword() async {
+    forgotPasswordLoading = true;
+    error = "";
+    emailSent = false;
+
+    try {
+      await UserRepository().forgotPassword(email!);
+      emailSent = true;
+    } catch (_error) {
+      if (_error is String) {
+        error = _error;
+      }
+    }
+
+    forgotPasswordLoading = false;
   }
 
   @computed
@@ -99,7 +120,7 @@ abstract class _LoginStoreBase with Store {
   @computed
   bool get loginValid => !loading && emailValid && passwordValid;
 
-    @computed
+  @computed
   bool get forgotPaswordValid => !loading && emailValid;
 
   @computed
