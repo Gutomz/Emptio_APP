@@ -1,9 +1,9 @@
 import 'package:emptio/core/app_assets.dart';
 import 'package:emptio/core/app_colors.dart';
+import 'package:emptio/views/home/home.view.dart';
 import 'package:emptio/views/login/store/login.store.dart';
 import 'package:emptio/views/redefine_password/redefine_password.view.dart';
 import 'package:emptio/views/register/register.view.dart';
-import 'package:emptio/views/splash/splash.view.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -39,7 +39,7 @@ class _LoginViewState extends State<LoginView> {
     loggedDisposer = reaction((_) => loginStore.logged, (bool logged) {
       if (logged) {
         Navigator.of(context).pushAndRemoveUntil(
-            MaterialPageRoute(builder: (ctx) => SplashView()),
+            MaterialPageRoute(builder: (ctx) => HomeView()),
             (route) => false);
       }
     });

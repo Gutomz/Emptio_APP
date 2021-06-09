@@ -1,6 +1,7 @@
 import 'package:emptio/core/app_api-errors.dart';
 import 'package:emptio/core/app_api.dart';
 import 'package:emptio/models/auth.model.dart';
+import 'package:emptio/models/user.model.dart';
 import 'package:emptio/view-models/login.view-model.dart';
 import 'package:emptio/view-models/redefine_password.view-model.dart';
 import 'package:emptio/view-models/register.view-model.dart';
@@ -45,6 +46,14 @@ class UserRepository {
     }
   }
 
+  Future logout() async {
+    try {
+      await api.delete('/auth');
+    } catch (error) {
+      return Future.error(AppApiErrors.handleError(error));
+    }
+  }
+
   Future<void> forgotPassword(String email) async {
     try {
       await api.post('/users/forgot-password', {"email": email});
@@ -76,6 +85,15 @@ class UserRepository {
         }
       }
 
+      return Future.error(AppApiErrors.handleError(error));
+    }
+  }
+
+  Future<UserModel> getMe() async {
+    try {
+      dynamic data = await api.get("/users/me");
+      return UserModel.fromJson(data);
+    } catch (error) {
       return Future.error(AppApiErrors.handleError(error));
     }
   }

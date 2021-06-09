@@ -1,4 +1,5 @@
 import 'package:emptio/core/app_colors.dart';
+import 'package:emptio/views/home/home.view.dart';
 import 'package:emptio/views/login/login.view.dart';
 import 'package:emptio/views/register/register.view.dart';
 import 'package:flutter/material.dart';
@@ -116,7 +117,14 @@ class EntryView extends StatelessWidget {
                       ),
                       SizedBox(height: 50),
                       TextButton(
-                        onPressed: () {},
+                        onPressed: () {
+                          Navigator.of(context).pushAndRemoveUntil(
+                            MaterialPageRoute(
+                              builder: (_ctx) => HomeView(),
+                            ),
+                            (route) => false,
+                          );
+                        },
                         style: TextButton.styleFrom(
                           primary: AppColors.lightGrey,
                           textStyle: TextStyle(

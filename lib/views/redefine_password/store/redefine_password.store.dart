@@ -63,7 +63,7 @@ abstract class _RedefinePasswordStoreBase with Store {
 
     try {
       AuthModel auth = await UserRepository().redefinePassword(model);
-      GetIt.I<AuthStore>().setAuth(auth);
+      await GetIt.I<AuthStore>().login(auth);
       logged = true;
     } catch (_error) {
       if (_error is String) {

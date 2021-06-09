@@ -34,6 +34,9 @@ dependencies:
   http: ^0.13.3
   location: ^4.1.1
   mime_type: ^1.0.0
+  shared_preferences: ^2.0.6
+  badges: ^2.0.1
+  animated_bottom_navigation_bar: ^0.3.2
 
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.

@@ -84,7 +84,7 @@ abstract class _RegisterStoreBase with Store {
 
     try {
       AuthModel auth = await UserRepository().register(userModel);
-      GetIt.I<AuthStore>().setAuth(auth);
+      await GetIt.I<AuthStore>().login(auth);
       logged = true;
     } catch (_error) {
       if (_error is String) {

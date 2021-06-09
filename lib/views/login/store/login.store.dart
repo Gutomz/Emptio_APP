@@ -52,7 +52,7 @@ abstract class _LoginStoreBase with Store {
 
     try {
       AuthModel auth = await UserRepository().login(model);
-      GetIt.I<AuthStore>().setAuth(auth);
+      await GetIt.I<AuthStore>().login(auth);
       logged = true;
     } catch (_error) {
       if (_error is String) {

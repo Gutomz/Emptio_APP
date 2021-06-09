@@ -6,9 +6,13 @@ import 'package:get_it/get_it.dart';
 import 'package:http/http.dart' as http;
 
 class AppApi {
-  final String _url = '192.168.0.194:3000';
+  static final String _url = '192.168.0.194:3000';
 
-  String _getPath(String? pathExtension) {
+  static String getUrl(String? extension) {
+    return "http://" + _url + _getPath(extension);
+  }
+
+  static String _getPath(String? pathExtension) {
     String path = "/api";
     if (pathExtension == null) {
       return path;
@@ -32,15 +36,15 @@ class AppApi {
     return headers;
   }
 
-  _handleResponse(http.Response response) {
+  Future _handleResponse(http.Response response) async {
     int code = response.statusCode;
     var body = jsonDecode(response.body);
 
     if (code == HttpStatus.ok) {
       return Future.value(body);
-    }
-    if (code == HttpStatus.unauthorized || code == HttpStatus.forbidden) {
-      // TODO - Deslogar usuário
+    } else if (code == HttpStatus.unauthorized) {
+      AuthStore store = GetIt.I<AuthStore>();
+      await store.logout();
     }
 
     return Future.error(body);
@@ -56,7 +60,8 @@ class AppApi {
     return _handleResponse(response);
   }
 
-  Future<dynamic> get(String path, Map<String, dynamic> queryParameters) async {
+  Future<dynamic> get(String path,
+      {Map<String, dynamic>? queryParameters}) async {
     final response = await http.get(
       _getURI(
         pathExtension: path,
@@ -92,13 +97,14 @@ class AppApi {
     return _handleResponse(response);
   }
 
-  Future<http.Response> delete(String path, Map<String, dynamic> body) async {
+  Future<dynamic> delete(String path,
+      {Map<String, dynamic>? body}) async {
     final response = await http.delete(
       _getURI(
         pathExtension: path,
       ),
       headers: _getHeaders(),
-      body: jsonEncode(body),
+      body: body != null ? jsonEncode(body) : null,
     );
 
     return _handleResponse(response);
