@@ -1,14 +1,15 @@
 import 'package:emptio/core/app_assets.dart';
 import 'package:emptio/core/app_colors.dart';
+import 'package:emptio/core/firebase_notification_handler.dart';
 import 'package:emptio/helpers/location.dart';
 import 'package:emptio/stores/auth.store.dart';
 import 'package:emptio/views/entry/entry.view.dart';
 import 'package:emptio/views/home/home.view.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get_it/get_it.dart';
-import 'package:location/location.dart';
 
 class SplashView extends StatefulWidget {
   @override
@@ -16,12 +17,16 @@ class SplashView extends StatefulWidget {
 }
 
 class _SplashViewState extends State<SplashView> {
+  FirebaseNotifications _firebaseNotifications = FirebaseNotifications();
   AuthStore _authStore = GetIt.I<AuthStore>();
 
   @override
   void initState() {
-    _init();
     super.initState();
+
+    WidgetsBinding.instance?.addPostFrameCallback((timeStamp) {
+      _init();
+    });
   }
 
   @override
@@ -42,12 +47,22 @@ class _SplashViewState extends State<SplashView> {
 
   Future _init() async {
     try {
-      await Firebase.initializeApp();
+      await initFirebase();
+      print('Firebase Configured Ok!');
       await requestLocation();
+      print('Location Permission Ok!');
       await validateAuth();
+      print('App initiated!');
     } catch (error) {
       return Future.error(error);
     }
+  }
+
+  Future initFirebase() async {
+    await Firebase.initializeApp();
+    await _firebaseNotifications.setupFirebase(context);
+    FirebaseMessaging.onBackgroundMessage(
+        FirebaseNotifications.backgroundHandler);
   }
 
   Future validateAuth() async {
@@ -61,6 +76,6 @@ class _SplashViewState extends State<SplashView> {
       route = MaterialPageRoute(builder: (ctx) => EntryView());
     }
 
-    Navigator.of(context).pushAndRemoveUntil(route, (route) => false);
+    // Navigator.of(context).pushAndRemoveUntil(route, (route) => false);
   }
 }

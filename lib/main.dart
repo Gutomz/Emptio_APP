@@ -10,6 +10,7 @@ void main() {
   runApp(MyApp());
 }
 
+
 void setupLocators() {
   GetIt.I.registerSingleton(AuthStore());
 }
