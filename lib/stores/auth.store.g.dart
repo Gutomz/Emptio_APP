@@ -15,6 +15,13 @@ mixin _$AuthStore on _AuthStoreBase, Store {
   bool get isLogged => (_$isLoggedComputed ??=
           Computed<bool>(() => super.isLogged, name: '_AuthStoreBase.isLogged'))
       .value;
+  Computed<bool>? _$offlineLoggedComputed;
+
+  @override
+  bool get offlineLogged =>
+      (_$offlineLoggedComputed ??= Computed<bool>(() => super.offlineLogged,
+              name: '_AuthStoreBase.offlineLogged'))
+          .value;
 
   final _$authAtom = Atom(name: '_AuthStoreBase.auth');
 
@@ -46,6 +53,36 @@ mixin _$AuthStore on _AuthStoreBase, Store {
     });
   }
 
+  final _$loadingAtom = Atom(name: '_AuthStoreBase.loading');
+
+  @override
+  bool get loading {
+    _$loadingAtom.reportRead();
+    return super.loading;
+  }
+
+  @override
+  set loading(bool value) {
+    _$loadingAtom.reportWrite(value, super.loading, () {
+      super.loading = value;
+    });
+  }
+
+  final _$isActiveAtom = Atom(name: '_AuthStoreBase.isActive');
+
+  @override
+  bool get isActive {
+    _$isActiveAtom.reportRead();
+    return super.isActive;
+  }
+
+  @override
+  set isActive(bool value) {
+    _$isActiveAtom.reportWrite(value, super.isActive, () {
+      super.isActive = value;
+    });
+  }
+
   final _$loginAsyncAction = AsyncAction('_AuthStoreBase.login');
 
   @override
@@ -73,7 +110,10 @@ mixin _$AuthStore on _AuthStoreBase, Store {
     return '''
 auth: ${auth},
 user: ${user},
-isLogged: ${isLogged}
+loading: ${loading},
+isActive: ${isActive},
+isLogged: ${isLogged},
+offlineLogged: ${offlineLogged}
     ''';
   }
 }

@@ -1,5 +1,6 @@
 import 'package:emptio/stores/app.store.dart';
 import 'package:emptio/stores/auth.store.dart';
+import 'package:emptio/stores/connectivity.store.dart';
 import 'package:flutter/material.dart';
 import 'package:emptio/theme.dart';
 import 'package:emptio/views/splash/splash.view.dart';
@@ -12,6 +13,7 @@ void main() {
 }
 
 void setupLocators() {
+  GetIt.I.registerSingleton(ConnectivityStore());
   GetIt.I.registerSingleton(AuthStore());
   GetIt.I.registerSingleton(AppStore());
 }

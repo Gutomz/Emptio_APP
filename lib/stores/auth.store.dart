@@ -3,6 +3,8 @@ import 'dart:convert';
 import 'package:emptio/models/auth.model.dart';
 import 'package:emptio/models/user.model.dart';
 import 'package:emptio/repositories/user.repository.dart';
+import 'package:emptio/stores/connectivity.store.dart';
+import 'package:get_it/get_it.dart';
 import 'package:mobx/mobx.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 part 'auth.store.g.dart';
@@ -10,6 +12,7 @@ part 'auth.store.g.dart';
 class AuthStore = _AuthStoreBase with _$AuthStore;
 
 abstract class _AuthStoreBase with Store {
+  final ConnectivityStore _connectivityStore = GetIt.I<ConnectivityStore>();
   final String _authKey = "auth_key";
 
   @observable
@@ -18,21 +21,35 @@ abstract class _AuthStoreBase with Store {
   @observable
   UserModel? user;
 
+  @observable
+  bool loading = false;
+
+  @observable
+  bool isActive = false;
+
   @action
   Future login(AuthModel authModel) async {
-    try {
-      auth = authModel;
-      user = await UserRepository().getMe();
+    loading = true;
+    auth = authModel;
 
-      SharedPreferences prefs = await SharedPreferences.getInstance();
-      await prefs.setString(_authKey, jsonEncode(authModel.toJson()));
-    } catch (error) {
-      auth = null;
+    if (_connectivityStore.isConnected) {
+      try {
+        user = await UserRepository().getMe();
+
+        SharedPreferences prefs = await SharedPreferences.getInstance();
+        await prefs.setString(_authKey, jsonEncode(authModel.toJson()));
+      } catch (error) {
+        auth = null;
+      }
     }
+
+    loading = false;
   }
 
   @action
   Future logout() async {
+    loading = true;
+
     try {
       SharedPreferences prefs = await SharedPreferences.getInstance();
       await prefs.remove(_authKey);
@@ -42,10 +59,14 @@ abstract class _AuthStoreBase with Store {
       user = null;
       auth = null;
     }
+
+    loading = false;
   }
 
   @action
   Future<bool> initAuthenticated() async {
+    loading = true;
+
     try {
       SharedPreferences prefs = await SharedPreferences.getInstance();
 
@@ -60,9 +81,16 @@ abstract class _AuthStoreBase with Store {
       return Future.value(false);
     } catch (error) {
       return Future.value(false);
+    } finally {
+      loading = false;
+      isActive = true;
     }
   }
 
   @computed
-  bool get isLogged => auth != null && user != null;
+  bool get isLogged =>
+      _connectivityStore.isConnected && auth != null && user != null;
+
+  @computed
+  bool get offlineLogged => auth != null && user != null;
 }

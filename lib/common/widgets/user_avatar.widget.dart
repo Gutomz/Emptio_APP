@@ -52,8 +52,8 @@ class UserAvatar extends StatelessWidget {
       backgroundColor: backgroundColor ?? AppColors.darkOrange,
       foregroundColor: foregroundColor ?? AppColors.white,
       radius: radius,
-      child: Observer(builder: (context){
-        return _buildImage(_authStore.user?.photo);
+      child: Observer(builder: (context) {
+        return _buildImage(_authStore.isLogged ? _authStore.user?.photo : null);
       }),
     );
   }

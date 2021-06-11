@@ -1,6 +1,7 @@
 import 'package:emptio/common/widgets/user_avatar.widget.dart';
 import 'package:emptio/core/app_colors.dart';
 import 'package:emptio/stores/auth.store.dart';
+import 'package:emptio/stores/connectivity.store.dart';
 import 'package:emptio/views/login/login.view.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
@@ -126,6 +127,7 @@ class MainDrawerHeader extends StatelessWidget {
   }) : super(key: key);
 
   final AuthStore _authStore = GetIt.I<AuthStore>();
+  final ConnectivityStore _connectivityStore = GetIt.I<ConnectivityStore>();
 
   @override
   Widget build(BuildContext context) {
@@ -147,6 +149,18 @@ class MainDrawerHeader extends StatelessWidget {
                 ),
                 SizedBox(height: 10),
                 Observer(builder: (_) {
+                  if (!_connectivityStore.isConnected) {
+                    return Text(
+                      "Sem conexão com a internet!",
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontWeight: FontWeight.w500,
+                        fontSize: 16,
+                      ),
+                    );
+                  }
+
                   if (!_authStore.isLogged) {
                     return TextButton(
                       onPressed: () {
