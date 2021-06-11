@@ -20,37 +20,47 @@ abstract class _AuthStoreBase with Store {
 
   @action
   Future login(AuthModel authModel) async {
-    auth = authModel;
-    user = await UserRepository().getMe();
+    try {
+      auth = authModel;
+      user = await UserRepository().getMe();
 
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    await prefs.setString(_authKey, jsonEncode(authModel.toJson()));
+      SharedPreferences prefs = await SharedPreferences.getInstance();
+      await prefs.setString(_authKey, jsonEncode(authModel.toJson()));
+    } catch (error) {
+      auth = null;
+    }
   }
 
   @action
   Future logout() async {
-    await UserRepository().logout();
+    try {
+      SharedPreferences prefs = await SharedPreferences.getInstance();
+      await prefs.remove(_authKey);
 
-    auth = null;
-    user = null;
-
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    await prefs.remove(_authKey);
+      await UserRepository().logout();
+    } catch (_) {/* do nothing */} finally {
+      user = null;
+      auth = null;
+    }
   }
 
   @action
   Future<bool> initAuthenticated() async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
+    try {
+      SharedPreferences prefs = await SharedPreferences.getInstance();
 
-    String? authString = prefs.getString(_authKey);
-    if (authString != null) {
-      AuthModel authModel = AuthModel.fromJson(jsonDecode(authString));
-      await login(authModel);
+      String? authString = prefs.getString(_authKey);
+      if (authString != null) {
+        AuthModel authModel = AuthModel.fromJson(jsonDecode(authString));
+        await login(authModel);
 
-      return Future.value(true);
+        return Future.value(true);
+      }
+
+      return Future.value(false);
+    } catch (error) {
+      return Future.value(false);
     }
-
-    return Future.value(false);
   }
 
   @computed

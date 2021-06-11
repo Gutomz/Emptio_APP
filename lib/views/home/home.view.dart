@@ -1,9 +1,9 @@
 import 'package:emptio/common/widgets/main_bottom_navigator.widget.dart';
 import 'package:emptio/common/widgets/main_drawer.widget.dart';
+import 'package:emptio/views/base_purchases/base_purchases.view.dart';
 import 'package:emptio/views/favorites/favorites.view.dart';
 import 'package:emptio/views/feed/feed.view.dart';
 import 'package:emptio/views/home/store/home.store.dart';
-import 'package:emptio/views/purchase_models/purchase_models.view.dart';
 import 'package:emptio/views/purchases/purchases.view.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
@@ -18,14 +18,14 @@ class HomeView extends StatelessWidget {
 
   final List<String> labels = [
     "Compras",
-    "Modelos",
+    "Listas",
     "Favoritos",
     "Notícias",
   ];
 
   final List<Widget> screens = [
     PurchasesView(),
-    PurchaseModelsView(),
+    BasePurchasesView(),
     FavoritesView(),
     FeedView(),
   ];

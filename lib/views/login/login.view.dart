@@ -94,6 +94,7 @@ class _LoginViewState extends State<LoginView> {
                 Observer(builder: (_) {
                   return TextField(
                     enabled: !loginStore.loading,
+                    keyboardType: TextInputType.emailAddress,
                     decoration: InputDecoration(
                       prefixIcon: Icon(Icons.email, color: AppColors.orange),
                       hintText: 'E-mail',
@@ -176,7 +177,7 @@ class _LoginViewState extends State<LoginView> {
                               strokeWidth: 2,
                             )
                           : Text(
-                              'Cadastrar',
+                              'Entrar',
                               style: TextStyle(
                                 fontSize: 16,
                                 fontWeight: FontWeight.w600,

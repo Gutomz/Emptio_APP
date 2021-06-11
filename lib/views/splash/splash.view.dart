@@ -8,7 +8,6 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get_it/get_it.dart';
-import 'package:location/location.dart';
 
 class SplashView extends StatefulWidget {
   @override
@@ -29,12 +28,9 @@ class _SplashViewState extends State<SplashView> {
     return Scaffold(
       backgroundColor: AppColors.blue,
       body: Center(
-        child: Hero(
-          tag: 'emptio',
-          child: SvgPicture.asset(
-            AppAssets.svgLogo,
-            width: MediaQuery.of(context).size.width * 0.35,
-          ),
+        child: SvgPicture.asset(
+          AppAssets.svgLogo,
+          width: MediaQuery.of(context).size.width * 0.35,
         ),
       ),
     );
