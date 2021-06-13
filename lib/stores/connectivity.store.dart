@@ -7,7 +7,7 @@ class ConnectivityStore = _ConnectivityStoreBase with _$ConnectivityStore;
 abstract class _ConnectivityStoreBase with Store {
   _ConnectivityStoreBase() {
     autorun((_) {
-      print('Connectivity changed: ${connectivityStream.status}');
+      print('Connectivity status changed: ${connectivityStream.status}');
     });
   }
 

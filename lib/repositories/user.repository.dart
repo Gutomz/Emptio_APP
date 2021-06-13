@@ -7,11 +7,11 @@ import 'package:emptio/view-models/redefine_password.view-model.dart';
 import 'package:emptio/view-models/register.view-model.dart';
 
 class UserRepository {
-  final AppApi api = AppApi();
+  final AppApi _api = AppApi();
 
   Future<AuthModel> register(RegisterViewModel model) async {
     try {
-      dynamic data = await api.post('/users', model.toJson());
+      dynamic data = await _api.post('/users', body: model.toJson());
       return AuthModel.fromJson(data);
     } catch (error) {
       if (AppApiErrors.isError(error)) {
@@ -30,7 +30,7 @@ class UserRepository {
 
   Future<AuthModel> login(LoginViewModel model) async {
     try {
-      dynamic data = await api.post('/auth', model.toJson());
+      dynamic data = await _api.post('/auth', body: model.toJson());
       return AuthModel.fromJson(data);
     } catch (error) {
       if (AppApiErrors.isError(error)) {
@@ -48,7 +48,7 @@ class UserRepository {
 
   Future logout() async {
     try {
-      await api.delete('/auth');
+      await _api.delete('/auth');
     } catch (error) {
       return Future.error(AppApiErrors.handleError(error));
     }
@@ -56,7 +56,7 @@ class UserRepository {
 
   Future<void> forgotPassword(String email) async {
     try {
-      await api.post('/users/forgot-password', {"email": email});
+      await _api.post('/users/forgot-password', body: {"email": email});
     } catch (error) {
       if (AppApiErrors.isError(error)) {
         String code = AppApiErrors.getCode(error);
@@ -73,7 +73,8 @@ class UserRepository {
 
   Future<AuthModel> redefinePassword(RedefinePasswordViewModel model) async {
     try {
-      dynamic data = await api.post('/users/redefine-password', model.toJson());
+      dynamic data =
+          await _api.post('/users/redefine-password', body: model.toJson());
       return AuthModel.fromJson(data);
     } catch (error) {
       if (AppApiErrors.isError(error)) {
@@ -91,7 +92,7 @@ class UserRepository {
 
   Future<UserModel> getMe() async {
     try {
-      dynamic data = await api.get("/users/me");
+      dynamic data = await _api.get("/users/me");
       return UserModel.fromJson(data);
     } catch (error) {
       return Future.error(AppApiErrors.handleError(error));

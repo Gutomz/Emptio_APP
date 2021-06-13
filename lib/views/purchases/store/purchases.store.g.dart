@@ -9,6 +9,21 @@ part of 'purchases.store.dart';
 // ignore_for_file: non_constant_identifier_names, unnecessary_brace_in_string_interps, unnecessary_lambdas, prefer_expression_function_bodies, lines_longer_than_80_chars, avoid_as, avoid_annotating_with_dynamic
 
 mixin _$PurchasesStore on _PurchasesStoreBase, Store {
+  Computed<int>? _$itemCountComputed;
+
+  @override
+  int get itemCount =>
+      (_$itemCountComputed ??= Computed<int>(() => super.itemCount,
+              name: '_PurchasesStoreBase.itemCount'))
+          .value;
+  Computed<bool>? _$firstLoadingComputed;
+
+  @override
+  bool get firstLoading =>
+      (_$firstLoadingComputed ??= Computed<bool>(() => super.firstLoading,
+              name: '_PurchasesStoreBase.firstLoading'))
+          .value;
+
   final _$statusAtom = Atom(name: '_PurchasesStoreBase.status');
 
   @override
@@ -24,33 +39,18 @@ mixin _$PurchasesStore on _PurchasesStoreBase, Store {
     });
   }
 
-  final _$searchAtom = Atom(name: '_PurchasesStoreBase.search');
+  final _$skipAtom = Atom(name: '_PurchasesStoreBase.skip');
 
   @override
-  String get search {
-    _$searchAtom.reportRead();
-    return super.search;
+  int get skip {
+    _$skipAtom.reportRead();
+    return super.skip;
   }
 
   @override
-  set search(String value) {
-    _$searchAtom.reportWrite(value, super.search, () {
-      super.search = value;
-    });
-  }
-
-  final _$pageAtom = Atom(name: '_PurchasesStoreBase.page');
-
-  @override
-  int get page {
-    _$pageAtom.reportRead();
-    return super.page;
-  }
-
-  @override
-  set page(int value) {
-    _$pageAtom.reportWrite(value, super.page, () {
-      super.page = value;
+  set skip(int value) {
+    _$skipAtom.reportWrite(value, super.skip, () {
+      super.skip = value;
     });
   }
 
@@ -84,12 +84,43 @@ mixin _$PurchasesStore on _PurchasesStoreBase, Store {
     });
   }
 
+  final _$limitReachedAtom = Atom(name: '_PurchasesStoreBase.limitReached');
+
+  @override
+  bool get limitReached {
+    _$limitReachedAtom.reportRead();
+    return super.limitReached;
+  }
+
+  @override
+  set limitReached(bool value) {
+    _$limitReachedAtom.reportWrite(value, super.limitReached, () {
+      super.limitReached = value;
+    });
+  }
+
   final _$loadPurchasesAsyncAction =
       AsyncAction('_PurchasesStoreBase.loadPurchases');
 
   @override
-  Future<dynamic> loadPurchases() {
-    return _$loadPurchasesAsyncAction.run(() => super.loadPurchases());
+  Future<dynamic> loadPurchases(PurchasesFilterViewModel filter) {
+    return _$loadPurchasesAsyncAction.run(() => super.loadPurchases(filter));
+  }
+
+  final _$createPurchaseAsyncAction =
+      AsyncAction('_PurchasesStoreBase.createPurchase');
+
+  @override
+  Future<void> createPurchase() {
+    return _$createPurchaseAsyncAction.run(() => super.createPurchase());
+  }
+
+  final _$deletePurchaseAsyncAction =
+      AsyncAction('_PurchasesStoreBase.deletePurchase');
+
+  @override
+  Future<void> deletePurchase(int index) {
+    return _$deletePurchaseAsyncAction.run(() => super.deletePurchase(index));
   }
 
   final _$_PurchasesStoreBaseActionController =
@@ -107,11 +138,33 @@ mixin _$PurchasesStore on _PurchasesStoreBase, Store {
   }
 
   @override
-  void setSearch(String _value) {
+  void setLoading(bool _value) {
     final _$actionInfo = _$_PurchasesStoreBaseActionController.startAction(
-        name: '_PurchasesStoreBase.setSearch');
+        name: '_PurchasesStoreBase.setLoading');
     try {
-      return super.setSearch(_value);
+      return super.setLoading(_value);
+    } finally {
+      _$_PurchasesStoreBaseActionController.endAction(_$actionInfo);
+    }
+  }
+
+  @override
+  void setError(String _value) {
+    final _$actionInfo = _$_PurchasesStoreBaseActionController.startAction(
+        name: '_PurchasesStoreBase.setError');
+    try {
+      return super.setError(_value);
+    } finally {
+      _$_PurchasesStoreBaseActionController.endAction(_$actionInfo);
+    }
+  }
+
+  @override
+  void removeIndex(int index) {
+    final _$actionInfo = _$_PurchasesStoreBaseActionController.startAction(
+        name: '_PurchasesStoreBase.removeIndex');
+    try {
+      return super.removeIndex(index);
     } finally {
       _$_PurchasesStoreBaseActionController.endAction(_$actionInfo);
     }
@@ -143,10 +196,12 @@ mixin _$PurchasesStore on _PurchasesStoreBase, Store {
   String toString() {
     return '''
 status: ${status},
-search: ${search},
-page: ${page},
+skip: ${skip},
 loading: ${loading},
-error: ${error}
+error: ${error},
+limitReached: ${limitReached},
+itemCount: ${itemCount},
+firstLoading: ${firstLoading}
     ''';
   }
 }

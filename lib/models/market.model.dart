@@ -1,3 +1,4 @@
+import 'package:emptio/core/app_api.dart';
 import 'package:emptio/models/location.model.dart';
 
 class MarketModel {
@@ -33,7 +34,9 @@ class MarketModel {
     name = json['name'];
     location = LocationModel.fromJson(json['location']);
     address = json['address'];
-    image = json['image'];
+    image = json['image'] != null && json['image'].isNotEmpty
+        ? AppApi.getUrl(json['image'])
+        : null;
     website = json['website'];
     phone = json['phone'];
     openingHours = json['openingHours'].cast<String>();

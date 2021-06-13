@@ -43,10 +43,19 @@ class MainDrawerBottom extends StatelessWidget {
       if (_authStore.isLogged)
         return Container(
           child: ListTile(
-            leading: Icon(
-              Icons.logout_rounded,
-              color: AppColors.red,
-            ),
+            leading: _authStore.loading
+                ? SizedBox(
+                    width: 20,
+                    height: 20,
+                    child: CircularProgressIndicator(
+                      color: AppColors.red,
+                      strokeWidth: 1.5,
+                    ),
+                  )
+                : Icon(
+                    Icons.logout_rounded,
+                    color: AppColors.red,
+                  ),
             title: Text(
               "Desconectar",
               style: TextStyle(

@@ -10,6 +10,4 @@ abstract class _AppStoreBase with Store {
 
   PurchasesStore closedPurchasesStore =
       PurchasesStore(status: PurchaseStatusTypes.CLOSED);
-
-  PurchasesStore searchPurchasesStore = PurchasesStore(shouldAutoRun: false);
 }

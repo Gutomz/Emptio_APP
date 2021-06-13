@@ -31,7 +31,9 @@ class UserModel {
     sId = json['_id'];
     name = json['name'];
     email = json['email'];
-    photo = AppApi.getUrl(json['photo']);
+    photo = json['photo'] != null && json['photo'] != ""
+        ? AppApi.getUrl(json['photo'])
+        : null;
     description = json['description'];
     location = LocationModel.fromJson(json['location']);
     configurations = UserConfigurationsModel.fromJson(json['configurations']);

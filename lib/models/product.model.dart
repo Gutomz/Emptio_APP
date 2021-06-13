@@ -1,3 +1,4 @@
+import 'package:emptio/core/app_api.dart';
 import 'package:emptio/models/measurement.model.dart';
 
 class ProductModel {
@@ -25,7 +26,9 @@ class ProductModel {
     sId = json['_id'];
     name = json['name'];
     variation = json['variation'];
-    image = json['image'];
+    image = json['image'] != null && json['image'].isNotEmpty
+        ? AppApi.getUrl(json['image'])
+        : null;
     weight = MeasurementModel.fromJson(json['weight']);
     tags = json['tags'].cast<String>();
     updatedAt = json['updatedAt'];

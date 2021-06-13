@@ -9,9 +9,9 @@ class PurchaseStatusTypes {
 class PurchaseModel {
   late String sId;
   late String status;
-  late int cost;
-  late int estimatedCost;
-  late int limit;
+  late double cost;
+  late double estimatedCost;
+  late double limit;
   MarketModel? market;
   late List<PurchaseItemModel> items;
   late String updatedAt;
@@ -32,11 +32,12 @@ class PurchaseModel {
   PurchaseModel.fromJson(Map<String, dynamic> json) {
     sId = json['_id'];
     status = json['status'];
-    cost = json['cost'];
-    estimatedCost = json['estimatedCost'];
-    limit = json['limit'];
-    market =
-        json['market'] != null ? MarketModel.fromJson(json['market']) : null;
+    cost = json['cost'].toDouble();
+    estimatedCost = json['estimatedCost'].toDouble();
+    limit = json['limit'].toDouble();
+    market = json['market'] != null && json['image'] != ""
+        ? MarketModel.fromJson(json['market'])
+        : null;
     items = List<PurchaseItemModel>.empty(growable: true);
     if (json['items'] != null) {
       json['items'].forEach((v) {

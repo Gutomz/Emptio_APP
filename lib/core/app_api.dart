@@ -6,7 +6,7 @@ import 'package:get_it/get_it.dart';
 import 'package:http/http.dart' as http;
 
 class AppApi {
-  static final String _url = '192.168.0.194:3000';
+  static final String _url = '192.168.15.44:3000';
 
   static String getUrl(String? extension) {
     return "http://" + _url + _getPath(extension);
@@ -50,11 +50,11 @@ class AppApi {
     return Future.error(body);
   }
 
-  Future<dynamic> post(String path, Map<String, dynamic> body) async {
+  Future<dynamic> post(String path, {Map<String, dynamic>? body}) async {
     final response = await http.post(
       _getURI(pathExtension: path),
       headers: _getHeaders(),
-      body: jsonEncode(body),
+      body: body != null ? jsonEncode(body) : null,
     );
 
     return _handleResponse(response);
@@ -97,8 +97,7 @@ class AppApi {
     return _handleResponse(response);
   }
 
-  Future<dynamic> delete(String path,
-      {Map<String, dynamic>? body}) async {
+  Future<dynamic> delete(String path, {Map<String, dynamic>? body}) async {
     final response = await http.delete(
       _getURI(
         pathExtension: path,

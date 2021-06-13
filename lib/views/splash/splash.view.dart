@@ -1,4 +1,3 @@
-import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:emptio/core/app_assets.dart';
 import 'package:emptio/core/app_colors.dart';
 import 'package:emptio/helpers/location.dart';

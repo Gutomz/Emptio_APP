@@ -7,7 +7,7 @@ class MeasurementTypes {
 
 class MeasurementModel {
   String? sId;
-  late int value;
+  late double value;
   late String unit;
 
   MeasurementModel({
@@ -18,7 +18,7 @@ class MeasurementModel {
 
   MeasurementModel.fromJson(Map<String, dynamic> json) {
     sId = json['_id'];
-    value = json['value'];
+    value = json['value'].toDouble();
     unit = json['unit'];
   }
 

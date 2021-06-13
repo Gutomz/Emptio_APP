@@ -3,7 +3,7 @@ import 'package:emptio/models/product.model.dart';
 class PurchaseItemModel {
   String? sId;
   late ProductModel product;
-  late int price;
+  late double price;
   late int quantity;
   late bool checked;
 
@@ -18,7 +18,7 @@ class PurchaseItemModel {
   PurchaseItemModel.fromJson(Map<String, dynamic> json) {
     sId = json['_id'];
     product = ProductModel.fromJson(json['product']);
-    price = json['price'];
+    price = json['price'].toDouble();
     quantity = json['quantity'];
     checked = json['checked'];
   }
