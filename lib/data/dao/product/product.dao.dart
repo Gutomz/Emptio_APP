@@ -1,4 +1,6 @@
+import 'package:emptio/core/app_errors.dart';
 import 'package:emptio/data/database.dart';
+import 'package:emptio/data/database_errors.dart';
 import 'package:emptio/data/models/product/product.dart';
 import 'package:emptio/models/measurement.model.dart';
 import 'package:emptio/models/product.model.dart';
@@ -22,10 +24,7 @@ class ProductDao {
       return parseToProductModel(product);
     }
 
-    // TODO - create error structure
-    throw {
-      "code": "product_not_found",
-    };
+    throw DatabaseError.notFoundError(AppErrors.PRODUCT_NOT_FOUND);
   }
 
   Future<ProductModel> parseToProductModel(Product product) async {

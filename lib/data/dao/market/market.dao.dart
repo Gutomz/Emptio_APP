@@ -1,4 +1,6 @@
+import 'package:emptio/core/app_errors.dart';
 import 'package:emptio/data/database.dart';
+import 'package:emptio/data/database_errors.dart';
 import 'package:emptio/data/models/market/market.dart';
 import 'package:emptio/models/market.model.dart';
 import 'package:hive/hive.dart';
@@ -21,10 +23,7 @@ class MarketDao {
       return parseToMarketModel(market);
     }
 
-    // TODO - create error structure
-    throw {
-      "code": "product_not_found",
-    };
+    throw DatabaseError.notFoundError(AppErrors.MARKET_NOT_FOUND);
   }
 
   Future<MarketModel> parseToMarketModel(Market market) async {
