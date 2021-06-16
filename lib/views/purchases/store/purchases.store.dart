@@ -121,10 +121,11 @@ abstract class _PurchasesStoreBase with Store {
   }
 
   @action
-  void resetPage() {
+  Future<void> resetPage() async {
     skip = 0;
     purchaseList.clear();
     limitReached = false;
+    await Future.delayed(Duration(seconds: 2));
   }
 
   @computed

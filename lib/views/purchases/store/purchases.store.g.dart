@@ -123,6 +123,13 @@ mixin _$PurchasesStore on _PurchasesStoreBase, Store {
     return _$deletePurchaseAsyncAction.run(() => super.deletePurchase(index));
   }
 
+  final _$resetPageAsyncAction = AsyncAction('_PurchasesStoreBase.resetPage');
+
+  @override
+  Future<void> resetPage() {
+    return _$resetPageAsyncAction.run(() => super.resetPage());
+  }
+
   final _$_PurchasesStoreBaseActionController =
       ActionController(name: '_PurchasesStoreBase');
 
@@ -176,17 +183,6 @@ mixin _$PurchasesStore on _PurchasesStoreBase, Store {
         name: '_PurchasesStoreBase.loadNextPage');
     try {
       return super.loadNextPage();
-    } finally {
-      _$_PurchasesStoreBaseActionController.endAction(_$actionInfo);
-    }
-  }
-
-  @override
-  void resetPage() {
-    final _$actionInfo = _$_PurchasesStoreBaseActionController.startAction(
-        name: '_PurchasesStoreBase.resetPage');
-    try {
-      return super.resetPage();
     } finally {
       _$_PurchasesStoreBaseActionController.endAction(_$actionInfo);
     }
