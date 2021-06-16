@@ -21,7 +21,7 @@ class _SplashViewState extends State<SplashView> {
   AuthStore _authStore = GetIt.I<AuthStore>();
   ConnectivityStore _connectivityStore = GetIt.I<ConnectivityStore>();
 
-  ReactionDisposer? _disposer;
+  late ReactionDisposer _disposer;
 
   @override
   void initState() {
@@ -53,7 +53,8 @@ class _SplashViewState extends State<SplashView> {
 
   @override
   void dispose() {
-    _disposer!();
+    _disposer();
+    Database.dispose();
     super.dispose();
   }
 

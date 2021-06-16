@@ -8,8 +8,8 @@ import 'package:hive_flutter/hive_flutter.dart';
 
 class Database {
   static const String productBoxName = "products";
-  static const String purchaseBoxName = "purchases";
   static const String marketBoxName = "markets";
+  static const String purchaseBoxName = "purchases";
 
   static const int measurementAdapterId = 0;
   static const int productAdapterId = 1;
@@ -24,5 +24,14 @@ class Database {
     Hive.registerAdapter(MarketAdapter());
     Hive.registerAdapter(PurchaseItemAdapter());
     Hive.registerAdapter(PurchaseAdapter());
+  }
+
+  static Future<void> dispose() async {
+    await Hive.box(productBoxName).compact();
+    await Hive.box(marketBoxName).compact();
+    await Hive.box(purchaseBoxName).compact();
+    print('dispose database');
+
+    return Hive.close();
   }
 }
