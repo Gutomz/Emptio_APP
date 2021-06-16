@@ -1,5 +1,6 @@
 import 'package:emptio/core/app_assets.dart';
 import 'package:emptio/core/app_colors.dart';
+import 'package:emptio/data/database.dart';
 import 'package:emptio/helpers/location.dart';
 import 'package:emptio/stores/auth.store.dart';
 import 'package:emptio/stores/connectivity.store.dart';
@@ -81,7 +82,9 @@ class _SplashViewState extends State<SplashView> {
               );
             }
 
-            if (snapshot.data! || !_connectivityStore.isConnected) {
+            if (snapshot.data! ||
+                !_connectivityStore.isConnected ||
+                _authStore.keepLoggedOut) {
               return HomeView();
             }
 

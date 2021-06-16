@@ -83,6 +83,21 @@ mixin _$AuthStore on _AuthStoreBase, Store {
     });
   }
 
+  final _$keepLoggedOutAtom = Atom(name: '_AuthStoreBase.keepLoggedOut');
+
+  @override
+  bool get keepLoggedOut {
+    _$keepLoggedOutAtom.reportRead();
+    return super.keepLoggedOut;
+  }
+
+  @override
+  set keepLoggedOut(bool value) {
+    _$keepLoggedOutAtom.reportWrite(value, super.keepLoggedOut, () {
+      super.keepLoggedOut = value;
+    });
+  }
+
   final _$loginAsyncAction = AsyncAction('_AuthStoreBase.login');
 
   @override
@@ -105,6 +120,15 @@ mixin _$AuthStore on _AuthStoreBase, Store {
     return _$initAuthenticatedAsyncAction.run(() => super.initAuthenticated());
   }
 
+  final _$setKeepLoggedOutAsyncAction =
+      AsyncAction('_AuthStoreBase.setKeepLoggedOut');
+
+  @override
+  Future<void> setKeepLoggedOut(bool _value) {
+    return _$setKeepLoggedOutAsyncAction
+        .run(() => super.setKeepLoggedOut(_value));
+  }
+
   @override
   String toString() {
     return '''
@@ -112,6 +136,7 @@ auth: ${auth},
 user: ${user},
 loading: ${loading},
 isActive: ${isActive},
+keepLoggedOut: ${keepLoggedOut},
 isLogged: ${isLogged},
 offlineLogged: ${offlineLogged}
     ''';

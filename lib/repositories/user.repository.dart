@@ -1,5 +1,6 @@
 import 'package:emptio/core/app_api-errors.dart';
 import 'package:emptio/core/app_api.dart';
+import 'package:emptio/core/app_errors.dart';
 import 'package:emptio/models/auth.model.dart';
 import 'package:emptio/models/user.model.dart';
 import 'package:emptio/view-models/login.view-model.dart';
@@ -18,7 +19,7 @@ class UserRepository {
         String code = AppApiErrors.getCode(error);
 
         if (code.isNotEmpty) {
-          if (code.contains("unique_field_error")) {
+          if (code.contains(AppErrors.UNIQUE_FIELD)) {
             return Future.error("E-mail já cadastrado!");
           }
         }
@@ -36,8 +37,8 @@ class UserRepository {
       if (AppApiErrors.isError(error)) {
         String code = AppApiErrors.getCode(error);
 
-        if (code.contains("user_not_found_error") ||
-            code.contains("invalid_field_error")) {
+        if (code.contains(AppErrors.USER_NOT_FOUND) ||
+            code.contains(AppErrors.INVALID_FIELD)) {
           return Future.error("E-mail e/ou senha inválidos!");
         }
       }
@@ -61,8 +62,8 @@ class UserRepository {
       if (AppApiErrors.isError(error)) {
         String code = AppApiErrors.getCode(error);
 
-        if (code.contains("user_not_found_error") ||
-            code.contains("invalid_field_error")) {
+        if (code.contains(AppErrors.USER_NOT_FOUND) ||
+            code.contains(AppErrors.INVALID_FIELD)) {
           return Future.error("E-mail não cadastrado!");
         }
       }

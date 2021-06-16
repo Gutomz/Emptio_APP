@@ -1,11 +1,15 @@
 import 'package:emptio/core/app_colors.dart';
+import 'package:emptio/stores/auth.store.dart';
 import 'package:emptio/views/home/home.view.dart';
 import 'package:emptio/views/login/login.view.dart';
 import 'package:emptio/views/register/register.view.dart';
 import 'package:flutter/material.dart';
+import 'package:get_it/get_it.dart';
 import 'widgets/entry_header.widget.dart';
 
 class EntryView extends StatelessWidget {
+  AuthStore _authStore = GetIt.I<AuthStore>();
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -118,6 +122,7 @@ class EntryView extends StatelessWidget {
                       SizedBox(height: 50),
                       TextButton(
                         onPressed: () {
+                          _authStore.setKeepLoggedOut(true);
                           Navigator.of(context).pushAndRemoveUntil(
                             MaterialPageRoute(
                               builder: (_ctx) => HomeView(),

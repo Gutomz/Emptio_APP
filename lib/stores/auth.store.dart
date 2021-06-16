@@ -14,6 +14,7 @@ class AuthStore = _AuthStoreBase with _$AuthStore;
 abstract class _AuthStoreBase with Store {
   final ConnectivityStore _connectivityStore = GetIt.I<ConnectivityStore>();
   final String _authKey = "auth_key";
+  final String _keepLoggedOuthKey = "keepLoggedOut_key";
 
   @observable
   AuthModel? auth;
@@ -26,6 +27,9 @@ abstract class _AuthStoreBase with Store {
 
   @observable
   bool isActive = false;
+
+  @observable
+  bool keepLoggedOut = false;
 
   @action
   Future login(AuthModel authModel) async {
@@ -70,6 +74,11 @@ abstract class _AuthStoreBase with Store {
     try {
       SharedPreferences prefs = await SharedPreferences.getInstance();
 
+      bool? _keepLoggedOut = prefs.getBool(_keepLoggedOuthKey);
+      if (_keepLoggedOut != null) {
+        keepLoggedOut = _keepLoggedOut;
+      }
+
       String? authString = prefs.getString(_authKey);
       if (authString != null) {
         AuthModel authModel = AuthModel.fromJson(jsonDecode(authString));
@@ -85,6 +94,14 @@ abstract class _AuthStoreBase with Store {
       loading = false;
       isActive = true;
     }
+  }
+
+  @action
+  Future<void> setKeepLoggedOut(bool _value) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+
+    prefs.setBool(_keepLoggedOuthKey, _value);
+    keepLoggedOut = _value;
   }
 
   @computed

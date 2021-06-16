@@ -1,5 +1,6 @@
 import 'package:emptio/core/app_api-errors.dart';
 import 'package:emptio/core/app_api.dart';
+import 'package:emptio/data/dao/purchase/purchase.dao.dart';
 import 'package:emptio/models/purchase.model.dart';
 import 'package:emptio/stores/auth.store.dart';
 import 'package:emptio/view-models/purchase_filter.view-model.dart';
@@ -7,6 +8,7 @@ import 'package:get_it/get_it.dart';
 
 class PurchaseRepository {
   final AppApi _api = AppApi();
+  final PurchaseDao _dao = PurchaseDao();
   final AuthStore _authStore = GetIt.I<AuthStore>();
 
   Future<PurchaseModel> create() async {
@@ -15,16 +17,8 @@ class PurchaseRepository {
         dynamic data = await _api.post("/purchases");
         return PurchaseModel.fromJson(data);
       }
-      String dateNow = DateTime.now().toIso8601String();
-      return PurchaseModel(
-          sId: dateNow,
-          status: "opened",
-          cost: 0,
-          estimatedCost: 0,
-          limit: 0,
-          items: [],
-          updatedAt: dateNow,
-          createdAt: dateNow);
+      
+      return await _dao.create();
     } catch (error) {
       print(error);
       return Future.error(AppApiErrors.handleError(error));
@@ -43,7 +37,7 @@ class PurchaseRepository {
         return list;
       }
 
-      return List<PurchaseModel>.empty(growable: true);
+      return _dao.getPurchases(filter);
     } catch (error) {
       print(error);
       return Future.error(AppApiErrors.handleError(error));
@@ -53,8 +47,10 @@ class PurchaseRepository {
   Future<void> delete(String purchaseId) async {
     try {
       if (_authStore.isLogged) {
-        await _api.delete("/purchases/$purchaseId");
+        return await _api.delete("/purchases/$purchaseId");
       }
+
+      return _dao.delete(int.parse(purchaseId));
     } catch (error) {
       print(error);
       return Future.error(AppApiErrors.handleError(error));

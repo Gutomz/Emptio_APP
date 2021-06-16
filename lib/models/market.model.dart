@@ -5,8 +5,8 @@ class MarketModel {
   late String sId;
   late String placeId;
   late String name;
-  late LocationModel location;
-  late String address;
+  LocationModel? location;
+  String? address;
   String? image;
   String? website;
   String? phone;
@@ -18,8 +18,8 @@ class MarketModel {
     required this.sId,
     required this.placeId,
     required this.name,
-    required this.location,
-    required this.address,
+    this.location,
+    this.address,
     this.image,
     this.website,
     this.phone,
@@ -49,7 +49,7 @@ class MarketModel {
     data['_id'] = this.sId;
     data['place_id'] = this.placeId;
     data['name'] = this.name;
-    data['location'] = this.location.toJson();
+    data['location'] = this.location?.toJson();
     data['address'] = this.address;
     data['image'] = this.image;
     data['website'] = this.website;
