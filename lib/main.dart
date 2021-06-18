@@ -6,7 +6,6 @@ import 'package:flutter/material.dart';
 import 'package:emptio/theme.dart';
 import 'package:emptio/views/splash/splash.view.dart';
 import 'package:get_it/get_it.dart';
-import 'package:hive/hive.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();

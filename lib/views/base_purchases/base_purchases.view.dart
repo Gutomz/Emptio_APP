@@ -9,7 +9,7 @@ class BasePurchasesView extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: MainAppBar(
-        title: "Listas de Compras",
+        title: "Listas",
         drawerContext: context,
         actions: [
           NotificationActionButton(),
