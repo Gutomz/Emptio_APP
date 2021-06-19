@@ -10,11 +10,9 @@ part 'product_search.store.g.dart';
 class ProductSearchStore = _ProductSearchStoreBase with _$ProductSearchStore;
 
 abstract class _ProductSearchStoreBase with Store {
-  final PurchaseDetailsStore _detailsStore =
-      GetIt.I<AppStore>().purchaseDetailsStore;
   int limit;
 
-  _ProductSearchStoreBase({this.limit = 10}) {
+  _ProductSearchStoreBase({String purchaseId = "", this.limit = 10}) {
     autorun((_) async {
       if (query.isNotEmpty) {
         print('search: $query');
@@ -23,7 +21,7 @@ abstract class _ProductSearchStoreBase with Store {
           search: query,
           limit: limit,
           skip: skip,
-          purchaseId: _detailsStore.purchase?.sId ?? "",
+          purchaseId: purchaseId,
         );
 
         await loadProducts(filter);

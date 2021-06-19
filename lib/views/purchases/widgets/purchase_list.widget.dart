@@ -59,10 +59,14 @@ class _PurchaseListState extends State<PurchaseList>
     return Future.value(response ?? false);
   }
 
-  Future<void> onPurchaseTap(BuildContext context, PurchaseModel purchase) async {
-    GetIt.I<AppStore>().purchaseDetailsStore.setPurchase(purchase);
+  Future<void> onPurchaseTap(
+      BuildContext context, PurchaseModel purchase) async {
     await Navigator.of(context).push(
-      MaterialPageRoute(builder: (context) => PurchaseDetailsView()),
+      MaterialPageRoute(
+        builder: (context) => PurchaseDetailsView(
+          purchase: purchase,
+        ),
+      ),
     );
 
     GetIt.I<AppStore>().dismissPurchaseDetails();

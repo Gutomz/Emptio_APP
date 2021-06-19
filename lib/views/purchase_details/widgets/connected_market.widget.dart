@@ -1,22 +1,21 @@
 import 'package:emptio/core/app_colors.dart';
 import 'package:emptio/models/purchase.model.dart';
-import 'package:emptio/stores/app.store.dart';
 import 'package:emptio/views/purchase_details/store/purchase_details.store.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
-import 'package:get_it/get_it.dart';
 
 class ConnectedMarketIndicator extends StatelessWidget {
-  final PurchaseDetailsStore _purchaseDetailsStore =
-      GetIt.I<AppStore>().purchaseDetailsStore;
+  final PurchaseDetailsStore detailsStore;
 
-  ConnectedMarketIndicator({Key? key}) : super(key: key);
+  ConnectedMarketIndicator({
+    required this.detailsStore,
+    Key? key,
+  }) : super(key: key);
 
   bool hasImage() {
-    PurchaseModel? purchase = _purchaseDetailsStore.purchase;
+    PurchaseModel? purchase = detailsStore.purchase;
 
-    return purchase != null &&
-        purchase.market != null &&
+    return purchase.market != null &&
         purchase.market!.image != null &&
         purchase.market!.image!.isNotEmpty;
   }
@@ -24,7 +23,7 @@ class ConnectedMarketIndicator extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Observer(builder: (context) {
-      if (_purchaseDetailsStore.isMarketConnected) {
+      if (detailsStore.isMarketConnected) {
         return Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
@@ -38,7 +37,8 @@ class ConnectedMarketIndicator extends StatelessWidget {
                         ? DecorationImage(
                             fit: BoxFit.cover,
                             image: NetworkImage(
-                                _purchaseDetailsStore.purchase!.market!.image!),
+                              detailsStore.purchase.market!.image!,
+                            ),
                           )
                         : null,
                     borderRadius: BorderRadius.circular(20),
@@ -54,7 +54,7 @@ class ConnectedMarketIndicator extends StatelessWidget {
                 ),
                 SizedBox(width: 20),
                 Text(
-                  _purchaseDetailsStore.purchase!.market!.name,
+                  detailsStore.purchase.market!.name,
                   style: TextStyle(
                     color: AppColors.orange,
                   ),
@@ -88,7 +88,6 @@ class ConnectedMarketIndicator extends StatelessWidget {
       return Container(
         width: double.infinity,
         padding: EdgeInsets.only(right: 15),
-        
         child: OutlinedButton(
           onPressed: () {},
           child: Text("Conectar Mercado"),

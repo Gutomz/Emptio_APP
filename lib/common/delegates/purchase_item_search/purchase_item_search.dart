@@ -2,20 +2,22 @@ import 'package:emptio/common/widgets/market_indicator.widget.dart';
 import 'package:emptio/common/widgets/product_tile.widget.dart';
 import 'package:emptio/core/app_colors.dart';
 import 'package:emptio/models/product.model.dart';
-import 'package:emptio/stores/app.store.dart';
 import 'package:emptio/stores/product_search.store.dart';
 import 'package:emptio/view-models/add_purchase_item.view-model.dart';
 import 'package:emptio/views/purchase_details/store/purchase_details.store.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
-import 'package:get_it/get_it.dart';
 
 class ProductSearch extends SearchDelegate<ProductModel?> {
-  final ProductSearchStore _store = ProductSearchStore();
-  final PurchaseDetailsStore _detailsStore =
-      GetIt.I<AppStore>().purchaseDetailsStore;
+  late ProductSearchStore _store;
+  final PurchaseDetailsStore detailsStore;
 
-  ProductSearch() : super(keyboardType: TextInputType.name);
+  ProductSearch({required this.detailsStore}) {
+    _store = ProductSearchStore(
+      purchaseId: this.detailsStore.purchase.sId,
+      limit: 10,
+    );
+  }
 
   @override
   String? get searchFieldLabel => "Pesquisar produto";
@@ -70,11 +72,11 @@ class ProductSearch extends SearchDelegate<ProductModel?> {
 
   @override
   PreferredSizeWidget? buildBottom(BuildContext context) {
-    if (_detailsStore.isMarketConnected) {
+    if (detailsStore.isMarketConnected) {
       return PreferredSize(
         child: Padding(
           padding: const EdgeInsets.only(left: 15, bottom: 15),
-          child: MarketIndicator(market: _detailsStore.purchase!.market!),
+          child: MarketIndicator(market: detailsStore.purchase.market!),
         ),
         preferredSize: Size.fromHeight(75),
       );
@@ -196,12 +198,12 @@ class ProductSearch extends SearchDelegate<ProductModel?> {
   }
 
   void onQuickSelect(ProductModel product) {
-    _detailsStore.addItem(AddPurchaseItemViewModel(
+    detailsStore.addItem(AddPurchaseItemViewModel(
       price: product.marketPrice ?? 0,
       quantity: 1,
       productId: product.sId,
     ));
-    
+
     _store.removeProduct(product.sId!);
   }
 }

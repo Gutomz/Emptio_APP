@@ -16,17 +16,24 @@ mixin _$PurchaseDetailsStore on _PurchaseDetailsStoreBase, Store {
           () => super.isMarketConnected,
           name: '_PurchaseDetailsStoreBase.isMarketConnected'))
       .value;
+  Computed<int>? _$itemsCountComputed;
+
+  @override
+  int get itemsCount =>
+      (_$itemsCountComputed ??= Computed<int>(() => super.itemsCount,
+              name: '_PurchaseDetailsStoreBase.itemsCount'))
+          .value;
 
   final _$purchaseAtom = Atom(name: '_PurchaseDetailsStoreBase.purchase');
 
   @override
-  PurchaseModel? get purchase {
+  PurchaseModel get purchase {
     _$purchaseAtom.reportRead();
     return super.purchase;
   }
 
   @override
-  set purchase(PurchaseModel? value) {
+  set purchase(PurchaseModel value) {
     _$purchaseAtom.reportWrite(value, super.purchase, () {
       super.purchase = value;
     });
@@ -84,23 +91,13 @@ mixin _$PurchaseDetailsStore on _PurchaseDetailsStoreBase, Store {
   }
 
   @override
-  void clear() {
-    final _$actionInfo = _$_PurchaseDetailsStoreBaseActionController
-        .startAction(name: '_PurchaseDetailsStoreBase.clear');
-    try {
-      return super.clear();
-    } finally {
-      _$_PurchaseDetailsStoreBaseActionController.endAction(_$actionInfo);
-    }
-  }
-
-  @override
   String toString() {
     return '''
 purchase: ${purchase},
 loading: ${loading},
 error: ${error},
-isMarketConnected: ${isMarketConnected}
+isMarketConnected: ${isMarketConnected},
+itemsCount: ${itemsCount}
     ''';
   }
 }
