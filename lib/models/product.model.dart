@@ -11,6 +11,11 @@ class ProductModel {
   late String updatedAt;
   late String createdAt;
 
+  double? marketPrice;
+  String? marketPriceUpdatedAt;
+  String? marketPriceUpdatedBy;
+
+
   ProductModel({
     this.sId,
     required this.name,
@@ -20,6 +25,9 @@ class ProductModel {
     required this.tags,
     required this.updatedAt,
     required this.createdAt,
+    this.marketPrice,
+    this.marketPriceUpdatedAt,
+    this.marketPriceUpdatedBy,
   });
 
   ProductModel.fromJson(Map<String, dynamic> json) {
@@ -33,6 +41,11 @@ class ProductModel {
     tags = json['tags'].cast<String>();
     updatedAt = json['updatedAt'];
     createdAt = json['createdAt'];
+    if(json['productMarket'] != null) {
+      marketPrice = json['productMarket']['price']?.toDouble();
+      marketPriceUpdatedAt = json['productMarket']['updatedAt'];
+      marketPriceUpdatedBy = json['productMarket']['updatedBy']['name'];
+    }
   }
 
   Map<String, dynamic> toJson() {

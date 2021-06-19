@@ -3,6 +3,7 @@ import 'package:emptio/core/app_api.dart';
 import 'package:emptio/data/dao/purchase/purchase.dao.dart';
 import 'package:emptio/models/purchase.model.dart';
 import 'package:emptio/stores/auth.store.dart';
+import 'package:emptio/view-models/add_purchase_item.view-model.dart';
 import 'package:emptio/view-models/purchase_filter.view-model.dart';
 import 'package:get_it/get_it.dart';
 
@@ -17,7 +18,7 @@ class PurchaseRepository {
         dynamic data = await _api.post("/purchases");
         return PurchaseModel.fromJson(data);
       }
-      
+
       return await _dao.create();
     } catch (error) {
       print(error);
@@ -51,6 +52,33 @@ class PurchaseRepository {
       }
 
       return _dao.delete(int.parse(purchaseId));
+    } catch (error) {
+      print(error);
+      return Future.error(AppApiErrors.handleError(error));
+    }
+  }
+
+  Future<PurchaseModel> addItem(
+      String purchaseId, AddPurchaseItemViewModel model) async {
+    try {
+      if (_authStore.isLogged) {
+        return await _api.post("/purchases/$purchaseId", body: model.toJson());
+      }
+
+      return _dao.addItem(int.parse(purchaseId), model);
+    } catch (error) {
+      print(error);
+      return Future.error(AppApiErrors.handleError(error));
+    }
+  }
+
+  Future<PurchaseModel> removeItem(String purchaseId, String itemId) async {
+    try {
+      if (_authStore.isLogged) {
+        return await _api.delete("/purchases/$purchaseId/$itemId");
+      }
+
+      return _dao.removeItem(int.parse(purchaseId), int.parse(itemId));
     } catch (error) {
       print(error);
       return Future.error(AppApiErrors.handleError(error));

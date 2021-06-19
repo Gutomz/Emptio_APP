@@ -1,19 +1,22 @@
 import 'package:emptio/data/dao/market/market.dao.dart';
 import 'package:emptio/data/dao/product/product.dao.dart';
 import 'package:emptio/data/database.dart';
+import 'package:emptio/data/database_errors.dart';
+import 'package:emptio/data/models/product/product.dart';
 import 'package:emptio/data/models/purchase/purchase.dart';
 import 'package:emptio/data/models/purchase_item/purchase_item.dart';
 import 'package:emptio/models/market.model.dart';
 import 'package:emptio/models/product.model.dart';
 import 'package:emptio/models/purchase.model.dart';
 import 'package:emptio/models/purchase_item.model.dart';
+import 'package:emptio/view-models/add_purchase_item.view-model.dart';
 import 'package:emptio/view-models/purchase_filter.view-model.dart';
 import 'package:hive/hive.dart';
 
 class PurchaseDao {
   Box<Purchase>? _mBox;
 
-  Future<void> openBox() async {
+  Future<void> _openBox() async {
     if (_mBox == null) {
       _mBox = await Hive.openBox<Purchase>(Database.purchaseBoxName);
     }
@@ -21,27 +24,28 @@ class PurchaseDao {
 
   Future<List<PurchaseModel>> getPurchases(
       PurchasesFilterViewModel filter) async {
-    await openBox();
+    await _openBox();
     List<PurchaseModel> models = List.empty(growable: true);
 
-    List<Purchase> purchases = (_mBox!.values.toList()
-          ..sort((a, b) {
-            if (filter.orderBy != null &&
-                filter.orderBy!.contains('updatedAt')) {
-              if (filter.isDesc) {
-                return b.updatedAt.compareTo(a.updatedAt);
-              }
-              return a.updatedAt.compareTo(b.updatedAt);
-            }
+    List<Purchase> purchases = (_mBox!.values
+            .where((element) => element.status
+                .contains(filter.status ?? PurchaseStatusTypes.OPEN))
+            .toList()
+              ..sort((a, b) {
+                if (filter.orderBy != null &&
+                    filter.orderBy!.contains('updatedAt')) {
+                  if (filter.isDesc) {
+                    return b.updatedAt.compareTo(a.updatedAt);
+                  }
+                  return a.updatedAt.compareTo(b.updatedAt);
+                }
 
-            if (filter.isDesc) {
-              return b.createdAt.compareTo(a.createdAt);
-            }
+                if (filter.isDesc) {
+                  return b.createdAt.compareTo(a.createdAt);
+                }
 
-            return a.createdAt.compareTo(b.createdAt);
-          }))
-        .where((element) =>
-            element.status.contains(filter.status ?? PurchaseStatusTypes.OPEN))
+                return a.createdAt.compareTo(b.createdAt);
+              }))
         .skip(filter.skip)
         .take(filter.limit)
         .toList();
@@ -55,14 +59,14 @@ class PurchaseDao {
   }
 
   Future<PurchaseModel> create() async {
-    await openBox();
+    await _openBox();
 
     final createdAt = DateTime.now().toIso8601String();
     int key = await _mBox!.add(Purchase(
       status: PurchaseStatusTypes.OPEN,
       limit: 0,
       marketKey: null,
-      items: [],
+      items: List.empty(growable: true),
       createdAt: createdAt,
       updatedAt: createdAt,
     ));
@@ -73,9 +77,54 @@ class PurchaseDao {
   }
 
   Future<void> delete(int key) async {
-    await openBox();
+    await _openBox();
 
     return await _mBox!.delete(key);
+  }
+
+  Future<PurchaseModel> addItem(int key, AddPurchaseItemViewModel model) async {
+    await _openBox();
+    Box<Product> productBox = await ProductDao().instance;
+
+    Purchase? purchase = _mBox!.get(key);
+
+    if (purchase == null)
+      throw DatabaseError.notFoundError('purchase_not_found');
+
+    Product? product;
+    if (model.productId != null) {
+      product = productBox.get(int.parse(model.productId!));
+    } else {
+      var productKey = (await ProductDao().create(model.productModel!)).sId!;
+      product = productBox.get(int.parse(productKey));
+    }
+
+    if (product == null) throw DatabaseError.notFoundError('product_not_found');
+
+    purchase.items.add(PurchaseItem(
+      productKey: product.key,
+      price: model.price,
+      quantity: model.quantity,
+    ));
+
+    await purchase.save();
+
+    return parseToPurchaseModel(purchase);
+  }
+
+  Future<PurchaseModel> removeItem(int key, int itemKey) async {
+    await _openBox();
+
+    Purchase? purchase = _mBox!.get(key);
+
+    if (purchase == null)
+      throw DatabaseError.notFoundError('purchase_not_found');
+
+    purchase.items.removeWhere((element) => element.key == itemKey);
+
+    await purchase.save();
+
+    return parseToPurchaseModel(purchase);
   }
 
   Future<PurchaseModel> parseToPurchaseModel(Purchase purchase) async {

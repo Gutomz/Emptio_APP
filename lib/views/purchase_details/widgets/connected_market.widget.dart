@@ -87,6 +87,8 @@ class ConnectedMarketIndicator extends StatelessWidget {
 
       return Container(
         width: double.infinity,
+        padding: EdgeInsets.only(right: 15),
+        
         child: OutlinedButton(
           onPressed: () {},
           child: Text("Conectar Mercado"),

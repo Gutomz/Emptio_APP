@@ -32,6 +32,43 @@ mixin _$PurchaseDetailsStore on _PurchaseDetailsStoreBase, Store {
     });
   }
 
+  final _$loadingAtom = Atom(name: '_PurchaseDetailsStoreBase.loading');
+
+  @override
+  bool get loading {
+    _$loadingAtom.reportRead();
+    return super.loading;
+  }
+
+  @override
+  set loading(bool value) {
+    _$loadingAtom.reportWrite(value, super.loading, () {
+      super.loading = value;
+    });
+  }
+
+  final _$errorAtom = Atom(name: '_PurchaseDetailsStoreBase.error');
+
+  @override
+  String get error {
+    _$errorAtom.reportRead();
+    return super.error;
+  }
+
+  @override
+  set error(String value) {
+    _$errorAtom.reportWrite(value, super.error, () {
+      super.error = value;
+    });
+  }
+
+  final _$addItemAsyncAction = AsyncAction('_PurchaseDetailsStoreBase.addItem');
+
+  @override
+  Future<void> addItem(AddPurchaseItemViewModel model) {
+    return _$addItemAsyncAction.run(() => super.addItem(model));
+  }
+
   final _$_PurchaseDetailsStoreBaseActionController =
       ActionController(name: '_PurchaseDetailsStoreBase');
 
@@ -61,6 +98,8 @@ mixin _$PurchaseDetailsStore on _PurchaseDetailsStoreBase, Store {
   String toString() {
     return '''
 purchase: ${purchase},
+loading: ${loading},
+error: ${error},
 isMarketConnected: ${isMarketConnected}
     ''';
   }

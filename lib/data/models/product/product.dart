@@ -27,6 +27,12 @@ class Product extends HiveObject {
   @HiveField(6)
   String updatedAt;
 
+  @HiveField(7)
+  double? marketPrice;
+
+  @HiveField(8)
+  String? marketPriceUpdatedAt;
+
   Product({
     required this.name,
     required this.variation,
@@ -35,5 +41,7 @@ class Product extends HiveObject {
     required this.tags,
     required this.createdAt,
     required this.updatedAt,
+    this.marketPrice,
+    this.marketPriceUpdatedAt,
   });
 }

@@ -62,12 +62,13 @@ class PurchaseTile extends StatelessWidget {
       child: Container(
         padding: EdgeInsets.symmetric(horizontal: 10, vertical: 10),
         decoration: BoxDecoration(
-            border: Border(
-          bottom: BorderSide(
-            color: AppColors.lightGrey,
-            width: 1,
+          border: Border(
+            bottom: BorderSide(
+              color: AppColors.lightGrey,
+              width: 1,
+            ),
           ),
-        )),
+        ),
         child: Row(
           children: [
             Container(

@@ -1,3 +1,5 @@
+import 'package:intl/intl.dart';
+
 class MeasurementTypes {
   static const String Kg = 'Kg';
   static const String g = 'g';
@@ -28,5 +30,9 @@ class MeasurementModel {
     data['value'] = this.value;
     data['unit'] = this.unit;
     return data;
+  }
+
+  String toString() {
+    return "${NumberFormat.decimalPattern('pt-Br').format(value)}$unit";
   }
 }

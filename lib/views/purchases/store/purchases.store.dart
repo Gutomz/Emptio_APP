@@ -72,6 +72,10 @@ abstract class _PurchasesStoreBase with Store {
 
       if (list.length < filter.limit) limitReached = true;
 
+      if (filter.skip == 0) {
+        purchaseList.clear();
+      }
+
       purchaseList.addAll(list);
       setError("");
     } on String catch (_error) {

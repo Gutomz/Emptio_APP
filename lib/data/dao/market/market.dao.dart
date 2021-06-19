@@ -8,14 +8,14 @@ import 'package:hive/hive.dart';
 class MarketDao {
   Box<Market>? _mBox;
 
-  Future<void> openBox() async {
+  Future<void> _openBox() async {
     if (_mBox == null) {
       _mBox = await Hive.openBox<Market>(Database.marketBoxName);
     }
   }
 
   Future<MarketModel> get(int key) async {
-    await openBox();
+    await _openBox();
 
     Market? market = _mBox!.get(key);
 

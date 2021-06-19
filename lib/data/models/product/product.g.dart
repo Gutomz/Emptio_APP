@@ -24,13 +24,15 @@ class ProductAdapter extends TypeAdapter<Product> {
       tags: (fields[4] as List).cast<String>(),
       createdAt: fields[5] as String,
       updatedAt: fields[6] as String,
+      marketPrice: fields[7] as double?,
+      marketPriceUpdatedAt: fields[8] as String?,
     );
   }
 
   @override
   void write(BinaryWriter writer, Product obj) {
     writer
-      ..writeByte(7)
+      ..writeByte(9)
       ..writeByte(0)
       ..write(obj.name)
       ..writeByte(1)
@@ -44,7 +46,11 @@ class ProductAdapter extends TypeAdapter<Product> {
       ..writeByte(5)
       ..write(obj.createdAt)
       ..writeByte(6)
-      ..write(obj.updatedAt);
+      ..write(obj.updatedAt)
+      ..writeByte(7)
+      ..write(obj.marketPrice)
+      ..writeByte(8)
+      ..write(obj.marketPriceUpdatedAt);
   }
 
   @override

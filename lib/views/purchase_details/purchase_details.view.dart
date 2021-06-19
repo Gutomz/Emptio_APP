@@ -1,8 +1,6 @@
-import 'package:emptio/stores/app.store.dart';
-import 'package:emptio/views/purchase_details/store/purchase_details.store.dart';
+import 'package:emptio/common/delegates/purchase_item_search/purchase_item_search.dart';
 import 'package:emptio/views/purchase_details/widgets/connected_market.widget.dart';
 import 'package:flutter/material.dart';
-import 'package:get_it/get_it.dart';
 
 class PurchaseDetailsView extends StatefulWidget {
   PurchaseDetailsView({Key? key}) : super(key: key);
@@ -12,24 +10,23 @@ class PurchaseDetailsView extends StatefulWidget {
 }
 
 class _PurchaseDetailsViewState extends State<PurchaseDetailsView> {
-  final PurchaseDetailsStore _purchaseDetailsStore =
-      GetIt.I<AppStore>().purchaseDetailsStore;
 
-  @override
-  void dispose() {
-    _purchaseDetailsStore.clear();
-    super.dispose();
-  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        leading: IconButton(
+          icon: Icon(Icons.arrow_back),
+          onPressed: () {
+            Navigator.of(context).pop();
+          },
+        ),
         title: Text("Detalhes"),
         actions: [
           IconButton(
             onPressed: () {},
-            icon: Icon(Icons.filter_alt_outlined),
+            icon: Icon(Icons.filter_list_rounded),
             tooltip: "Alterar Filtro",
           ),
           IconButton(
@@ -40,7 +37,10 @@ class _PurchaseDetailsViewState extends State<PurchaseDetailsView> {
         ],
         bottom: PreferredSize(
           child: Padding(
-            padding: const EdgeInsets.only(left: 15, bottom: 10),
+            padding: const EdgeInsets.only(
+              left: 15,
+              bottom: 10,
+            ),
             child: ConnectedMarketIndicator(),
           ),
           preferredSize: Size.fromHeight(70),
@@ -48,7 +48,12 @@ class _PurchaseDetailsViewState extends State<PurchaseDetailsView> {
       ),
       body: Container(),
       floatingActionButton: FloatingActionButton(
-        onPressed: (){},
+        onPressed: () {
+          showSearch(
+            context: context,
+            delegate: ProductSearch(),
+          );
+        },
         child: Icon(Icons.add),
         foregroundColor: Colors.white,
       ),
