@@ -7,6 +7,7 @@ import 'package:emptio/view-models/product_filter.view-model.dart';
 import 'package:get_it/get_it.dart';
 
 class ProductRepository {
+  static const String TAG = "ProductRepository";
   final AppApi _api = AppApi();
   final ProductDao _productDao = ProductDao();
   final AuthStore _authStore = GetIt.I<AuthStore>();
@@ -25,7 +26,8 @@ class ProductRepository {
 
       return await _productDao.getAll(filter);
     } catch (error) {
-      print(error);
+      print('$TAG.get: $error');
+
       return Future.error(AppApiErrors.handleError(error));
     }
   }

@@ -9,6 +9,7 @@ import 'package:emptio/view-models/update_purchase_item.view-model.dart';
 import 'package:get_it/get_it.dart';
 
 class PurchaseRepository {
+  static const String TAG = "PurchaseRepository";
   final AppApi _api = AppApi();
   final PurchaseDao _dao = PurchaseDao();
   final AuthStore _authStore = GetIt.I<AuthStore>();
@@ -22,7 +23,8 @@ class PurchaseRepository {
 
       return await _dao.create();
     } catch (error) {
-      print(error);
+      print('$TAG.create: $error');
+
       return Future.error(AppApiErrors.handleError(error));
     }
   }
@@ -41,7 +43,8 @@ class PurchaseRepository {
 
       return _dao.getPurchases(filter);
     } catch (error) {
-      print(error);
+      print('$TAG.get: $error');
+
       return Future.error(AppApiErrors.handleError(error));
     }
   }
@@ -54,7 +57,8 @@ class PurchaseRepository {
 
       return _dao.delete(int.parse(purchaseId));
     } catch (error) {
-      print(error);
+      print('$TAG.delete: $error');
+
       return Future.error(AppApiErrors.handleError(error));
     }
   }
@@ -71,13 +75,14 @@ class PurchaseRepository {
 
       return await _dao.addItem(int.parse(purchaseId), model);
     } catch (error) {
-      print(error);
+      print('$TAG.addItem: $error');
+
       return Future.error(AppApiErrors.handleError(error));
     }
   }
 
-  Future<PurchaseModel> updateItem(
-      String purchaseId, String itemId, UpdatePurchaseItemViewModel model) async {
+  Future<PurchaseModel> updateItem(String purchaseId, String itemId,
+      UpdatePurchaseItemViewModel model) async {
     try {
       if (_authStore.isLogged) {
         var data =
@@ -86,9 +91,11 @@ class PurchaseRepository {
         return PurchaseModel.fromJson(data);
       }
 
-      return await _dao.updateItem(int.parse(purchaseId), int.parse(itemId), model);
+      return await _dao.updateItem(
+          int.parse(purchaseId), int.parse(itemId), model);
     } catch (error) {
-      print(error);
+      print('$TAG.updateItem: $error');
+
       return Future.error(AppApiErrors.handleError(error));
     }
   }
@@ -101,7 +108,8 @@ class PurchaseRepository {
 
       return _dao.removeItem(int.parse(purchaseId), int.parse(itemId));
     } catch (error) {
-      print(error);
+      print('$TAG.removeItem: $error');
+
       return Future.error(AppApiErrors.handleError(error));
     }
   }

@@ -8,6 +8,7 @@ import 'package:emptio/view-models/redefine_password.view-model.dart';
 import 'package:emptio/view-models/register.view-model.dart';
 
 class UserRepository {
+  static const String TAG = "UserRepository";
   final AppApi _api = AppApi();
 
   Future<AuthModel> register(RegisterViewModel model) async {
@@ -15,6 +16,7 @@ class UserRepository {
       dynamic data = await _api.post('/users', body: model.toJson());
       return AuthModel.fromJson(data);
     } catch (error) {
+      print('$TAG.register: $error');
       if (AppApiErrors.isError(error)) {
         String code = AppApiErrors.getCode(error);
 
@@ -34,6 +36,8 @@ class UserRepository {
       dynamic data = await _api.post('/auth', body: model.toJson());
       return AuthModel.fromJson(data);
     } catch (error) {
+      print('$TAG.login: $error');
+
       if (AppApiErrors.isError(error)) {
         String code = AppApiErrors.getCode(error);
 
@@ -51,6 +55,8 @@ class UserRepository {
     try {
       await _api.delete('/auth');
     } catch (error) {
+      print('$TAG.logout: $error');
+
       return Future.error(AppApiErrors.handleError(error));
     }
   }
@@ -59,6 +65,8 @@ class UserRepository {
     try {
       await _api.post('/users/forgot-password', body: {"email": email});
     } catch (error) {
+      print('$TAG.forgotPassword: $error');
+
       if (AppApiErrors.isError(error)) {
         String code = AppApiErrors.getCode(error);
 
@@ -78,6 +86,8 @@ class UserRepository {
           await _api.post('/users/redefine-password', body: model.toJson());
       return AuthModel.fromJson(data);
     } catch (error) {
+      print('$TAG.redefinePassword: $error');
+
       if (AppApiErrors.isError(error)) {
         String code = AppApiErrors.getCode(error);
 
@@ -96,6 +106,8 @@ class UserRepository {
       dynamic data = await _api.get("/users/me");
       return UserModel.fromJson(data);
     } catch (error) {
+      print('$TAG.getMe: $error');
+
       return Future.error(AppApiErrors.handleError(error));
     }
   }
