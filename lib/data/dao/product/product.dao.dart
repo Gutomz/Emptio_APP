@@ -45,8 +45,8 @@ class ProductDao {
     await _openBox();
     List<ProductModel> models = List.empty(growable: true);
 
-    String marketId = "";
-    List<int> excludeIds = List.empty(growable: true);
+    // String marketId = "";
+    // List<int> excludeIds = List.empty(growable: true);
     if (filter.purchaseId.isNotEmpty) {
       // TODO - get market_id and exclude products from purchase
     }

@@ -1,9 +1,6 @@
 import 'package:emptio/models/product.model.dart';
 import 'package:emptio/repositories/product.repository.dart';
-import 'package:emptio/stores/app.store.dart';
 import 'package:emptio/view-models/product_filter.view-model.dart';
-import 'package:emptio/views/purchase_details/store/purchase_details.store.dart';
-import 'package:get_it/get_it.dart';
 import 'package:mobx/mobx.dart';
 part 'product_search.store.g.dart';
 

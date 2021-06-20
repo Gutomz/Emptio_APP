@@ -1,3 +1,5 @@
+import 'package:emptio/common/widgets/dismissible_background.widget.dart';
+import 'package:emptio/common/widgets/dismissible_confirm_dialog.widget.dart';
 import 'package:emptio/common/widgets/empty_placeholder.widget.dart';
 import 'package:emptio/core/app_assets.dart';
 import 'package:emptio/core/app_colors.dart';
@@ -34,26 +36,11 @@ class _PurchaseListState extends State<PurchaseList>
     bool? response = await showDialog(
         context: context,
         builder: (context) {
-          return AlertDialog(
-            title: Text("Excluir Compra!"),
-            content: Text("Tem certeza que deseja excluir essa compra?"),
-            actions: [
-              ElevatedButton(
-                onPressed: () => Navigator.of(context).pop(false),
-                child: Text("cancelar"),
-                style: ButtonStyle(
-                  elevation: MaterialStateProperty.all(0),
-                  backgroundColor: MaterialStateProperty.all(AppColors.grey),
-                ),
-              ),
-              ElevatedButton(
-                onPressed: () => Navigator.of(context).pop(true),
-                child: Text("sim"),
-                style: ButtonStyle(
-                  backgroundColor: MaterialStateProperty.all(AppColors.red),
-                ),
-              ),
-            ],
+          return ConfirmDismissDialog(
+            title: "Excluir Compra?",
+            content: "Tem certeza que deseja excluir essa compra?",
+            acceptText: "sim",
+            rejectText: "cancelar",
           );
         });
     return Future.value(response ?? false);
@@ -114,27 +101,10 @@ class _PurchaseListState extends State<PurchaseList>
                 return Dismissible(
                   key: Key(purchase.sId),
                   direction: DismissDirection.startToEnd,
-                  background: Container(
+                  background: DismissibleBackground(
+                    icon: Icons.delete,
+                    title: "Excluir",
                     color: AppColors.red,
-                    child: Align(
-                      alignment: Alignment(-0.85, 0),
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Icon(
-                            Icons.delete,
-                            color: Colors.white,
-                          ),
-                          Text(
-                            "Excluir",
-                            style: TextStyle(
-                              color: Colors.white,
-                              fontWeight: FontWeight.w600,
-                            ),
-                          )
-                        ],
-                      ),
-                    ),
                   ),
                   onDismissed: (_) => purchasesStore.deletePurchase(index),
                   confirmDismiss: confirmDismiss,

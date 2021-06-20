@@ -1,3 +1,4 @@
+import 'package:emptio/common/widgets/subtitle_item.widget.dart';
 import 'package:emptio/core/app_colors.dart';
 import 'package:emptio/models/product.model.dart';
 import 'package:flutter/material.dart';
@@ -19,10 +20,6 @@ class ProductTile extends StatelessWidget {
     }
 
     return "-";
-  }
-
-  String getProductName() {
-    return "${product.name}${product.variation.isNotEmpty ? " - ${product.variation}" : ""}";
   }
 
   String getPriceText() {
@@ -77,7 +74,7 @@ class ProductTile extends StatelessWidget {
                         children: [
                           Flexible(
                             child: Text(
-                              getProductName(),
+                              product.getCombinedName(),
                               style: TextStyle(
                                 color: AppColors.darkBlue,
                                 fontWeight: FontWeight.w600,
@@ -144,44 +141,6 @@ class ProductTile extends StatelessWidget {
           ],
         ),
       ),
-    );
-  }
-}
-
-class SubtitleItem extends StatelessWidget {
-  const SubtitleItem({
-    Key? key,
-    required this.icon,
-    this.text,
-  }) : super(key: key);
-
-  final IconData icon;
-  final String? text;
-
-  @override
-  Widget build(BuildContext context) {
-    return Row(
-      children: [
-        Icon(
-          icon,
-          color: AppColors.grey,
-          size: 12,
-        ),
-        SizedBox(width: 5),
-        Expanded(
-          child: Container(
-            child: Text(
-              text ?? "-",
-              maxLines: 1,
-              style: TextStyle(
-                fontSize: 12,
-                color: AppColors.grey,
-              ),
-              overflow: TextOverflow.ellipsis,
-            ),
-          ),
-        ),
-      ],
     );
   }
 }

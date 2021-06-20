@@ -1,5 +1,4 @@
 import 'package:emptio/models/purchase.model.dart';
-import 'package:emptio/views/purchase_details/store/purchase_details.store.dart';
 import 'package:emptio/views/purchases/store/purchases.store.dart';
 import 'package:mobx/mobx.dart';
 part 'app.store.g.dart';

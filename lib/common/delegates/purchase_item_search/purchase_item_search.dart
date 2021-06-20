@@ -1,3 +1,4 @@
+import 'package:emptio/common/widgets/dismissible_background.widget.dart';
 import 'package:emptio/common/widgets/market_indicator.widget.dart';
 import 'package:emptio/common/widgets/product_tile.widget.dart';
 import 'package:emptio/core/app_colors.dart';
@@ -143,27 +144,10 @@ class ProductSearch extends SearchDelegate<ProductModel?> {
               key: Key(product.sId!),
               direction: DismissDirection.startToEnd,
               onDismissed: (direction) => onQuickSelect(product),
-              background: Container(
+              background: DismissibleBackground(
+                icon: Icons.check_rounded,
+                title: "Adicionar",
                 color: AppColors.green,
-                child: Align(
-                  alignment: Alignment(-0.85, 0),
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Icon(
-                        Icons.check_rounded,
-                        color: Colors.white,
-                      ),
-                      Text(
-                        "Adicionar",
-                        style: TextStyle(
-                          color: Colors.white,
-                          fontWeight: FontWeight.w600,
-                        ),
-                      )
-                    ],
-                  ),
-                ),
               ),
               child: ProductTile(
                 product,

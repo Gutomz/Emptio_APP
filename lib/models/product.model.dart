@@ -15,7 +15,6 @@ class ProductModel {
   String? marketPriceUpdatedAt;
   String? marketPriceUpdatedBy;
 
-
   ProductModel({
     this.sId,
     required this.name,
@@ -41,7 +40,7 @@ class ProductModel {
     tags = json['tags'].cast<String>();
     updatedAt = json['updatedAt'];
     createdAt = json['createdAt'];
-    if(json['productMarket'] != null) {
+    if (json['productMarket'] != null) {
       marketPrice = json['productMarket']['price']?.toDouble();
       marketPriceUpdatedAt = json['productMarket']['updatedAt'];
       marketPriceUpdatedBy = json['productMarket']['updatedBy']['name'];
@@ -59,5 +58,9 @@ class ProductModel {
     data['updatedAt'] = this.updatedAt;
     data['createdAt'] = this.createdAt;
     return data;
+  }
+
+  String getCombinedName() {
+    return "$name${variation.isNotEmpty ? " - $variation" : ""}";
   }
 }

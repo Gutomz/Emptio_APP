@@ -5,6 +5,7 @@ import 'package:emptio/models/purchase.model.dart';
 import 'package:emptio/stores/auth.store.dart';
 import 'package:emptio/view-models/add_purchase_item.view-model.dart';
 import 'package:emptio/view-models/purchase_filter.view-model.dart';
+import 'package:emptio/view-models/update_purchase_item.view-model.dart';
 import 'package:get_it/get_it.dart';
 
 class PurchaseRepository {
@@ -62,10 +63,30 @@ class PurchaseRepository {
       String purchaseId, AddPurchaseItemViewModel model) async {
     try {
       if (_authStore.isLogged) {
-        return await _api.post("/purchases/$purchaseId", body: model.toJson());
+        var data =
+            await _api.post("/purchases/$purchaseId", body: model.toJson());
+
+        return PurchaseModel.fromJson(data);
       }
 
-      return _dao.addItem(int.parse(purchaseId), model);
+      return await _dao.addItem(int.parse(purchaseId), model);
+    } catch (error) {
+      print(error);
+      return Future.error(AppApiErrors.handleError(error));
+    }
+  }
+
+  Future<PurchaseModel> updateItem(
+      String purchaseId, String itemId, UpdatePurchaseItemViewModel model) async {
+    try {
+      if (_authStore.isLogged) {
+        var data =
+            await _api.put("/purchases/$purchaseId/$itemId", model.toJson());
+
+        return PurchaseModel.fromJson(data);
+      }
+
+      return await _dao.updateItem(int.parse(purchaseId), int.parse(itemId), model);
     } catch (error) {
       print(error);
       return Future.error(AppApiErrors.handleError(error));

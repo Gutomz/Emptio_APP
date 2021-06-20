@@ -1,4 +1,3 @@
-import 'package:emptio/models/product.model.dart';
 import 'package:emptio/view-models/product_create.view-model.dart';
 
 class AddPurchaseItemViewModel {

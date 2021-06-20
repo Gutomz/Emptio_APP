@@ -84,13 +84,14 @@ abstract class _PurchasesStoreBase with Store {
   }
 
   @action
-  Future<void> createPurchase() async {
+  Future<PurchaseModel?> createPurchase() async {
     loading = true;
     error = "";
 
     try {
       PurchaseModel model = await PurchaseRepository().create();
       purchaseList.insert(0, model);
+      return model;
     } on String catch (_error) {
       error = _error;
     }

@@ -1,5 +1,4 @@
 import 'package:emptio/data/database.dart';
-import 'package:emptio/data/models/product/product.dart';
 import 'package:hive/hive.dart';
 
 part 'purchase_item.g.dart';

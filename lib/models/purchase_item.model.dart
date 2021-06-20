@@ -1,14 +1,14 @@
 import 'package:emptio/models/product.model.dart';
 
 class PurchaseItemModel {
-  String? sId;
+  late String sId;
   late ProductModel product;
   late double price;
   late int quantity;
   late bool checked;
 
   PurchaseItemModel({
-    this.sId,
+    required this.sId,
     required this.product,
     required this.price,
     required this.quantity,

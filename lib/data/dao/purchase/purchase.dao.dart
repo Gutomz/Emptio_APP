@@ -11,6 +11,7 @@ import 'package:emptio/models/purchase.model.dart';
 import 'package:emptio/models/purchase_item.model.dart';
 import 'package:emptio/view-models/add_purchase_item.view-model.dart';
 import 'package:emptio/view-models/purchase_filter.view-model.dart';
+import 'package:emptio/view-models/update_purchase_item.view-model.dart';
 import 'package:hive/hive.dart';
 
 class PurchaseDao {
@@ -106,6 +107,27 @@ class PurchaseDao {
       price: model.price,
       quantity: model.quantity,
     ));
+
+    await purchase.save();
+
+    return parseToPurchaseModel(purchase);
+  }
+
+  Future<PurchaseModel> updateItem(
+      int key, int itemKey, UpdatePurchaseItemViewModel model) async {
+    await _openBox();
+
+    Purchase? purchase = _mBox!.get(key);
+
+    if (purchase == null)
+      throw DatabaseError.notFoundError('purchase_not_found');
+
+    PurchaseItem item =
+        purchase.items.firstWhere((element) => element.key == itemKey);
+
+    item.price = model.price;
+    item.quantity = model.quantity;
+    item.checked = model.checked;
 
     await purchase.save();
 

@@ -111,7 +111,7 @@ mixin _$PurchasesStore on _PurchasesStoreBase, Store {
       AsyncAction('_PurchasesStoreBase.createPurchase');
 
   @override
-  Future<void> createPurchase() {
+  Future<PurchaseModel?> createPurchase() {
     return _$createPurchaseAsyncAction.run(() => super.createPurchase());
   }
 

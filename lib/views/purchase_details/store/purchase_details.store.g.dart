@@ -16,6 +16,13 @@ mixin _$PurchaseDetailsStore on _PurchaseDetailsStoreBase, Store {
           () => super.isMarketConnected,
           name: '_PurchaseDetailsStoreBase.isMarketConnected'))
       .value;
+  Computed<List<PurchaseItemModel>>? _$filtredItemsComputed;
+
+  @override
+  List<PurchaseItemModel> get filtredItems => (_$filtredItemsComputed ??=
+          Computed<List<PurchaseItemModel>>(() => super.filtredItems,
+              name: '_PurchaseDetailsStoreBase.filtredItems'))
+      .value;
   Computed<int>? _$itemsCountComputed;
 
   @override
@@ -23,21 +30,6 @@ mixin _$PurchaseDetailsStore on _PurchaseDetailsStoreBase, Store {
       (_$itemsCountComputed ??= Computed<int>(() => super.itemsCount,
               name: '_PurchaseDetailsStoreBase.itemsCount'))
           .value;
-
-  final _$purchaseAtom = Atom(name: '_PurchaseDetailsStoreBase.purchase');
-
-  @override
-  PurchaseModel get purchase {
-    _$purchaseAtom.reportRead();
-    return super.purchase;
-  }
-
-  @override
-  set purchase(PurchaseModel value) {
-    _$purchaseAtom.reportWrite(value, super.purchase, () {
-      super.purchase = value;
-    });
-  }
 
   final _$loadingAtom = Atom(name: '_PurchaseDetailsStoreBase.loading');
 
@@ -69,11 +61,44 @@ mixin _$PurchaseDetailsStore on _PurchaseDetailsStoreBase, Store {
     });
   }
 
+  final _$showCheckedAtom = Atom(name: '_PurchaseDetailsStoreBase.showChecked');
+
+  @override
+  bool get showChecked {
+    _$showCheckedAtom.reportRead();
+    return super.showChecked;
+  }
+
+  @override
+  set showChecked(bool value) {
+    _$showCheckedAtom.reportWrite(value, super.showChecked, () {
+      super.showChecked = value;
+    });
+  }
+
   final _$addItemAsyncAction = AsyncAction('_PurchaseDetailsStoreBase.addItem');
 
   @override
   Future<void> addItem(AddPurchaseItemViewModel model) {
     return _$addItemAsyncAction.run(() => super.addItem(model));
+  }
+
+  final _$updateItemAsyncAction =
+      AsyncAction('_PurchaseDetailsStoreBase.updateItem');
+
+  @override
+  Future<void> updateItem(String itemId, UpdatePurchaseItemViewModel model,
+      {bool shouldRefresh = false}) {
+    return _$updateItemAsyncAction.run(
+        () => super.updateItem(itemId, model, shouldRefresh: shouldRefresh));
+  }
+
+  final _$deleteItemAsyncAction =
+      AsyncAction('_PurchaseDetailsStoreBase.deleteItem');
+
+  @override
+  Future<void> deleteItem(String itemId) {
+    return _$deleteItemAsyncAction.run(() => super.deleteItem(itemId));
   }
 
   final _$_PurchaseDetailsStoreBaseActionController =
@@ -91,12 +116,35 @@ mixin _$PurchaseDetailsStore on _PurchaseDetailsStoreBase, Store {
   }
 
   @override
+  void changeFilter(bool _value) {
+    final _$actionInfo = _$_PurchaseDetailsStoreBaseActionController
+        .startAction(name: '_PurchaseDetailsStoreBase.changeFilter');
+    try {
+      return super.changeFilter(_value);
+    } finally {
+      _$_PurchaseDetailsStoreBaseActionController.endAction(_$actionInfo);
+    }
+  }
+
+  @override
+  void refreshItems() {
+    final _$actionInfo = _$_PurchaseDetailsStoreBaseActionController
+        .startAction(name: '_PurchaseDetailsStoreBase.refreshItems');
+    try {
+      return super.refreshItems();
+    } finally {
+      _$_PurchaseDetailsStoreBaseActionController.endAction(_$actionInfo);
+    }
+  }
+
+  @override
   String toString() {
     return '''
-purchase: ${purchase},
 loading: ${loading},
 error: ${error},
+showChecked: ${showChecked},
 isMarketConnected: ${isMarketConnected},
+filtredItems: ${filtredItems},
 itemsCount: ${itemsCount}
     ''';
   }

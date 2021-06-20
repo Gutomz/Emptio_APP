@@ -1,8 +1,11 @@
 import 'package:emptio/common/delegates/purchase_item_search/purchase_item_search.dart';
 import 'package:emptio/models/purchase.model.dart';
+import 'package:emptio/models/purchase_item.model.dart';
 import 'package:emptio/views/purchase_details/store/purchase_details.store.dart';
 import 'package:emptio/views/purchase_details/widgets/connected_market.widget.dart';
+import 'package:emptio/views/purchase_details/widgets/purchase_items_list.widget.dart';
 import 'package:flutter/material.dart';
+import 'package:mobx/mobx.dart';
 
 class PurchaseDetailsView extends StatefulWidget {
   final PurchaseModel purchase;
@@ -21,7 +24,44 @@ class _PurchaseDetailsViewState extends State<PurchaseDetailsView> {
   late PurchaseDetailsStore _store;
 
   _PurchaseDetailsViewState({required PurchaseModel purchase}) {
-    _store = PurchaseDetailsStore(purchase: purchase);
+    _store = PurchaseDetailsStore(
+      purchase: purchase,
+      items: ObservableList<PurchaseItemModel>()..addAll(purchase.items),
+    );
+  }
+
+  Future<void> selectFilter(BuildContext context) async {
+    bool? checked = await showModalBottomSheet(
+      context: context,
+      builder: (context) {
+        return SafeArea(
+          child: Container(
+            child: Wrap(
+              children: [
+                ListTile(
+                  leading: Icon(Icons.list_rounded),
+                  title: Text('Restantes'),
+                  onTap: () async {
+                    Navigator.of(context).pop(false);
+                  },
+                ),
+                ListTile(
+                  leading: Icon(Icons.checklist),
+                  title: Text('Concluidas'),
+                  onTap: () async {
+                    Navigator.of(context).pop(true);
+                  },
+                ),
+              ],
+            ),
+          ),
+        );
+      },
+    );
+
+    if(checked != null) {
+      _store.changeFilter(checked);
+    }
   }
 
   @override
@@ -37,7 +77,7 @@ class _PurchaseDetailsViewState extends State<PurchaseDetailsView> {
         title: Text("Detalhes"),
         actions: [
           IconButton(
-            onPressed: () {},
+            onPressed: () => selectFilter(context),
             icon: Icon(Icons.filter_list_rounded),
             tooltip: "Alterar Filtro",
           ),
@@ -60,13 +100,15 @@ class _PurchaseDetailsViewState extends State<PurchaseDetailsView> {
           preferredSize: Size.fromHeight(70),
         ),
       ),
-      body: Container(),
+      body: PurchaseItemsList(store: _store),
       floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          showSearch(
+        onPressed: () async {
+          await showSearch(
             context: context,
             delegate: ProductSearch(detailsStore: _store),
           );
+
+          _store.refreshItems();
         },
         child: Icon(Icons.add),
         foregroundColor: Colors.white,

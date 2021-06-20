@@ -8,7 +8,7 @@ import 'package:get_it/get_it.dart';
 import 'widgets/entry_header.widget.dart';
 
 class EntryView extends StatelessWidget {
-  AuthStore _authStore = GetIt.I<AuthStore>();
+  final AuthStore _authStore = GetIt.I<AuthStore>();
 
   @override
   Widget build(BuildContext context) {
