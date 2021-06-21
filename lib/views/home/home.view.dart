@@ -1,8 +1,10 @@
 import 'package:emptio/common/widgets/main_bottom_navigator.widget.dart';
 import 'package:emptio/common/widgets/main_drawer.widget.dart';
+import 'package:emptio/models/base_purchase.model.dart';
 import 'package:emptio/models/purchase.model.dart';
 import 'package:emptio/stores/app.store.dart';
 import 'package:emptio/views/base_purchases/base_purchases.view.dart';
+import 'package:emptio/views/base_purchases/store/base_purchases.store.dart';
 import 'package:emptio/views/favorites/favorites.view.dart';
 import 'package:emptio/views/feed/feed.view.dart';
 import 'package:emptio/views/home/store/home.store.dart';
@@ -97,14 +99,16 @@ class HomeView extends StatelessWidget {
           ),
         ),
       );
-
-      GetIt.I<AppStore>().dismissPurchaseDetails();
     }
   }
 
   Future<void> basePurchasesViewAction(BuildContext context) async {
-    // TODO - Base Purchases View action
-    print('Create Base Purchase');
+    BasePurchasesStore _basePurchasesStore = _appStore.basePurchasesStore;
+    BasePurchaseModel? purchase = await _basePurchasesStore.createPurchase();
+
+    if (purchase != null) {
+      // TODO - navigate to BasePurchaseDetailsView
+    }
   }
 
   Future<void> favoritesViewAction(BuildContext context) async {

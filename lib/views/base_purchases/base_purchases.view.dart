@@ -1,5 +1,6 @@
 import 'package:emptio/common/widgets/main_app_bar.widget.dart';
 import 'package:emptio/common/widgets/notificationActionButton.widget.dart';
+import 'package:emptio/views/base_purchases/widgets/base_purchase_list.widget.dart';
 import 'package:flutter/material.dart';
 
 class BasePurchasesView extends StatelessWidget {
@@ -19,6 +20,7 @@ class BasePurchasesView extends StatelessWidget {
           ),
         ],
       ),
+      body: BasePurchaseList(),
     );
   }
 }
