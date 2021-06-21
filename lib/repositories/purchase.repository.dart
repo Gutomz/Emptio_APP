@@ -34,8 +34,7 @@ class PurchaseRepository {
         List data =
             await _api.get('/purchases', queryParameters: filter.toQuery());
         var list = data
-            .map((purchase) => PurchaseModel.fromJson(purchase))
-            .cast<PurchaseModel>()
+            .map<PurchaseModel>((purchase) => PurchaseModel.fromJson(purchase))
             .toList();
         return list;
       }
