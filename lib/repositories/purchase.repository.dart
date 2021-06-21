@@ -11,7 +11,6 @@ import 'package:get_it/get_it.dart';
 class PurchaseRepository {
   static const String TAG = "PurchaseRepository";
   final AppApi _api = AppApi();
-  final PurchaseDao _dao = PurchaseDao();
   final AuthStore _authStore = GetIt.I<AuthStore>();
 
   Future<PurchaseModel> create() async {
@@ -21,7 +20,7 @@ class PurchaseRepository {
         return PurchaseModel.fromJson(data);
       }
 
-      return await _dao.create();
+      return await PurchaseDao.createParsed();
     } catch (error) {
       print('$TAG.create: $error');
 
@@ -41,7 +40,7 @@ class PurchaseRepository {
         return list;
       }
 
-      return _dao.getPurchases(filter);
+      return PurchaseDao.getAllParsed(filter);
     } catch (error) {
       print('$TAG.get: $error');
 
@@ -55,7 +54,7 @@ class PurchaseRepository {
         return await _api.delete("/purchases/$purchaseId");
       }
 
-      return _dao.delete(int.parse(purchaseId));
+      return PurchaseDao.delete(int.parse(purchaseId));
     } catch (error) {
       print('$TAG.delete: $error');
 
@@ -73,7 +72,7 @@ class PurchaseRepository {
         return PurchaseModel.fromJson(data);
       }
 
-      return await _dao.addItem(int.parse(purchaseId), model);
+      return await PurchaseDao.addItemParsed(int.parse(purchaseId), model);
     } catch (error) {
       print('$TAG.addItem: $error');
 
@@ -91,7 +90,7 @@ class PurchaseRepository {
         return PurchaseModel.fromJson(data);
       }
 
-      return await _dao.updateItem(
+      return await PurchaseDao.updateItemParsed(
           int.parse(purchaseId), int.parse(itemId), model);
     } catch (error) {
       print('$TAG.updateItem: $error');
@@ -106,7 +105,8 @@ class PurchaseRepository {
         return await _api.delete("/purchases/$purchaseId/$itemId");
       }
 
-      return _dao.removeItem(int.parse(purchaseId), int.parse(itemId));
+      return PurchaseDao.removeItemParsed(
+          int.parse(purchaseId), int.parse(itemId));
     } catch (error) {
       print('$TAG.removeItem: $error');
 

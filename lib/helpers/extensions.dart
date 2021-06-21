@@ -21,6 +21,18 @@ extension StringExtension on String {
   }
 }
 
+extension IterableExtension on Iterable {
+  bool containElement(bool Function(dynamic) checkFunction) {
+    for (var element in this) {
+      if (checkFunction(element)) {
+        return true;
+      }
+    }
+
+    return false;
+  }
+}
+
 extension NumberExtension on num {
   String formatMoney() {
     final NumberFormat numberFormat =

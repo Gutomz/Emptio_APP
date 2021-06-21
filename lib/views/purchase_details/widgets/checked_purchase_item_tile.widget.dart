@@ -45,8 +45,8 @@ class CheckedPurchaseItemTile extends StatelessWidget {
         child: Row(
           children: [
             Container(
-              width: 90,
-              height: 90,
+              width: 95,
+              height: 95,
               decoration: BoxDecoration(
                 image: hasImage()
                     ? DecorationImage(
@@ -69,7 +69,7 @@ class CheckedPurchaseItemTile extends StatelessWidget {
             SizedBox(width: 10),
             Expanded(
               child: Container(
-                height: 90,
+                height: 95,
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -105,16 +105,20 @@ class CheckedPurchaseItemTile extends StatelessWidget {
                               child: Column(
                                 children: [
                                   SubtitleItem(
+                                    icon: Icons.business_rounded,
+                                    text: item.product.brand,
+                                  ),
+                                  SubtitleItem(
                                     icon: Icons.straighten_rounded,
                                     text: item.product.weight.toString(),
                                   ),
                                   SubtitleItem(
-                                    icon: Icons.price_check_rounded,
-                                    text: item.price.formatMoney().trim(),
-                                  ),
-                                  SubtitleItem(
                                     icon: Icons.shopping_cart_outlined,
                                     text: item.quantity.toString(),
+                                  ),
+                                  SubtitleItem(
+                                    icon: Icons.monetization_on_outlined,
+                                    text: "R\$${item.price.formatMoney()}",
                                   ),
                                 ],
                               ),

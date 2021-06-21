@@ -9,7 +9,6 @@ import 'package:get_it/get_it.dart';
 class ProductRepository {
   static const String TAG = "ProductRepository";
   final AppApi _api = AppApi();
-  final ProductDao _productDao = ProductDao();
   final AuthStore _authStore = GetIt.I<AuthStore>();
 
   Future<List<ProductModel>> get(ProductFilterViewModel filter) async {
@@ -24,7 +23,7 @@ class ProductRepository {
         return list;
       }
 
-      return await _productDao.getAll(filter);
+      return await ProductDao.getAllParsed(filter);
     } catch (error) {
       print('$TAG.get: $error');
 

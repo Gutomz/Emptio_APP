@@ -1,5 +1,4 @@
 import 'package:emptio/data/database.dart';
-import 'package:emptio/data/models/purchase_item/purchase_item.dart';
 import 'package:hive/hive.dart';
 
 part 'purchase.g.dart';
@@ -16,7 +15,7 @@ class Purchase extends HiveObject {
   int? marketKey;
 
   @HiveField(3)
-  List<PurchaseItem> items;
+  List<int> itemsKey;
 
   @HiveField(4)
   String createdAt;
@@ -28,7 +27,7 @@ class Purchase extends HiveObject {
     required this.status,
     required this.limit,
     this.marketKey,
-    required this.items,
+    required this.itemsKey,
     required this.createdAt,
     required this.updatedAt,
   });

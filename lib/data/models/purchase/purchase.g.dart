@@ -20,7 +20,7 @@ class PurchaseAdapter extends TypeAdapter<Purchase> {
       status: fields[0] as String,
       limit: fields[1] as double,
       marketKey: fields[2] as int?,
-      items: (fields[3] as List).cast<PurchaseItem>(),
+      itemsKey: (fields[3] as List).cast<int>(),
       createdAt: fields[4] as String,
       updatedAt: fields[5] as String,
     );
@@ -37,7 +37,7 @@ class PurchaseAdapter extends TypeAdapter<Purchase> {
       ..writeByte(2)
       ..write(obj.marketKey)
       ..writeByte(3)
-      ..write(obj.items)
+      ..write(obj.itemsKey)
       ..writeByte(4)
       ..write(obj.createdAt)
       ..writeByte(5)
