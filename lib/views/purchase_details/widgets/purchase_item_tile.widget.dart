@@ -124,7 +124,7 @@ class PurchaseItemTile extends StatelessWidget {
                           ? Icon(
                               Icons.image_not_supported_outlined,
                               color: AppColors.black,
-                              size: 32,
+                              size: 22,
                             )
                           : null,
                     ),
