@@ -5,6 +5,8 @@ class MeasurementTypes {
   static const String g = 'g';
   static const String L = 'L';
   static const String mL = 'ml';
+
+  static List<String> list = [Kg, g, L, mL];
 }
 
 class MeasurementModel {

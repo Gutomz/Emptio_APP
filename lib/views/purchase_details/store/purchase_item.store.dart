@@ -66,6 +66,14 @@ abstract class _PurchaseItemStoreBase with Store {
     updateItem();
   }
 
+  @action
+  void setItem(UpdatePurchaseItemViewModel model) {
+    price = model.price;
+    quantity = model.quantity;
+    checked = model.checked;
+    updateItem(shoulRefresh: true);
+  }
+
   @computed
   double get totalPrice => price * quantity;
 

@@ -15,6 +15,10 @@ extension StringExtension on String {
     DateTime date = DateTime.parse(this.replaceFirst("-03:00", ""));
     return dateFormat.format(date);
   }
+
+  String formatTag() {
+    return this.trim().toLowerCase().replaceAll(" ", "-");
+  }
 }
 
 extension NumberExtension on num {

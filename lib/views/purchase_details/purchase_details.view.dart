@@ -1,6 +1,12 @@
 import 'package:emptio/common/delegates/purchase_item_search/purchase_item_search.dart';
+import 'package:emptio/models/product.model.dart';
 import 'package:emptio/models/purchase.model.dart';
 import 'package:emptio/models/purchase_item.model.dart';
+import 'package:emptio/view-models/add_purchase_item.view-model.dart';
+import 'package:emptio/view-models/update_purchase_item.view-model.dart';
+import 'package:emptio/views/edit_purchase_item/edit_puchase_item.view.dart';
+import 'package:emptio/views/edit_purchase_item/store/edit_purchase_item.store.dart';
+import 'package:emptio/views/new_purchase_item/new_purchase_item.view.dart';
 import 'package:emptio/views/purchase_details/store/purchase_details.store.dart';
 import 'package:emptio/views/purchase_details/widgets/connected_market.widget.dart';
 import 'package:emptio/views/purchase_details/widgets/purchase_items_list.widget.dart';
@@ -59,8 +65,63 @@ class _PurchaseDetailsViewState extends State<PurchaseDetailsView> {
       },
     );
 
-    if(checked != null) {
+    if (checked != null) {
       _store.changeFilter(checked);
+    }
+  }
+
+  Future<void> searchProduct() async {
+    ProductSearchResponse? response = await showSearch<ProductSearchResponse?>(
+      context: context,
+      delegate: ProductSearch(detailsStore: _store),
+    );
+
+    if (response != null) {
+      if (response.addNew != null) {
+        await createNewProductItem();
+      } else if (response.product != null) {
+        await createExitingProductItem(response.product!);
+      }
+    }
+
+    _store.refreshItems();
+  }
+
+  Future<void> createNewProductItem() async {
+    AddPurchaseItemViewModel? item = await Navigator.of(context).push(
+      MaterialPageRoute(
+        builder: (context) => NewPurchaseItemView(
+          purchase: _store.purchase,
+        ),
+      ),
+    );
+
+    if (item != null) {
+      await _store.addItem(item);
+    }
+  }
+
+  Future<void> createExitingProductItem(ProductModel product) async {
+    UpdatePurchaseItemViewModel? update = await Navigator.of(context).push(
+      MaterialPageRoute(builder: (context) {
+        return EditPurchaseItemView(
+          purchase: _store.purchase,
+          product: product,
+          store: EditPurchaseItemStore(
+            price: product.marketPrice ?? 0,
+            quantity: 1,
+            checked: false,
+          ),
+        );
+      }),
+    );
+
+    if (update != null) {
+      await _store.addItem(AddPurchaseItemViewModel(
+        price: update.price,
+        quantity: update.quantity,
+        productId: product.sId,
+      ));
     }
   }
 
@@ -102,14 +163,7 @@ class _PurchaseDetailsViewState extends State<PurchaseDetailsView> {
       ),
       body: PurchaseItemsList(store: _store),
       floatingActionButton: FloatingActionButton(
-        onPressed: () async {
-          await showSearch(
-            context: context,
-            delegate: ProductSearch(detailsStore: _store),
-          );
-
-          _store.refreshItems();
-        },
+        onPressed: searchProduct,
         child: Icon(Icons.add),
         foregroundColor: Colors.white,
       ),

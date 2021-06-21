@@ -3,6 +3,9 @@ import 'package:emptio/common/widgets/dismissible_confirm_dialog.widget.dart';
 import 'package:emptio/common/widgets/subtitle_item.widget.dart';
 import 'package:emptio/core/app_colors.dart';
 import 'package:emptio/models/purchase_item.model.dart';
+import 'package:emptio/view-models/update_purchase_item.view-model.dart';
+import 'package:emptio/views/edit_purchase_item/edit_puchase_item.view.dart';
+import 'package:emptio/views/edit_purchase_item/store/edit_purchase_item.store.dart';
 import 'package:emptio/views/purchase_details/store/purchase_item.store.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
@@ -23,6 +26,26 @@ class PurchaseItemTile extends StatelessWidget {
       store.toggleChecked();
     } else {
       store.deleteItem();
+    }
+  }
+
+  Future<void> onPressed(BuildContext context) async {
+    UpdatePurchaseItemViewModel? update = await Navigator.of(context).push(
+      MaterialPageRoute(
+        builder: (context) => EditPurchaseItemView(
+          purchase: store.purchaseStore.purchase,
+          product: item.product,
+          store: EditPurchaseItemStore(
+            price: store.price,
+            quantity: store.quantity,
+            checked: store.checked,
+          ),
+        ),
+      ),
+    );
+
+    if (update != null) {
+      store.setItem(update);
     }
   }
 
@@ -66,7 +89,7 @@ class PurchaseItemTile extends StatelessWidget {
         secondary: true,
       ),
       child: InkWell(
-        onTap: () => {},
+        onTap: () => onPressed(context),
         child: Container(
           padding: EdgeInsets.symmetric(horizontal: 10, vertical: 10),
           decoration: BoxDecoration(
@@ -79,32 +102,35 @@ class PurchaseItemTile extends StatelessWidget {
           ),
           child: Row(
             children: [
-              Container(
-                width: 90,
-                height: 90,
-                decoration: BoxDecoration(
-                  image: hasImage()
-                      ? DecorationImage(
-                          fit: BoxFit.cover,
-                          image: NetworkImage(item.product.image!),
+              Hero(
+                tag: 'product${item.product.sId}',
+                child: Container(
+                  width: 80,
+                  height: 80,
+                  decoration: BoxDecoration(
+                    image: hasImage()
+                        ? DecorationImage(
+                            fit: BoxFit.cover,
+                            image: NetworkImage(item.product.image!),
+                          )
+                        : null,
+                    borderRadius: BorderRadius.all(Radius.circular(8.0)),
+                    border: Border.all(color: AppColors.grey),
+                    color: AppColors.lightGrey.withOpacity(0.2),
+                  ),
+                  child: !hasImage()
+                      ? Icon(
+                          Icons.image_not_supported_outlined,
+                          color: AppColors.black,
+                          size: 32,
                         )
                       : null,
-                  borderRadius: BorderRadius.all(Radius.circular(8.0)),
-                  border: Border.all(color: AppColors.grey),
-                  color: AppColors.lightGrey.withOpacity(0.2),
                 ),
-                child: !hasImage()
-                    ? Icon(
-                        Icons.image_not_supported_outlined,
-                        color: AppColors.black,
-                        size: 32,
-                      )
-                    : null,
               ),
               SizedBox(width: 10),
               Expanded(
                 child: Container(
-                  height: 90,
+                  height: 80,
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     crossAxisAlignment: CrossAxisAlignment.start,
@@ -121,7 +147,7 @@ class PurchaseItemTile extends StatelessWidget {
                                     style: TextStyle(
                                       color: AppColors.darkBlue,
                                       fontWeight: FontWeight.w600,
-                                      fontSize: 14,
+                                      fontSize: 12,
                                     ),
                                     overflow: TextOverflow.ellipsis,
                                   ),

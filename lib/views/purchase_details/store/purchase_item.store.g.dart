@@ -130,6 +130,17 @@ mixin _$PurchaseItemStore on _PurchaseItemStoreBase, Store {
   }
 
   @override
+  void setItem(UpdatePurchaseItemViewModel model) {
+    final _$actionInfo = _$_PurchaseItemStoreBaseActionController.startAction(
+        name: '_PurchaseItemStoreBase.setItem');
+    try {
+      return super.setItem(model);
+    } finally {
+      _$_PurchaseItemStoreBaseActionController.endAction(_$actionInfo);
+    }
+  }
+
+  @override
   String toString() {
     return '''
 price: ${price},

@@ -38,27 +38,30 @@ class ProductTile extends StatelessWidget {
         padding: EdgeInsets.symmetric(horizontal: 15, vertical: 10),
         child: Row(
           children: [
-            Container(
-              width: 60,
-              height: 60,
-              decoration: BoxDecoration(
-                image: hasImage()
-                    ? DecorationImage(
-                        fit: BoxFit.cover,
-                        image: NetworkImage(product.image!),
+            Hero(
+              tag: 'product${product.sId}',
+              child: Container(
+                width: 60,
+                height: 60,
+                decoration: BoxDecoration(
+                  image: hasImage()
+                      ? DecorationImage(
+                          fit: BoxFit.cover,
+                          image: NetworkImage(product.image!),
+                        )
+                      : null,
+                  borderRadius: BorderRadius.all(Radius.circular(8.0)),
+                  border: Border.all(color: AppColors.grey),
+                  color: AppColors.lightGrey.withOpacity(0.2),
+                ),
+                child: !hasImage()
+                    ? Icon(
+                        Icons.image_not_supported_outlined,
+                        color: AppColors.black,
+                        size: 26,
                       )
                     : null,
-                borderRadius: BorderRadius.all(Radius.circular(8.0)),
-                border: Border.all(color: AppColors.grey),
-                color: AppColors.lightGrey.withOpacity(0.2),
               ),
-              child: !hasImage()
-                  ? Icon(
-                      Icons.image_not_supported_outlined,
-                      color: AppColors.black,
-                      size: 26,
-                    )
-                  : null,
             ),
             SizedBox(width: 10),
             Expanded(

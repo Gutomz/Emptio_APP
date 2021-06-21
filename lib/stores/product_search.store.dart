@@ -12,7 +12,6 @@ abstract class _ProductSearchStoreBase with Store {
   _ProductSearchStoreBase({String purchaseId = "", this.limit = 10}) {
     autorun((_) async {
       if (query.isNotEmpty) {
-        print('search: $query');
         setLoading(true);
         ProductFilterViewModel filter = ProductFilterViewModel(
           search: query,
@@ -56,7 +55,6 @@ abstract class _ProductSearchStoreBase with Store {
   @action
   Future<void> loadProducts(ProductFilterViewModel filter) async {
     try {
-      print('load purchases');
       List<ProductModel> list = await ProductRepository().get(filter);
 
       if (list.length < filter.limit) limitReached = true;
@@ -75,6 +73,8 @@ abstract class _ProductSearchStoreBase with Store {
   @action
   void removeProduct(String productId) {
     productsList.removeWhere((element) => element.sId == productId);
+    final newList = productsList.toList();
+    productsList = ObservableList()..addAll(newList);
   }
 
   @action

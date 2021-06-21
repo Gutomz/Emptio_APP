@@ -5,11 +5,22 @@ import 'package:emptio/core/app_colors.dart';
 import 'package:emptio/models/product.model.dart';
 import 'package:emptio/stores/product_search.store.dart';
 import 'package:emptio/view-models/add_purchase_item.view-model.dart';
+import 'package:emptio/view-models/update_purchase_item.view-model.dart';
+import 'package:emptio/views/edit_purchase_item/edit_puchase_item.view.dart';
+import 'package:emptio/views/edit_purchase_item/store/edit_purchase_item.store.dart';
 import 'package:emptio/views/purchase_details/store/purchase_details.store.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 
-class ProductSearch extends SearchDelegate<ProductModel?> {
+class ProductSearchResponse {
+  ProductModel? product;
+  bool? addNew;
+
+  ProductSearchResponse({this.product, this.addNew})
+      : assert(product != null || addNew != null);
+}
+
+class ProductSearch extends SearchDelegate<ProductSearchResponse?> {
   late ProductSearchStore _store;
   final PurchaseDetailsStore detailsStore;
 
@@ -18,6 +29,16 @@ class ProductSearch extends SearchDelegate<ProductModel?> {
       purchaseId: this.detailsStore.purchase.sId,
       limit: 10,
     );
+  }
+
+  void onQuickSelect(ProductModel product) {
+    detailsStore.addItem(AddPurchaseItemViewModel(
+      price: product.marketPrice ?? 0,
+      quantity: 1,
+      productId: product.sId,
+    ));
+
+    _store.removeProduct(product.sId!);
   }
 
   @override
@@ -99,7 +120,10 @@ class ProductSearch extends SearchDelegate<ProductModel?> {
 
       if (_store.firstLoading) {
         return Center(
-          child: CircularProgressIndicator(),
+          child: CircularProgressIndicator(
+            color: AppColors.darkOrange,
+            strokeWidth: 2,
+          ),
         );
       }
 
@@ -108,7 +132,9 @@ class ProductSearch extends SearchDelegate<ProductModel?> {
           children: [
             AddProductTile(
               title: 'Adicionar novo produto',
-              onTap: () {},
+              onTap: () {
+                close(context, ProductSearchResponse(addNew: true));
+              },
             ),
             Divider(height: 1, color: AppColors.lightGrey),
             Padding(
@@ -133,7 +159,9 @@ class ProductSearch extends SearchDelegate<ProductModel?> {
           if (index == 0) {
             return AddProductTile(
               title: 'Adicionar novo produto',
-              onTap: () {},
+              onTap: () {
+                close(context, ProductSearchResponse(addNew: true));
+              },
             );
           }
 
@@ -151,7 +179,8 @@ class ProductSearch extends SearchDelegate<ProductModel?> {
               ),
               child: ProductTile(
                 product,
-                onTap: () {},
+                onTap: () =>
+                    close(context, ProductSearchResponse(product: product)),
               ),
             );
           }
@@ -179,16 +208,6 @@ class ProductSearch extends SearchDelegate<ProductModel?> {
         textAlign: TextAlign.center,
       ),
     );
-  }
-
-  void onQuickSelect(ProductModel product) {
-    detailsStore.addItem(AddPurchaseItemViewModel(
-      price: product.marketPrice ?? 0,
-      quantity: 1,
-      productId: product.sId,
-    ));
-
-    _store.removeProduct(product.sId!);
   }
 }
 
