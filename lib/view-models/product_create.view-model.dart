@@ -1,6 +1,7 @@
 import 'package:emptio/models/measurement.model.dart';
 
 class ProductCreateViewModel {
+  String brand;
   String name;
   String variation;
   MeasurementModel weight;
@@ -8,6 +9,7 @@ class ProductCreateViewModel {
   String? image;
 
   ProductCreateViewModel({
+    required this.brand,
     required this.name,
     required this.variation,
     required this.weight,
@@ -17,6 +19,7 @@ class ProductCreateViewModel {
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
+    data['brand'] = this.brand;
     data['name'] = this.name;
     data['variation'] = this.variation;
     data['weight'] = this.weight.toJson();

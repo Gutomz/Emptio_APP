@@ -100,155 +100,154 @@ class PurchaseItemTile extends StatelessWidget {
               ),
             ),
           ),
-          child: Row(
+          child: Column(
             children: [
-              Hero(
-                tag: 'product${item.product.sId}',
-                child: Container(
-                  width: 80,
-                  height: 80,
-                  decoration: BoxDecoration(
-                    image: hasImage()
-                        ? DecorationImage(
-                            fit: BoxFit.cover,
-                            image: NetworkImage(item.product.image!),
-                          )
-                        : null,
-                    borderRadius: BorderRadius.all(Radius.circular(8.0)),
-                    border: Border.all(color: AppColors.grey),
-                    color: AppColors.lightGrey.withOpacity(0.2),
-                  ),
-                  child: !hasImage()
-                      ? Icon(
-                          Icons.image_not_supported_outlined,
-                          color: AppColors.black,
-                          size: 32,
-                        )
-                      : null,
-                ),
-              ),
-              SizedBox(width: 10),
-              Expanded(
-                child: Container(
-                  height: 80,
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Container(
-                        child: Column(
-                          children: [
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                Flexible(
-                                  child: Text(
-                                    item.product.getCombinedName(),
-                                    style: TextStyle(
-                                      color: AppColors.darkBlue,
-                                      fontWeight: FontWeight.w600,
-                                      fontSize: 12,
-                                    ),
-                                    overflow: TextOverflow.ellipsis,
-                                  ),
-                                ),
-                                Icon(
-                                  Icons.double_arrow_rounded,
-                                  color: AppColors.darkBlue,
-                                  size: 16,
-                                ),
-                              ],
-                            ),
-                            SubtitleItem(
-                              icon: Icons.straighten_rounded,
-                              text: item.product.weight.toString(),
-                            ),
-                          ],
-                        ),
+              Row(
+                children: [
+                  Hero(
+                    tag: 'product${item.product.sId}',
+                    child: Container(
+                      width: 60,
+                      height: 60,
+                      decoration: BoxDecoration(
+                        image: hasImage()
+                            ? DecorationImage(
+                                fit: BoxFit.cover,
+                                image: NetworkImage(item.product.image!),
+                              )
+                            : null,
+                        borderRadius: BorderRadius.all(Radius.circular(8.0)),
+                        border: Border.all(color: AppColors.grey),
+                        color: AppColors.lightGrey.withOpacity(0.2),
                       ),
-                      Container(
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          crossAxisAlignment: CrossAxisAlignment.end,
-                          children: [
-                            Flexible(
-                              child: Container(
-                                constraints:
-                                    BoxConstraints.tight(Size(135, 35)),
-                                decoration: BoxDecoration(
-                                  color: AppColors.blue,
-                                  borderRadius: BorderRadius.circular(10),
-                                ),
-                                child: Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceAround,
-                                  crossAxisAlignment: CrossAxisAlignment.center,
-                                  children: [
-                                    Observer(builder: (_) {
-                                      return IconButton(
-                                        onPressed: store.quantityMinLimit
-                                            ? null
-                                            : store.decrementQuantity,
-                                        color: Colors.white,
-                                        disabledColor: AppColors.grey,
-                                        icon: Icon(Icons.remove),
-                                        iconSize: 16,
-                                        splashRadius: 16,
-                                      );
-                                    }),
-                                    Observer(builder: (_) {
-                                      return Text(
-                                        store.quantity.toString(),
-                                        style: TextStyle(
-                                          color: AppColors.orange,
-                                        ),
-                                      );
-                                    }),
-                                    Observer(builder: (_) {
-                                      return IconButton(
-                                        onPressed: store.quantityMaxLimit
-                                            ? null
-                                            : store.incrementQuantity,
-                                        color: Colors.white,
-                                        disabledColor: AppColors.grey,
-                                        icon: Icon(Icons.add),
-                                        iconSize: 16,
-                                        splashRadius: 16,
-                                      );
-                                    }),
-                                  ],
+                      child: !hasImage()
+                          ? Icon(
+                              Icons.image_not_supported_outlined,
+                              color: AppColors.black,
+                              size: 32,
+                            )
+                          : null,
+                    ),
+                  ),
+                  SizedBox(width: 10),
+                  Flexible(
+                    child: Container(
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        children: [
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Flexible(
+                                child: Text(
+                                  item.product.getCombinedName(),
+                                  style: TextStyle(
+                                    color: AppColors.darkBlue,
+                                    fontWeight: FontWeight.w600,
+                                    fontSize: 12,
+                                  ),
+                                  overflow: TextOverflow.ellipsis,
                                 ),
                               ),
-                            ),
-                            SizedBox(width: 10),
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.end,
-                              crossAxisAlignment: CrossAxisAlignment.end,
-                              children: [
-                                Text(
-                                  "R\$",
-                                  style: TextStyle(
-                                    fontSize: 10,
-                                    color: AppColors.lightGrey,
-                                  ),
+                              Icon(
+                                Icons.double_arrow_rounded,
+                                color: AppColors.darkBlue,
+                                size: 16,
+                              ),
+                            ],
+                          ),
+                          SubtitleItem(
+                            icon: Icons.business_rounded,
+                            text: item.product.brand,
+                          ),
+                          SubtitleItem(
+                            icon: Icons.straighten_rounded,
+                            text: item.product.weight.toString(),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+              SizedBox(height: 10),
+              Container(
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  crossAxisAlignment: CrossAxisAlignment.end,
+                  children: [
+                    Flexible(
+                      child: Container(
+                        constraints: BoxConstraints.tight(Size(135, 35)),
+                        decoration: BoxDecoration(
+                          color: AppColors.blue,
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceAround,
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            Observer(builder: (_) {
+                              return IconButton(
+                                onPressed: store.quantityMinLimit
+                                    ? null
+                                    : store.decrementQuantity,
+                                color: Colors.white,
+                                disabledColor: AppColors.grey,
+                                icon: Icon(Icons.remove),
+                                iconSize: 16,
+                                splashRadius: 16,
+                              );
+                            }),
+                            Observer(builder: (_) {
+                              return Text(
+                                store.quantity.toString(),
+                                style: TextStyle(
+                                  color: AppColors.orange,
                                 ),
-                                Observer(builder: (_) {
-                                  return Text(
-                                    store.totalPrice.formatMoney(),
-                                    style: TextStyle(
-                                      fontSize: 18,
-                                      fontWeight: FontWeight.bold,
-                                      color: AppColors.orange,
-                                    ),
-                                  );
-                                }),
-                              ],
-                            ),
+                              );
+                            }),
+                            Observer(builder: (_) {
+                              return IconButton(
+                                onPressed: store.quantityMaxLimit
+                                    ? null
+                                    : store.incrementQuantity,
+                                color: Colors.white,
+                                disabledColor: AppColors.grey,
+                                icon: Icon(Icons.add),
+                                iconSize: 16,
+                                splashRadius: 16,
+                              );
+                            }),
                           ],
                         ),
                       ),
-                    ],
-                  ),
+                    ),
+                    SizedBox(width: 10),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.end,
+                      crossAxisAlignment: CrossAxisAlignment.end,
+                      children: [
+                        Text(
+                          "R\$",
+                          style: TextStyle(
+                            fontSize: 10,
+                            color: AppColors.lightGrey,
+                          ),
+                        ),
+                        Observer(builder: (_) {
+                          return Text(
+                            store.totalPrice.formatMoney(),
+                            style: TextStyle(
+                              fontSize: 18,
+                              fontWeight: FontWeight.bold,
+                              color: AppColors.orange,
+                            ),
+                          );
+                        }),
+                      ],
+                    ),
+                  ],
                 ),
               ),
             ],

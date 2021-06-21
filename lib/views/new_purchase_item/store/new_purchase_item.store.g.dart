@@ -23,6 +23,20 @@ mixin _$NewPurchaseItemStore on _NewPurchaseItemStoreBase, Store {
       (_$nameErrorComputed ??= Computed<String?>(() => super.nameError,
               name: '_NewPurchaseItemStoreBase.nameError'))
           .value;
+  Computed<bool>? _$brandValidComputed;
+
+  @override
+  bool get brandValid =>
+      (_$brandValidComputed ??= Computed<bool>(() => super.brandValid,
+              name: '_NewPurchaseItemStoreBase.brandValid'))
+          .value;
+  Computed<String?>? _$brandErrorComputed;
+
+  @override
+  String? get brandError =>
+      (_$brandErrorComputed ??= Computed<String?>(() => super.brandError,
+              name: '_NewPurchaseItemStoreBase.brandError'))
+          .value;
   Computed<bool>? _$minQuantityReachedComputed;
 
   @override
@@ -50,6 +64,21 @@ mixin _$NewPurchaseItemStore on _NewPurchaseItemStoreBase, Store {
       (_$formValidComputed ??= Computed<bool>(() => super.formValid,
               name: '_NewPurchaseItemStoreBase.formValid'))
           .value;
+
+  final _$brandAtom = Atom(name: '_NewPurchaseItemStoreBase.brand');
+
+  @override
+  String? get brand {
+    _$brandAtom.reportRead();
+    return super.brand;
+  }
+
+  @override
+  set brand(String? value) {
+    _$brandAtom.reportWrite(value, super.brand, () {
+      super.brand = value;
+    });
+  }
 
   final _$nameAtom = Atom(name: '_NewPurchaseItemStoreBase.name');
 
@@ -143,6 +172,17 @@ mixin _$NewPurchaseItemStore on _NewPurchaseItemStoreBase, Store {
 
   final _$_NewPurchaseItemStoreBaseActionController =
       ActionController(name: '_NewPurchaseItemStoreBase');
+
+  @override
+  void setBrand(String _value) {
+    final _$actionInfo = _$_NewPurchaseItemStoreBaseActionController
+        .startAction(name: '_NewPurchaseItemStoreBase.setBrand');
+    try {
+      return super.setBrand(_value);
+    } finally {
+      _$_NewPurchaseItemStoreBaseActionController.endAction(_$actionInfo);
+    }
+  }
 
   @override
   void setName(String _value) {
@@ -257,6 +297,7 @@ mixin _$NewPurchaseItemStore on _NewPurchaseItemStoreBase, Store {
   @override
   String toString() {
     return '''
+brand: ${brand},
 name: ${name},
 variation: ${variation},
 weightValue: ${weightValue},
@@ -265,6 +306,8 @@ price: ${price},
 quantity: ${quantity},
 nameValid: ${nameValid},
 nameError: ${nameError},
+brandValid: ${brandValid},
+brandError: ${brandError},
 minQuantityReached: ${minQuantityReached},
 maxQuantityReached: ${maxQuantityReached},
 total: ${total},

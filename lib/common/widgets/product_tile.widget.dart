@@ -103,6 +103,10 @@ class ProductTile extends StatelessWidget {
                             child: Column(
                               children: [
                                 SubtitleItem(
+                                  icon: Icons.business_rounded,
+                                  text: product.brand,
+                                ),
+                                SubtitleItem(
                                   icon: Icons.straighten_rounded,
                                   text: product.weight.toString(),
                                 ),

@@ -67,20 +67,40 @@ class ProductHeader extends StatelessWidget {
               textAlign: TextAlign.center,
             ),
           ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
+          Wrap(
+            alignment: WrapAlignment.center,
+            spacing: 10,
             children: [
-              Icon(
-                Icons.straighten_rounded,
-                size: 12,
-                color: AppColors.grey,
-              ),
-              SizedBox(width: 5),
-              Text(
-                product.weight.toString(),
-                style: TextStyle(
-                  fontSize: 12,
+              Chip(
+                labelPadding: EdgeInsets.all(0),
+                backgroundColor: Colors.transparent,
+                avatar: Icon(
+                  Icons.business_rounded,
+                  size: 12,
                   color: AppColors.grey,
+                ),
+                label: Text(
+                  product.brand,
+                  style: TextStyle(
+                    fontSize: 12,
+                    color: AppColors.grey,
+                  ),
+                ),
+              ),
+              Chip(
+                labelPadding: EdgeInsets.all(0),
+                backgroundColor: Colors.transparent,
+                avatar: Icon(
+                  Icons.straighten_rounded,
+                  size: 12,
+                  color: AppColors.grey,
+                ),
+                label: Text(
+                  product.weight.toString(),
+                  style: TextStyle(
+                    fontSize: 12,
+                    color: AppColors.grey,
+                  ),
                 ),
               ),
             ],

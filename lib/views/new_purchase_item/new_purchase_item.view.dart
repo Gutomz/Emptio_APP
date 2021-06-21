@@ -77,6 +77,16 @@ class NewPurchaseItemView extends StatelessWidget {
               SizedBox(height: 25),
               Observer(builder: (_) {
                 return UnderlinedTextField(
+                  label: "Marca",
+                  errorText: store.brandError,
+                  textInputAction: TextInputAction.next,
+                  onEditingComplete: () => node.nextFocus(),
+                  onChanged: store.setBrand,
+                );
+              }),
+              SizedBox(height: 15),
+              Observer(builder: (_) {
+                return UnderlinedTextField(
                   label: "Nome",
                   errorText: store.nameError,
                   textInputAction: TextInputAction.next,
@@ -229,9 +239,11 @@ class NewPurchaseItemView extends StatelessWidget {
               store.minQuantityReached ? null : store.decrementQuantity,
           onIncrementPressed:
               store.maxQuantityReached ? null : store.incrementQuantity,
-          onAddPressed: store.formValid ? () {
-            Navigator.of(context).pop(store.getModel());
-          } : null,
+          onAddPressed: store.formValid
+              ? () {
+                  Navigator.of(context).pop(store.getModel());
+                }
+              : null,
           quantity: store.quantity,
           total: store.total,
         );

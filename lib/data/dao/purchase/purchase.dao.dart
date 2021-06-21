@@ -96,7 +96,7 @@ class PurchaseDao {
     if (model.productId != null) {
       product = productBox.get(int.parse(model.productId!));
     } else {
-      var productKey = (await ProductDao().create(model.productModel!)).sId!;
+      var productKey = (await ProductDao().create(model.productModel!)).sId;
       product = productBox.get(int.parse(productKey));
     }
 

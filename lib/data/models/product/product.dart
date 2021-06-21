@@ -7,33 +7,37 @@ part 'product.g.dart';
 @HiveType(typeId: Database.productAdapterId)
 class Product extends HiveObject {
   @HiveField(0)
-  String name;
+  String brand;
 
   @HiveField(1)
-  String variation;
+  String name;
 
   @HiveField(2)
-  String? image;
+  String variation;
 
   @HiveField(3)
-  Measurement weight;
+  String? image;
 
   @HiveField(4)
-  List<String> tags;
+  Measurement weight;
 
   @HiveField(5)
-  String createdAt;
+  List<String> tags;
 
   @HiveField(6)
-  String updatedAt;
+  String createdAt;
 
   @HiveField(7)
-  double? marketPrice;
+  String updatedAt;
 
   @HiveField(8)
+  double? marketPrice;
+
+  @HiveField(9)
   String? marketPriceUpdatedAt;
 
   Product({
+    required this.brand,
     required this.name,
     required this.variation,
     this.image,

@@ -9,6 +9,9 @@ class NewPurchaseItemStore = _NewPurchaseItemStoreBase
 
 abstract class _NewPurchaseItemStoreBase with Store {
   @observable
+  String? brand;
+
+  @observable
   String? name;
 
   @observable
@@ -27,6 +30,9 @@ abstract class _NewPurchaseItemStoreBase with Store {
 
   @observable
   int quantity = 1;
+
+  @action
+  void setBrand(String _value) => brand = _value;
 
   @action
   void setName(String _value) => name = _value;
@@ -65,13 +71,14 @@ abstract class _NewPurchaseItemStoreBase with Store {
       price: price,
       quantity: quantity,
       productModel: ProductCreateViewModel(
+        brand: brand!,
         name: name!,
         variation: variation,
         weight: MeasurementModel(
           value: weightValue,
           unit: weightUnit,
         ),
-        tags: tags,
+        tags: tags.toList(),
       ),
     );
   }
@@ -93,6 +100,25 @@ abstract class _NewPurchaseItemStoreBase with Store {
     }
 
     return "Nome muito curto";
+  }
+
+  @computed
+  bool get brandValid {
+    String _brand = brand ?? "";
+    return _brand.isNotEmpty && _brand.length > 1;
+  }
+
+  @computed
+  String? get brandError {
+    String _brand = brand ?? "";
+
+    if (brand == null || brandValid) {
+      return null;
+    } else if (_brand.isEmpty) {
+      return "Campo obrigatório!";
+    }
+
+    return "Muito curto";
   }
 
   @computed

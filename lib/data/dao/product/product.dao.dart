@@ -29,6 +29,7 @@ class ProductDao {
 
     String createAt = DateTime.now().toIso8601String();
     int key = await _mBox!.add(Product(
+      brand: model.brand,
       name: model.name,
       variation: model.variation,
       image: model.image,
@@ -87,6 +88,7 @@ class ProductDao {
   Future<ProductModel> parseToProductModel(Product product) async {
     return ProductModel(
       sId: product.key.toString(),
+      brand: product.brand,
       name: product.name,
       variation: product.variation,
       tags: product.tags,

@@ -5,9 +5,6 @@ import 'package:emptio/core/app_colors.dart';
 import 'package:emptio/models/product.model.dart';
 import 'package:emptio/stores/product_search.store.dart';
 import 'package:emptio/view-models/add_purchase_item.view-model.dart';
-import 'package:emptio/view-models/update_purchase_item.view-model.dart';
-import 'package:emptio/views/edit_purchase_item/edit_puchase_item.view.dart';
-import 'package:emptio/views/edit_purchase_item/store/edit_purchase_item.store.dart';
 import 'package:emptio/views/purchase_details/store/purchase_details.store.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
@@ -38,7 +35,7 @@ class ProductSearch extends SearchDelegate<ProductSearchResponse?> {
       productId: product.sId,
     ));
 
-    _store.removeProduct(product.sId!);
+    _store.removeProduct(product.sId);
   }
 
   @override
@@ -169,7 +166,7 @@ class ProductSearch extends SearchDelegate<ProductSearchResponse?> {
             ProductModel product = _store.productsList[index - 1];
 
             return Dismissible(
-              key: Key(product.sId!),
+              key: Key(product.sId),
               direction: DismissDirection.startToEnd,
               onDismissed: (direction) => onQuickSelect(product),
               background: DismissibleBackground(

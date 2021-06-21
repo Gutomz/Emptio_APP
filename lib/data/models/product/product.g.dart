@@ -17,39 +17,42 @@ class ProductAdapter extends TypeAdapter<Product> {
       for (int i = 0; i < numOfFields; i++) reader.readByte(): reader.read(),
     };
     return Product(
-      name: fields[0] as String,
-      variation: fields[1] as String,
-      image: fields[2] as String?,
-      weight: fields[3] as Measurement,
-      tags: (fields[4] as List).cast<String>(),
-      createdAt: fields[5] as String,
-      updatedAt: fields[6] as String,
-      marketPrice: fields[7] as double?,
-      marketPriceUpdatedAt: fields[8] as String?,
+      brand: fields[0] as String,
+      name: fields[1] as String,
+      variation: fields[2] as String,
+      image: fields[3] as String?,
+      weight: fields[4] as Measurement,
+      tags: (fields[5] as List).cast<String>(),
+      createdAt: fields[6] as String,
+      updatedAt: fields[7] as String,
+      marketPrice: fields[8] as double?,
+      marketPriceUpdatedAt: fields[9] as String?,
     );
   }
 
   @override
   void write(BinaryWriter writer, Product obj) {
     writer
-      ..writeByte(9)
+      ..writeByte(10)
       ..writeByte(0)
-      ..write(obj.name)
+      ..write(obj.brand)
       ..writeByte(1)
-      ..write(obj.variation)
+      ..write(obj.name)
       ..writeByte(2)
-      ..write(obj.image)
+      ..write(obj.variation)
       ..writeByte(3)
-      ..write(obj.weight)
+      ..write(obj.image)
       ..writeByte(4)
-      ..write(obj.tags)
+      ..write(obj.weight)
       ..writeByte(5)
-      ..write(obj.createdAt)
+      ..write(obj.tags)
       ..writeByte(6)
-      ..write(obj.updatedAt)
+      ..write(obj.createdAt)
       ..writeByte(7)
-      ..write(obj.marketPrice)
+      ..write(obj.updatedAt)
       ..writeByte(8)
+      ..write(obj.marketPrice)
+      ..writeByte(9)
       ..write(obj.marketPriceUpdatedAt);
   }
 

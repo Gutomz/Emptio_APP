@@ -2,7 +2,8 @@ import 'package:emptio/core/app_api.dart';
 import 'package:emptio/models/measurement.model.dart';
 
 class ProductModel {
-  String? sId;
+  String sId;
+  late String brand;
   late String name;
   late String variation;
   String? image;
@@ -16,7 +17,8 @@ class ProductModel {
   String? marketPriceUpdatedBy;
 
   ProductModel({
-    this.sId,
+    required this.sId,
+    required this.brand,
     required this.name,
     required this.variation,
     this.image,
@@ -29,27 +31,34 @@ class ProductModel {
     this.marketPriceUpdatedBy,
   });
 
-  ProductModel.fromJson(Map<String, dynamic> json) {
-    sId = json['_id'];
-    name = json['name'];
-    variation = json['variation'];
-    image = json['image'] != null && json['image'].isNotEmpty
-        ? AppApi.getUrl(json['image'])
-        : null;
-    weight = MeasurementModel.fromJson(json['weight']);
-    tags = json['tags'].cast<String>();
-    updatedAt = json['updatedAt'];
-    createdAt = json['createdAt'];
+  factory ProductModel.fromJson(Map<String, dynamic> json) {
+    var model = ProductModel(
+      sId: json['_id'],
+      brand: json['brand'],
+      name: json['name'],
+      variation: json['variation'],
+      image: json['image'] != null && json['image'].isNotEmpty
+          ? AppApi.getUrl(json['image'])
+          : null,
+      weight: MeasurementModel.fromJson(json['weight']),
+      tags: json['tags'].cast<String>(),
+      updatedAt: json['updatedAt'],
+      createdAt: json['createdAt'],
+    );
+
     if (json['productMarket'] != null) {
-      marketPrice = json['productMarket']['price']?.toDouble();
-      marketPriceUpdatedAt = json['productMarket']['updatedAt'];
-      marketPriceUpdatedBy = json['productMarket']['updatedBy']['name'];
+      model.marketPrice = json['productMarket']['price']?.toDouble();
+      model.marketPriceUpdatedAt = json['productMarket']['updatedAt'];
+      model.marketPriceUpdatedBy = json['productMarket']['updatedBy']['name'];
     }
+
+    return model;
   }
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     data['_id'] = this.sId;
+    data['brand'] = this.brand;
     data['name'] = this.name;
     data['variation'] = this.variation;
     data['image'] = this.image;
