@@ -1,12 +1,16 @@
 class UserConfigurationsModel {
-  late bool canNotify;
-  late String pushToken;
+  bool canNotify;
+  String pushToken;
 
   UserConfigurationsModel({required this.canNotify, required this.pushToken});
 
-  UserConfigurationsModel.fromJson(Map<String, dynamic> json) {
-    canNotify = json['canNotify'];
-    pushToken = json['pushToken'];
+  factory UserConfigurationsModel.fromJson(Map<String, dynamic> json) {
+    var model = UserConfigurationsModel(
+      canNotify: json['canNotify'],
+      pushToken: json['pushToken'],
+    );
+
+    return model;
   }
 
   Map<String, dynamic> toJson() {

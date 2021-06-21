@@ -11,8 +11,8 @@ class MeasurementTypes {
 
 class MeasurementModel {
   String? sId;
-  late double value;
-  late String unit;
+  double value;
+  String unit;
 
   MeasurementModel({
     this.sId,
@@ -20,10 +20,14 @@ class MeasurementModel {
     required this.unit,
   });
 
-  MeasurementModel.fromJson(Map<String, dynamic> json) {
-    sId = json['_id'];
-    value = json['value'].toDouble();
-    unit = json['unit'];
+  factory MeasurementModel.fromJson(Map<String, dynamic> json) {
+    var model = MeasurementModel(
+      sId: json['_id'],
+      value: json['value'].toDouble(),
+      unit: json['unit'],
+    );
+
+    return model;
   }
 
   Map<String, dynamic> toJson() {

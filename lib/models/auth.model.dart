@@ -1,12 +1,16 @@
 class AuthModel {
-  late String token;
-  late String refreshToken;
+  String token;
+  String refreshToken;
 
   AuthModel({required this.token, required this.refreshToken});
 
-  AuthModel.fromJson(Map<String, dynamic> json) {
-    token = json['token'];
-    refreshToken = json['refreshToken'];
+  factory AuthModel.fromJson(Map<String, dynamic> json) {
+    var model = AuthModel(
+      token: json['token'],
+      refreshToken: json['refreshToken'],
+    );
+
+    return model;
   }
 
   Map<String, dynamic> toJson() {

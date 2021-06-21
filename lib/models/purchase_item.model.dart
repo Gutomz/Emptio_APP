@@ -1,11 +1,11 @@
 import 'package:emptio/models/product.model.dart';
 
 class PurchaseItemModel {
-  late String sId;
-  late ProductModel product;
-  late double price;
-  late int quantity;
-  late bool checked;
+  String sId;
+  ProductModel product;
+  double price;
+  int quantity;
+  bool checked;
 
   PurchaseItemModel({
     required this.sId,
@@ -15,12 +15,16 @@ class PurchaseItemModel {
     required this.checked,
   });
 
-  PurchaseItemModel.fromJson(Map<String, dynamic> json) {
-    sId = json['_id'];
-    product = ProductModel.fromJson(json['product']);
-    price = json['price'].toDouble();
-    quantity = json['quantity'];
-    checked = json['checked'];
+  factory PurchaseItemModel.fromJson(Map<String, dynamic> json) {
+    var model = PurchaseItemModel(
+      sId: json['_id'],
+      product: ProductModel.fromJson(json['product']),
+      price: json['price'].toDouble(),
+      quantity: json['quantity'],
+      checked: json['checked'],
+    );
+
+    return model;
   }
 
   Map<String, dynamic> toJson() {

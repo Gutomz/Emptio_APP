@@ -1,14 +1,18 @@
 class LocationModel {
   String? sId;
-  late double lat;
-  late double lng;
+  double lat;
+  double lng;
 
   LocationModel({this.sId, required this.lat, required this.lng});
 
-  LocationModel.fromJson(Map<String, dynamic> json) {
-    sId = json['_id'];
-    lat = json['lat'];
-    lng = json['lng'];
+  factory LocationModel.fromJson(Map<String, dynamic> json) {
+    var model = LocationModel(
+      sId: json['_id'],
+      lat: json['lat'],
+      lng: json['lng'],
+    );
+
+    return model;
   }
 
   Map<String, dynamic> toJson() {

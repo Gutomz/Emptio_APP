@@ -5,41 +5,47 @@ import 'package:emptio/models/location.model.dart';
 import 'package:emptio/models/user_configurations.model.dart';
 
 class UserModel {
-  late String sId;
-  late String name;
-  late String email;
+  String sId;
+  String name;
+  String email;
   String? photo;
-  late String description;
-  late LocationModel location;
-  late UserConfigurationsModel configurations;
-  late int notificationCount;
-  late String createdAt;
-  late String updatedAt;
+  String description;
+  LocationModel location;
+  UserConfigurationsModel configurations;
+  int notificationCount;
+  String createdAt;
+  String updatedAt;
 
-  UserModel(
-      {required this.description,
-      required this.photo,
-      required this.sId,
-      required this.name,
-      required this.email,
-      required this.location,
-      required this.createdAt,
-      required this.updatedAt,
-      required this.notificationCount});
+  UserModel({
+    required this.description,
+    required this.photo,
+    required this.sId,
+    required this.name,
+    required this.email,
+    required this.location,
+    required this.configurations,
+    required this.createdAt,
+    required this.updatedAt,
+    required this.notificationCount,
+  });
 
-  UserModel.fromJson(Map<String, dynamic> json) {
-    sId = json['_id'];
-    name = json['name'];
-    email = json['email'];
-    photo = json['photo'] != null && json['photo'] != ""
-        ? AppApi.getUrl(json['photo'])
-        : null;
-    description = json['description'];
-    location = LocationModel.fromJson(json['location']);
-    configurations = UserConfigurationsModel.fromJson(json['configurations']);
-    notificationCount = json['notificationCount'];
-    createdAt = json['createdAt'];
-    updatedAt = json['updatedAt'];
+  factory UserModel.fromJson(Map<String, dynamic> json) {
+    var model = UserModel(
+      sId: json['_id'],
+      name: json['name'],
+      email: json['email'],
+      photo: json['photo'] != null && json['photo'] != ""
+          ? AppApi.getUrl(json['photo'])
+          : null,
+      description: json['description'],
+      location: LocationModel.fromJson(json['location']),
+      configurations: UserConfigurationsModel.fromJson(json['configurations']),
+      notificationCount: json['notificationCount'],
+      createdAt: json['createdAt'],
+      updatedAt: json['updatedAt'],
+    );
+
+    return model;
   }
 
   Map<String, dynamic> toJson() {

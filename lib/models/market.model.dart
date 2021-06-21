@@ -2,17 +2,17 @@ import 'package:emptio/core/app_api.dart';
 import 'package:emptio/models/location.model.dart';
 
 class MarketModel {
-  late String sId;
-  late String placeId;
-  late String name;
+  String sId;
+  String placeId;
+  String name;
   LocationModel? location;
   String? address;
   String? image;
   String? website;
   String? phone;
-  late List<String> openingHours;
-  late String updatedAt;
-  late String createdAt;
+  List<String> openingHours;
+  String updatedAt;
+  String createdAt;
 
   MarketModel({
     required this.sId,
@@ -28,20 +28,24 @@ class MarketModel {
     required this.createdAt,
   });
 
-  MarketModel.fromJson(Map<String, dynamic> json) {
-    sId = json['_id'];
-    placeId = json['place_id'];
-    name = json['name'];
-    location = LocationModel.fromJson(json['location']);
-    address = json['address'];
-    image = json['image'] != null && json['image'].isNotEmpty
-        ? AppApi.getUrl(json['image'])
-        : null;
-    website = json['website'];
-    phone = json['phone'];
-    openingHours = json['openingHours'].cast<String>();
-    updatedAt = json['updatedAt'];
-    createdAt = json['createdAt'];
+  factory MarketModel.fromJson(Map<String, dynamic> json) {
+    var model = MarketModel(
+      sId: json['_id'],
+      placeId: json['place_id'],
+      name: json['name'],
+      location: LocationModel.fromJson(json['location']),
+      address: json['address'],
+      image: json['image'] != null && json['image'].isNotEmpty
+          ? AppApi.getUrl(json['image'])
+          : null,
+      website: json['website'],
+      phone: json['phone'],
+      openingHours: json['openingHours'].cast<String>(),
+      updatedAt: json['updatedAt'],
+      createdAt: json['createdAt'],
+    );
+
+    return model;
   }
 
   Map<String, dynamic> toJson() {

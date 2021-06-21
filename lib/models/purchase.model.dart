@@ -7,15 +7,15 @@ class PurchaseStatusTypes {
 }
 
 class PurchaseModel {
-  late String sId;
-  late String status;
-  late double cost;
-  late double estimatedCost;
-  late double limit;
+  String sId;
+  String status;
+  double cost;
+  double estimatedCost;
+  double limit;
   MarketModel? market;
-  late List<PurchaseItemModel> items;
-  late String updatedAt;
-  late String createdAt;
+  List<PurchaseItemModel> items;
+  String updatedAt;
+  String createdAt;
 
   PurchaseModel({
     required this.sId,
@@ -29,23 +29,28 @@ class PurchaseModel {
     required this.createdAt,
   });
 
-  PurchaseModel.fromJson(Map<String, dynamic> json) {
-    sId = json['_id'];
-    status = json['status'];
-    cost = json['cost'].toDouble();
-    estimatedCost = json['estimatedCost'].toDouble();
-    limit = json['limit'].toDouble();
-    market = json['market'] != null && json['image'] != ""
-        ? MarketModel.fromJson(json['market'])
-        : null;
-    items = List<PurchaseItemModel>.empty(growable: true);
+  factory PurchaseModel.fromJson(Map<String, dynamic> json) {
+    var model = PurchaseModel(
+      sId: json['_id'],
+      status: json['status'],
+      cost: json['cost'].toDouble(),
+      estimatedCost: json['estimatedCost'].toDouble(),
+      limit: json['limit'].toDouble(),
+      market: json['market'] != null && json['image'] != ""
+          ? MarketModel.fromJson(json['market'])
+          : null,
+      items: List<PurchaseItemModel>.empty(growable: true),
+      updatedAt: json['updatedAt'],
+      createdAt: json['createdAt'],
+    );
+
     if (json['items'] != null) {
       json['items'].forEach((v) {
-        items.add(new PurchaseItemModel.fromJson(v));
+        model.items.add(new PurchaseItemModel.fromJson(v));
       });
     }
-    updatedAt = json['updatedAt'];
-    createdAt = json['createdAt'];
+
+    return model;
   }
 
   Map<String, dynamic> toJson() {
