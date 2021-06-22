@@ -17,8 +17,7 @@ class BasePurchaseList extends StatefulWidget {
   _BasePurchaseListState createState() => _BasePurchaseListState();
 }
 
-class _BasePurchaseListState extends State<BasePurchaseList>
-    with AutomaticKeepAliveClientMixin<BasePurchaseList> {
+class _BasePurchaseListState extends State<BasePurchaseList> {
   final BasePurchasesStore purchasesStore =
       GetIt.I<AppStore>().basePurchasesStore;
 
@@ -52,8 +51,6 @@ class _BasePurchaseListState extends State<BasePurchaseList>
 
   @override
   Widget build(BuildContext context) {
-    super.build(context);
-
     return Observer(builder: (context) {
       if (purchasesStore.error.isNotEmpty) {
         return Center(
@@ -85,7 +82,12 @@ class _BasePurchaseListState extends State<BasePurchaseList>
         backgroundColor: AppColors.lighBlue,
         color: Colors.white,
         onRefresh: purchasesStore.resetPage,
-        child: ListView.builder(
+        child: ListView.separated(
+          padding: EdgeInsets.only(bottom: 50),
+          separatorBuilder: (context, index) => Divider(
+            height: 1,
+            color: AppColors.grey,
+          ),
           itemCount: purchasesStore.itemCount,
           itemBuilder: (context, index) {
             if (index < purchasesStore.purchaseList.length) {
@@ -136,7 +138,6 @@ class _BasePurchaseListState extends State<BasePurchaseList>
                     iconSize: 26,
                     tooltip: "Iniciar Compra",
                   ),
-                  shape: Border(bottom: BorderSide(color: AppColors.lightGrey)),
                 ),
               );
             }
@@ -153,7 +154,4 @@ class _BasePurchaseListState extends State<BasePurchaseList>
       );
     });
   }
-
-  @override
-  bool get wantKeepAlive => true;
 }

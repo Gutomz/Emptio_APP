@@ -26,8 +26,7 @@ class PurchaseList extends StatefulWidget {
   _PurchaseListState createState() => _PurchaseListState(purchasesStore: store);
 }
 
-class _PurchaseListState extends State<PurchaseList>
-    with AutomaticKeepAliveClientMixin<PurchaseList> {
+class _PurchaseListState extends State<PurchaseList> {
   final PurchasesStore purchasesStore;
 
   _PurchaseListState({required this.purchasesStore});
@@ -61,8 +60,6 @@ class _PurchaseListState extends State<PurchaseList>
 
   @override
   Widget build(BuildContext context) {
-    super.build(context);
-
     return Observer(builder: (context) {
       if (purchasesStore.error.isNotEmpty) {
         return Center(
@@ -91,7 +88,12 @@ class _PurchaseListState extends State<PurchaseList>
         backgroundColor: AppColors.lighBlue,
         color: Colors.white,
         onRefresh: purchasesStore.resetPage,
-        child: ListView.builder(
+        child: ListView.separated(
+          padding: EdgeInsets.only(bottom: 50),
+          separatorBuilder: (context, index) => Divider(
+            height: 1,
+            color: AppColors.grey,
+          ),
           itemCount: purchasesStore.itemCount,
           itemBuilder: (context, index) {
             if (index < purchasesStore.purchaseList.length) {
@@ -133,7 +135,4 @@ class _PurchaseListState extends State<PurchaseList>
       );
     });
   }
-
-  @override
-  bool get wantKeepAlive => true;
 }

@@ -86,7 +86,6 @@ class HomeView extends StatelessWidget {
     });
   }
 
-  // * Purchases View action
   Future<void> purchasesViewAction(BuildContext context) async {
     PurchasesStore _purchasesStore = _appStore.openPurchasesStore;
     PurchaseModel? purchase = await _purchasesStore.createPurchase();
