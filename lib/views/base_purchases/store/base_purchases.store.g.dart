@@ -23,6 +23,13 @@ mixin _$BasePurchasesStore on _BasePurchasesStoreBase, Store {
       (_$firstLoadingComputed ??= Computed<bool>(() => super.firstLoading,
               name: '_BasePurchasesStoreBase.firstLoading'))
           .value;
+  Computed<bool>? _$isLoadingTileComputed;
+
+  @override
+  bool get isLoadingTile =>
+      (_$isLoadingTileComputed ??= Computed<bool>(() => super.isLoadingTile,
+              name: '_BasePurchasesStoreBase.isLoadingTile'))
+          .value;
 
   final _$searchAtom = Atom(name: '_BasePurchasesStoreBase.search');
 
@@ -66,6 +73,21 @@ mixin _$BasePurchasesStore on _BasePurchasesStoreBase, Store {
   set loading(bool value) {
     _$loadingAtom.reportWrite(value, super.loading, () {
       super.loading = value;
+    });
+  }
+
+  final _$loadingTileAtom = Atom(name: '_BasePurchasesStoreBase.loadingTile');
+
+  @override
+  String get loadingTile {
+    _$loadingTileAtom.reportRead();
+    return super.loadingTile;
+  }
+
+  @override
+  set loadingTile(String value) {
+    _$loadingTileAtom.reportWrite(value, super.loadingTile, () {
+      super.loadingTile = value;
     });
   }
 
@@ -121,6 +143,16 @@ mixin _$BasePurchasesStore on _BasePurchasesStoreBase, Store {
   @override
   Future<void> deletePurchase(int index) {
     return _$deletePurchaseAsyncAction.run(() => super.deletePurchase(index));
+  }
+
+  final _$createPurchaseWithBaseModelAsyncAction =
+      AsyncAction('_BasePurchasesStoreBase.createPurchaseWithBaseModel');
+
+  @override
+  Future<PurchaseModel?> createPurchaseWithBaseModel(
+      BasePurchaseModel baseModel) {
+    return _$createPurchaseWithBaseModelAsyncAction
+        .run(() => super.createPurchaseWithBaseModel(baseModel));
   }
 
   final _$resetPageAsyncAction =
@@ -195,10 +227,12 @@ mixin _$BasePurchasesStore on _BasePurchasesStoreBase, Store {
 search: ${search},
 skip: ${skip},
 loading: ${loading},
+loadingTile: ${loadingTile},
 error: ${error},
 limitReached: ${limitReached},
 itemCount: ${itemCount},
-firstLoading: ${firstLoading}
+firstLoading: ${firstLoading},
+isLoadingTile: ${isLoadingTile}
     ''';
   }
 }

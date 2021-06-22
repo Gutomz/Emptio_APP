@@ -6,6 +6,7 @@ import 'package:emptio/core/app_colors.dart';
 import 'package:emptio/models/base_purchase.model.dart';
 import 'package:emptio/stores/app.store.dart';
 import 'package:emptio/views/base_purchases/store/base_purchases.store.dart';
+import 'package:emptio/views/purchase_details/purchase_details.view.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:get_it/get_it.dart';
@@ -47,6 +48,25 @@ class _BasePurchaseListState extends State<BasePurchaseList> {
     // );
 
     // GetIt.I<AppStore>().dismissPurchaseDetails();
+  }
+
+  Future<void> onCreatePurchaseTap(
+      BuildContext context, BasePurchaseModel model) async {
+    var purchase = await purchasesStore.createPurchaseWithBaseModel(model);
+
+    if (purchase != null) {
+      Navigator.of(context).push(
+        MaterialPageRoute(
+          builder: (context) => PurchaseDetailsView(
+            purchase: purchase,
+          ),
+        ),
+      );
+
+      await Future.delayed(Duration(seconds: 1));
+
+      GetIt.I<AppStore>().homeStore.changeTab(0);
+    }
   }
 
   @override
@@ -104,42 +124,62 @@ class _BasePurchaseListState extends State<BasePurchaseList> {
                 ),
                 onDismissed: (_) => purchasesStore.deletePurchase(index),
                 confirmDismiss: confirmDismiss,
-                child: ListTile(
-                  onTap: () => onPurchaseTap(context, purchase),
-                  title: Text(
-                    purchase.name,
-                    style: TextStyle(
-                      color: AppColors.darkBlue,
-                      fontWeight: FontWeight.w600,
-                      fontSize: 14,
-                    ),
-                  ),
-                  subtitle: Row(
-                    children: [
-                      Icon(
-                        Icons.shopping_cart_outlined,
-                        color: AppColors.grey,
-                        size: 16,
-                      ),
-                      SizedBox(width: 5),
-                      Text(
-                        "${purchase.items.length}",
+                child: Observer(builder: (_) {
+                  return ListTile(
+                      onTap: purchasesStore.isLoadingTile
+                          ? null
+                          : () => onPurchaseTap(context, purchase),
+                      title: Text(
+                        purchase.name,
                         style: TextStyle(
-                          color: AppColors.orange,
+                          color: AppColors.darkBlue,
                           fontWeight: FontWeight.w600,
-                          fontSize: 16,
+                          fontSize: 14,
                         ),
-                      )
-                    ],
-                  ),
-                  trailing: IconButton(
-                    onPressed: () {},
-                    icon: Icon(Icons.shopping_basket_outlined),
-                    color: AppColors.darkGrey,
-                    iconSize: 26,
-                    tooltip: "Iniciar Compra",
-                  ),
-                ),
+                      ),
+                      subtitle: Row(
+                        children: [
+                          Icon(
+                            Icons.shopping_cart_outlined,
+                            color: AppColors.grey,
+                            size: 16,
+                          ),
+                          SizedBox(width: 5),
+                          Text(
+                            "${purchase.items.length}",
+                            style: TextStyle(
+                              color: AppColors.orange,
+                              fontWeight: FontWeight.w600,
+                              fontSize: 16,
+                            ),
+                          )
+                        ],
+                      ),
+                      trailing: Observer(builder: (context) {
+                        if (purchasesStore.loadingTile == purchase.sId)
+                          return Padding(
+                            padding: const EdgeInsets.only(right: 12),
+                            child: Container(
+                              width: 20,
+                              height: 20,
+                              child: CircularProgressIndicator(
+                                color: AppColors.darkOrange,
+                                strokeWidth: 2,
+                              ),
+                            ),
+                          );
+
+                        return IconButton(
+                          onPressed: purchasesStore.isLoadingTile
+                              ? null
+                              : () => onCreatePurchaseTap(context, purchase),
+                          icon: Icon(Icons.shopping_basket_outlined),
+                          color: AppColors.darkGrey,
+                          iconSize: 26,
+                          tooltip: "Iniciar Compra",
+                        );
+                      }));
+                }),
               );
             }
 

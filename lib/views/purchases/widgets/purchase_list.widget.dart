@@ -4,13 +4,11 @@ import 'package:emptio/common/widgets/empty_placeholder.widget.dart';
 import 'package:emptio/core/app_assets.dart';
 import 'package:emptio/core/app_colors.dart';
 import 'package:emptio/models/purchase.model.dart';
-import 'package:emptio/stores/app.store.dart';
 import 'package:emptio/views/purchase_details/purchase_details.view.dart';
 import 'package:emptio/views/purchases/store/purchases.store.dart';
 import 'package:emptio/views/purchases/widgets/purchase_tile.widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
-import 'package:get_it/get_it.dart';
 
 class PurchaseList extends StatefulWidget {
   final PurchasesStore store;

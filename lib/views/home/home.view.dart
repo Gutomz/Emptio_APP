@@ -3,6 +3,7 @@ import 'package:emptio/common/widgets/main_drawer.widget.dart';
 import 'package:emptio/models/base_purchase.model.dart';
 import 'package:emptio/models/purchase.model.dart';
 import 'package:emptio/stores/app.store.dart';
+import 'package:emptio/view-models/create_purchase.view-model.dart';
 import 'package:emptio/views/base_purchases/base_purchases.view.dart';
 import 'package:emptio/views/base_purchases/store/base_purchases.store.dart';
 import 'package:emptio/views/favorites/favorites.view.dart';
@@ -93,7 +94,8 @@ class _HomeViewState extends State<HomeView> {
 
   Future<void> purchasesViewAction(BuildContext context) async {
     PurchasesStore _purchasesStore = _appStore.openPurchasesStore;
-    PurchaseModel? purchase = await _purchasesStore.createPurchase();
+    PurchaseModel? purchase =
+        await _purchasesStore.createPurchase(CreatePurchaseViewModel());
 
     if (purchase != null) {
       Navigator.of(context).push(

@@ -1,7 +1,11 @@
 import 'package:emptio/models/base_purchase.model.dart';
+import 'package:emptio/models/purchase.model.dart';
 import 'package:emptio/repositories/base_purchase.repository.dart';
+import 'package:emptio/repositories/purchase.repository.dart';
+import 'package:emptio/stores/app.store.dart';
 import 'package:emptio/stores/auth.store.dart';
 import 'package:emptio/view-models/base_purchase_filter.view-model.dart';
+import 'package:emptio/view-models/create_purchase.view-model.dart';
 import 'package:get_it/get_it.dart';
 import 'package:mobx/mobx.dart';
 
@@ -44,6 +48,9 @@ abstract class _BasePurchasesStoreBase with Store {
 
   @observable
   bool loading = false;
+
+  @observable
+  String loadingTile = "";
 
   @observable
   String error = "";
@@ -114,6 +121,25 @@ abstract class _BasePurchasesStoreBase with Store {
   }
 
   @action
+  Future<PurchaseModel?> createPurchaseWithBaseModel(
+      BasePurchaseModel baseModel) async {
+    loadingTile = baseModel.sId;
+    error = "";
+    var purchasesStore = GetIt.I<AppStore>().openPurchasesStore;
+
+    try {
+      CreatePurchaseViewModel createModel =
+          CreatePurchaseViewModel(basePurchaseId: baseModel.sId);
+      PurchaseModel? model = await purchasesStore.createPurchase(createModel);
+      return model;
+    } on String catch (_error) {
+      error = _error;
+    } finally {
+      loadingTile = "";
+    }
+  }
+
+  @action
   void removeIndex(int index) {
     purchaseList.removeAt(index);
   }
@@ -137,4 +163,7 @@ abstract class _BasePurchasesStoreBase with Store {
 
   @computed
   bool get firstLoading => loading && purchaseList.isEmpty;
+
+  @computed
+  bool get isLoadingTile => loadingTile.isNotEmpty;
 }

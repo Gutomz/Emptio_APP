@@ -111,8 +111,9 @@ mixin _$PurchasesStore on _PurchasesStoreBase, Store {
       AsyncAction('_PurchasesStoreBase.createPurchase');
 
   @override
-  Future<PurchaseModel?> createPurchase() {
-    return _$createPurchaseAsyncAction.run(() => super.createPurchase());
+  Future<PurchaseModel?> createPurchase(CreatePurchaseViewModel createModel) {
+    return _$createPurchaseAsyncAction
+        .run(() => super.createPurchase(createModel));
   }
 
   final _$deletePurchaseAsyncAction =
