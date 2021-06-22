@@ -47,15 +47,13 @@ class _PurchaseListState extends State<PurchaseList> {
 
   Future<void> onPurchaseTap(
       BuildContext context, PurchaseModel purchase) async {
-    await Navigator.of(context).push(
+    Navigator.of(context).push(
       MaterialPageRoute(
         builder: (context) => PurchaseDetailsView(
           purchase: purchase,
         ),
       ),
     );
-
-    GetIt.I<AppStore>().dismissPurchaseDetails();
   }
 
   @override
@@ -89,6 +87,8 @@ class _PurchaseListState extends State<PurchaseList> {
         color: Colors.white,
         onRefresh: purchasesStore.resetPage,
         child: ListView.separated(
+          key:
+              PageStorageKey<String>('purchases_list-${purchasesStore.status}'),
           padding: EdgeInsets.only(bottom: 50),
           separatorBuilder: (context, index) => Divider(
             height: 1,

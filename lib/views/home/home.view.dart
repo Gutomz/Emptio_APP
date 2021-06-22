@@ -96,7 +96,7 @@ class _HomeViewState extends State<HomeView> {
     PurchaseModel? purchase = await _purchasesStore.createPurchase();
 
     if (purchase != null) {
-      await Navigator.of(context).push(
+      Navigator.of(context).push(
         MaterialPageRoute(
           builder: (context) => PurchaseDetailsView(
             purchase: purchase,

@@ -83,6 +83,7 @@ class _BasePurchaseListState extends State<BasePurchaseList> {
         color: Colors.white,
         onRefresh: purchasesStore.resetPage,
         child: ListView.separated(
+          key: PageStorageKey<String>('base_purchases_list'),
           padding: EdgeInsets.only(bottom: 50),
           separatorBuilder: (context, index) => Divider(
             height: 1,
