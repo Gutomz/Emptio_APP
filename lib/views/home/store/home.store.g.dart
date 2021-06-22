@@ -24,21 +24,6 @@ mixin _$HomeStore on _HomeStoreBase, Store {
     });
   }
 
-  final _$currentViewAtom = Atom(name: '_HomeStoreBase.currentView');
-
-  @override
-  Widget get currentView {
-    _$currentViewAtom.reportRead();
-    return super.currentView;
-  }
-
-  @override
-  set currentView(Widget value) {
-    _$currentViewAtom.reportWrite(value, super.currentView, () {
-      super.currentView = value;
-    });
-  }
-
   final _$_HomeStoreBaseActionController =
       ActionController(name: '_HomeStoreBase');
 
@@ -56,8 +41,7 @@ mixin _$HomeStore on _HomeStoreBase, Store {
   @override
   String toString() {
     return '''
-currentTab: ${currentTab},
-currentView: ${currentView}
+currentTab: ${currentTab}
     ''';
   }
 }

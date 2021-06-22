@@ -15,7 +15,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:get_it/get_it.dart';
 
-class HomeView extends StatelessWidget {
+class HomeView extends StatefulWidget {
+  @override
+  _HomeViewState createState() => _HomeViewState();
+}
+
+class _HomeViewState extends State<HomeView> {
   final AppStore _appStore = GetIt.I<AppStore>();
 
   final List<IconData> icons = [
@@ -41,19 +46,7 @@ class HomeView extends StatelessWidget {
 
   final List<Future<void> Function(BuildContext)> actions = [];
 
-  final PageStorageBucket _bucket = PageStorageBucket();
-
-  late final HomeStore _homeStore;
-
-  HomeView({Key? key}) {
-    _homeStore = HomeStore(screens);
-    actions.addAll([
-      purchasesViewAction,
-      basePurchasesViewAction,
-      favoritesViewAction,
-      feedViewAction,
-    ]);
-  }
+  final HomeStore _homeStore = GetIt.I<AppStore>().homeStore;
 
   void onFabPressed(BuildContext context, int currentTab) {
     Function(BuildContext) action = actions[currentTab];
@@ -61,12 +54,24 @@ class HomeView extends StatelessWidget {
   }
 
   @override
+  void initState() {
+    actions.addAll([
+      purchasesViewAction,
+      basePurchasesViewAction,
+      favoritesViewAction,
+      feedViewAction,
+    ]);
+
+    super.initState();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Observer(builder: (context) {
       return Scaffold(
         body: PageStorage(
-          child: _homeStore.currentView,
-          bucket: _bucket,
+          child: screens[_homeStore.currentTab],
+          bucket: _homeStore.bucket,
         ),
         floatingActionButton: FloatingActionButton(
           onPressed: () => onFabPressed(context, _homeStore.currentTab),
