@@ -73,7 +73,7 @@ class PurchaseItemTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Dismissible(
-      key: Key(item.sId),
+      key: Key("${DateTime.now().toIso8601String()}${item.sId}"),
       onDismissed: onDismissed,
       confirmDismiss: (direction) => confirmDismiss(context, direction),
       direction: DismissDirection.horizontal,

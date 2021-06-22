@@ -36,4 +36,12 @@ class PurchaseItemModel {
     data['checked'] = this.checked;
     return data;
   }
+
+  @override
+  int get hashCode => this.sId.hashCode;
+
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      (other is PurchaseItemModel && this.sId == other.sId);
 }

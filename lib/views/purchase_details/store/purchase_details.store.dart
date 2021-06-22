@@ -1,8 +1,11 @@
 import 'package:emptio/models/purchase.model.dart';
 import 'package:emptio/models/purchase_item.model.dart';
 import 'package:emptio/repositories/purchase.repository.dart';
+import 'package:emptio/stores/app.store.dart';
 import 'package:emptio/view-models/add_purchase_item.view-model.dart';
 import 'package:emptio/view-models/update_purchase_item.view-model.dart';
+import 'package:emptio/views/purchases/store/purchases.store.dart';
+import 'package:get_it/get_it.dart';
 import 'package:mobx/mobx.dart';
 part 'purchase_details.store.g.dart';
 
@@ -10,11 +13,18 @@ class PurchaseDetailsStore = _PurchaseDetailsStoreBase
     with _$PurchaseDetailsStore;
 
 abstract class _PurchaseDetailsStoreBase with Store {
-  _PurchaseDetailsStoreBase({required this.purchase, required this.items});
+  final PurchasesStore _purchasesStore = GetIt.I<AppStore>().openPurchasesStore;
+
+  _PurchaseDetailsStoreBase({
+    required this.purchase,
+    required this.items,
+    required this.checkedItems,
+  });
 
   PurchaseModel purchase;
 
   ObservableList<PurchaseItemModel> items;
+  ObservableList<PurchaseItemModel> checkedItems;
 
   @observable
   bool loading = false;
@@ -24,9 +34,6 @@ abstract class _PurchaseDetailsStoreBase with Store {
 
   @observable
   bool showChecked = false;
-
-  @action
-  void setPurchase(PurchaseModel _value) => purchase = _value;
 
   @action
   void changeFilter(bool _value) {
@@ -42,7 +49,7 @@ abstract class _PurchaseDetailsStoreBase with Store {
       PurchaseModel _purchase =
           await PurchaseRepository().addItem(purchase.sId, model);
 
-      purchase = _purchase;
+      updatePurchase(_purchase);
     } on String catch (_error) {
       error = _error;
     }
@@ -51,8 +58,8 @@ abstract class _PurchaseDetailsStoreBase with Store {
   }
 
   @action
-  Future<void> updateItem(String itemId, UpdatePurchaseItemViewModel model,
-      {bool shouldRefresh = false}) async {
+  Future<void> updateItem(
+      String itemId, UpdatePurchaseItemViewModel model) async {
     loading = true;
     error = "";
 
@@ -60,9 +67,7 @@ abstract class _PurchaseDetailsStoreBase with Store {
       PurchaseModel _purchase =
           await PurchaseRepository().updateItem(purchase.sId, itemId, model);
 
-      purchase = _purchase;
-
-      if(shouldRefresh) refreshItems();
+      updatePurchase(_purchase);
     } on String catch (_error) {
       error = _error;
     }
@@ -76,11 +81,10 @@ abstract class _PurchaseDetailsStoreBase with Store {
     error = "";
 
     try {
-      items.removeWhere((element) => element.sId == itemId);
       PurchaseModel _purchase =
           await PurchaseRepository().removeItem(purchase.sId, itemId);
 
-      purchase = _purchase;
+      updatePurchase(_purchase);
     } on String catch (_error) {
       error = _error;
     }
@@ -89,9 +93,26 @@ abstract class _PurchaseDetailsStoreBase with Store {
   }
 
   @action
-  void refreshItems() {
+  void updateItems(List<PurchaseItemModel> models) {
     items.clear();
-    items.addAll(purchase.items);
+    checkedItems.clear();
+    items.addAll(models.where((v) => !v.checked));
+    checkedItems..addAll(models.where((v) => v.checked));
+  }
+
+  @action
+  void updatePurchase(PurchaseModel model) {
+    purchase = model;
+    updateItems(model.items);
+    _purchasesStore.updatePurchase(model);
+  }
+
+  @action
+  Future<void> toggleChecked(
+      String itemsId, UpdatePurchaseItemViewModel model) async {
+    items.removeWhere((v) => v.sId == itemsId);
+    checkedItems.removeWhere((v) => v.sId == itemsId);
+    updateItem(itemsId, model);
   }
 
   @computed
@@ -99,7 +120,7 @@ abstract class _PurchaseDetailsStoreBase with Store {
 
   @computed
   List<PurchaseItemModel> get filtredItems =>
-      items.where((element) => element.checked == showChecked).toList();
+      showChecked ? checkedItems : items;
 
   @computed
   int get itemsCount => filtredItems.length;

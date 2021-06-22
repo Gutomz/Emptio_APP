@@ -29,6 +29,7 @@ class PurchaseItemsList extends StatelessWidget {
       }
 
       return ListView.builder(
+        key: PageStorageKey<String>('purchase_details_items_list'),
         itemCount: store.itemsCount,
         itemBuilder: (context, index) {
           PurchaseItemModel item = store.filtredItems[index];

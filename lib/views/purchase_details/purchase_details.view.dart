@@ -32,7 +32,10 @@ class _PurchaseDetailsViewState extends State<PurchaseDetailsView> {
   _PurchaseDetailsViewState({required PurchaseModel purchase}) {
     _store = PurchaseDetailsStore(
       purchase: purchase,
-      items: ObservableList<PurchaseItemModel>()..addAll(purchase.items),
+      items: ObservableList<PurchaseItemModel>()
+        ..addAll(purchase.items.where((v) => !v.checked)),
+      checkedItems: ObservableList<PurchaseItemModel>()
+        ..addAll(purchase.items.where((v) => v.checked)),
     );
   }
 
@@ -83,8 +86,6 @@ class _PurchaseDetailsViewState extends State<PurchaseDetailsView> {
         await createExitingProductItem(response.product!);
       }
     }
-
-    _store.refreshItems();
   }
 
   Future<void> createNewProductItem() async {

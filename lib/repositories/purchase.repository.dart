@@ -101,7 +101,8 @@ class PurchaseRepository {
   Future<PurchaseModel> removeItem(String purchaseId, String itemId) async {
     try {
       if (_authStore.isLogged) {
-        return await _api.delete("/purchases/$purchaseId/$itemId");
+        var data = await _api.delete("/purchases/$purchaseId/$itemId");
+        return PurchaseModel.fromJson(data);
       }
 
       return PurchaseDao.removeItemParsed(

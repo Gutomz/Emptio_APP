@@ -100,6 +100,12 @@ abstract class _PurchasesStoreBase with Store {
   }
 
   @action
+  void updatePurchase(PurchaseModel model) {
+    int index = purchaseList.indexWhere((element) => element.sId == model.sId);
+    purchaseList[index] = model;
+  }
+
+  @action
   Future<void> deletePurchase(int index) async {
     loading = true;
     error = "";

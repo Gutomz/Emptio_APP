@@ -27,7 +27,7 @@ abstract class _PurchaseItemStoreBase with Store {
   bool checked = false;
 
   @action
-  Future<void> updateItem({bool shoulRefresh = false}) async {
+  Future<void> updateItem() async {
     purchaseStore.updateItem(
       itemId,
       UpdatePurchaseItemViewModel(
@@ -35,7 +35,6 @@ abstract class _PurchaseItemStoreBase with Store {
         quantity: quantity,
         checked: checked,
       ),
-      shouldRefresh: shoulRefresh,
     );
   }
 
@@ -47,7 +46,14 @@ abstract class _PurchaseItemStoreBase with Store {
   @action
   void toggleChecked() {
     checked = !checked;
-    updateItem(shoulRefresh: true);
+    purchaseStore.toggleChecked(
+      itemId,
+      UpdatePurchaseItemViewModel(
+        price: price,
+        quantity: quantity,
+        checked: checked,
+      ),
+    );
   }
 
   @action
@@ -71,7 +77,7 @@ abstract class _PurchaseItemStoreBase with Store {
     price = model.price;
     quantity = model.quantity;
     checked = model.checked;
-    updateItem(shoulRefresh: true);
+    updateItem();
   }
 
   @computed
