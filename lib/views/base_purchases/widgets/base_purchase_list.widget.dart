@@ -39,7 +39,6 @@ class _BasePurchaseListState extends State<BasePurchaseList> {
 
   Future<void> onPurchaseTap(
       BuildContext context, BasePurchaseModel purchase) async {
-    print('navigate to base purchase details');
     Navigator.of(context).push(MaterialPageRoute(
       builder: (context) => BasePurchaseDetailsView(purchase: purchase),
     ));
@@ -111,11 +110,12 @@ class _BasePurchaseListState extends State<BasePurchaseList> {
 
               return Dismissible(
                 key: Key(purchase.sId),
-                direction: DismissDirection.startToEnd,
+                direction: DismissDirection.endToStart,
                 background: DismissibleBackground(
                   icon: Icons.delete,
                   title: "Excluir",
                   color: AppColors.red,
+                  secondary: true,
                 ),
                 onDismissed: (_) => purchasesStore.deletePurchase(index),
                 confirmDismiss: confirmDismiss,

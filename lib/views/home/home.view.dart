@@ -4,6 +4,7 @@ import 'package:emptio/models/base_purchase.model.dart';
 import 'package:emptio/models/purchase.model.dart';
 import 'package:emptio/stores/app.store.dart';
 import 'package:emptio/view-models/create_purchase.view-model.dart';
+import 'package:emptio/views/base_purchase_details/base_purchase_details.view.dart';
 import 'package:emptio/views/base_purchases/base_purchases.view.dart';
 import 'package:emptio/views/base_purchases/store/base_purchases.store.dart';
 import 'package:emptio/views/favorites/favorites.view.dart';
@@ -98,13 +99,9 @@ class _HomeViewState extends State<HomeView> {
         await _purchasesStore.createPurchase(CreatePurchaseViewModel());
 
     if (purchase != null) {
-      Navigator.of(context).push(
-        MaterialPageRoute(
-          builder: (context) => PurchaseDetailsView(
-            purchase: purchase,
-          ),
-        ),
-      );
+      Navigator.of(context).push(MaterialPageRoute(
+        builder: (context) => PurchaseDetailsView(purchase: purchase),
+      ));
     }
   }
 
@@ -113,7 +110,9 @@ class _HomeViewState extends State<HomeView> {
     BasePurchaseModel? purchase = await _basePurchasesStore.createPurchase();
 
     if (purchase != null) {
-      // TODO - navigate to BasePurchaseDetailsView
+      Navigator.of(context).push(MaterialPageRoute(
+        builder: (context) => BasePurchaseDetailsView(purchase: purchase),
+      ));
     }
   }
 

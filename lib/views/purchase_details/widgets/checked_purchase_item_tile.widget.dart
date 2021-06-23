@@ -26,11 +26,12 @@ class CheckedPurchaseItemTile extends StatelessWidget {
     return Dismissible(
       key: Key(item.sId),
       onDismissed: onDismissed,
-      direction: DismissDirection.startToEnd,
+      direction: DismissDirection.endToStart,
       background: DismissibleBackground(
         icon: Icons.remove_done_rounded,
         title: 'Remover',
         color: AppColors.red,
+        secondary: true,
       ),
       child: Container(
         padding: EdgeInsets.symmetric(horizontal: 10, vertical: 10),

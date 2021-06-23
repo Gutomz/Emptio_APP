@@ -96,11 +96,12 @@ class _PurchaseListState extends State<PurchaseList> {
               if (widget.canDelete) {
                 return Dismissible(
                   key: Key(purchase.sId),
-                  direction: DismissDirection.startToEnd,
+                  direction: DismissDirection.endToStart,
                   background: DismissibleBackground(
                     icon: Icons.delete,
                     title: "Excluir",
                     color: AppColors.red,
+                    secondary: true,
                   ),
                   onDismissed: (_) => purchasesStore.deletePurchase(index),
                   confirmDismiss: confirmDismiss,
