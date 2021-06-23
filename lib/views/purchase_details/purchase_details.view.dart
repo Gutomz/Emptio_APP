@@ -76,7 +76,11 @@ class _PurchaseDetailsViewState extends State<PurchaseDetailsView> {
   Future<void> searchProduct() async {
     ProductSearchResponse? response = await showSearch<ProductSearchResponse?>(
       context: context,
-      delegate: ProductSearch(detailsStore: _store),
+      delegate: ProductSearch(
+        onQuickSelect: onQuickSelectProduct,
+        purchaseId: _store.purchase.sId,
+        connectedMarket: _store.purchase.market,
+      ),
     );
 
     if (response != null) {
@@ -86,6 +90,14 @@ class _PurchaseDetailsViewState extends State<PurchaseDetailsView> {
         await createExitingProductItem(response.product!);
       }
     }
+  }
+
+  void onQuickSelectProduct(ProductModel product) {
+    _store.addItem(AddPurchaseItemViewModel(
+      price: product.marketPrice ?? 0,
+      quantity: 1,
+      productId: product.sId,
+    ));
   }
 
   Future<void> createNewProductItem() async {

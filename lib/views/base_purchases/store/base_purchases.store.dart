@@ -1,7 +1,6 @@
 import 'package:emptio/models/base_purchase.model.dart';
 import 'package:emptio/models/purchase.model.dart';
 import 'package:emptio/repositories/base_purchase.repository.dart';
-import 'package:emptio/repositories/purchase.repository.dart';
 import 'package:emptio/stores/app.store.dart';
 import 'package:emptio/stores/auth.store.dart';
 import 'package:emptio/view-models/base_purchase_filter.view-model.dart';
@@ -137,6 +136,12 @@ abstract class _BasePurchasesStoreBase with Store {
     } finally {
       loadingTile = "";
     }
+  }
+
+  @action
+  void updatePurchase(BasePurchaseModel model) {
+    int index = purchaseList.indexWhere((element) => element.sId == model.sId);
+    purchaseList[index] = model;
   }
 
   @action

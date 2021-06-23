@@ -7,11 +7,13 @@ import 'package:emptio/helpers/extensions.dart';
 class ProductTile extends StatelessWidget {
   final ProductModel product;
   final Function onTap;
+  final bool hidePrice;
 
   const ProductTile(
     this.product, {
     Key? key,
     required this.onTap,
+    this.hidePrice = false
   }) : super(key: key);
 
   String getDateText() {
@@ -117,27 +119,28 @@ class ProductTile extends StatelessWidget {
                               ],
                             ),
                           ),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.end,
-                            crossAxisAlignment: CrossAxisAlignment.end,
-                            children: [
-                              Text(
-                                "R\$",
-                                style: TextStyle(
-                                  fontSize: 10,
-                                  color: AppColors.lightGrey,
+                          if (!hidePrice)
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.end,
+                              crossAxisAlignment: CrossAxisAlignment.end,
+                              children: [
+                                Text(
+                                  "R\$",
+                                  style: TextStyle(
+                                    fontSize: 10,
+                                    color: AppColors.lightGrey,
+                                  ),
                                 ),
-                              ),
-                              Text(
-                                getPriceText(),
-                                style: TextStyle(
-                                  fontSize: 18,
-                                  fontWeight: FontWeight.bold,
-                                  color: AppColors.orange,
+                                Text(
+                                  getPriceText(),
+                                  style: TextStyle(
+                                    fontSize: 18,
+                                    fontWeight: FontWeight.bold,
+                                    color: AppColors.orange,
+                                  ),
                                 ),
-                              ),
-                            ],
-                          ),
+                              ],
+                            ),
                         ],
                       ),
                     ),

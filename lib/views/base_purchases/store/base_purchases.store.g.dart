@@ -200,6 +200,17 @@ mixin _$BasePurchasesStore on _BasePurchasesStoreBase, Store {
   }
 
   @override
+  void updatePurchase(BasePurchaseModel model) {
+    final _$actionInfo = _$_BasePurchasesStoreBaseActionController.startAction(
+        name: '_BasePurchasesStoreBase.updatePurchase');
+    try {
+      return super.updatePurchase(model);
+    } finally {
+      _$_BasePurchasesStoreBaseActionController.endAction(_$actionInfo);
+    }
+  }
+
+  @override
   void removeIndex(int index) {
     final _$actionInfo = _$_BasePurchasesStoreBaseActionController.startAction(
         name: '_BasePurchasesStoreBase.removeIndex');

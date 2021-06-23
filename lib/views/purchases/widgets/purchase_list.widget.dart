@@ -45,13 +45,9 @@ class _PurchaseListState extends State<PurchaseList> {
 
   Future<void> onPurchaseTap(
       BuildContext context, PurchaseModel purchase) async {
-    Navigator.of(context).push(
-      MaterialPageRoute(
-        builder: (context) => PurchaseDetailsView(
-          purchase: purchase,
-        ),
-      ),
-    );
+    Navigator.of(context).push(MaterialPageRoute(
+      builder: (context) => PurchaseDetailsView(purchase: purchase),
+    ));
   }
 
   @override

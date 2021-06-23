@@ -5,6 +5,7 @@ import 'package:emptio/core/app_assets.dart';
 import 'package:emptio/core/app_colors.dart';
 import 'package:emptio/models/base_purchase.model.dart';
 import 'package:emptio/stores/app.store.dart';
+import 'package:emptio/views/base_purchase_details/base_purchase_details.view.dart';
 import 'package:emptio/views/base_purchases/store/base_purchases.store.dart';
 import 'package:emptio/views/purchase_details/purchase_details.view.dart';
 import 'package:flutter/material.dart';
@@ -39,15 +40,9 @@ class _BasePurchaseListState extends State<BasePurchaseList> {
   Future<void> onPurchaseTap(
       BuildContext context, BasePurchaseModel purchase) async {
     print('navigate to base purchase details');
-    // await Navigator.of(context).push(
-    //   MaterialPageRoute(
-    //     builder: (context) => PurchaseDetailsView(
-    //       purchase: purchase,
-    //     ),
-    //   ),
-    // );
-
-    // GetIt.I<AppStore>().dismissPurchaseDetails();
+    Navigator.of(context).push(MaterialPageRoute(
+      builder: (context) => BasePurchaseDetailsView(purchase: purchase),
+    ));
   }
 
   Future<void> onCreatePurchaseTap(
