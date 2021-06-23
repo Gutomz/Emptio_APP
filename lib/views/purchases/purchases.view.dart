@@ -21,7 +21,7 @@ class PurchasesView extends StatelessWidget {
       length: 2,
       child: Scaffold(
         appBar: MainAppBar(
-          title: "Compras",
+          title: Text("Compras"),
           drawerContext: context,
           actions: [
             NotificationActionButton(),

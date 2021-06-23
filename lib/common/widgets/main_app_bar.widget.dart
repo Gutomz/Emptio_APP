@@ -3,13 +3,13 @@ import 'package:flutter/material.dart';
 
 class MainAppBar extends AppBar {
   MainAppBar({
-    required String title,
+    required Widget title,
     required BuildContext drawerContext,
     List<Widget>? actions,
     PreferredSizeWidget? bottom,
   }) : super(
           elevation: 10,
-          title: Text(title),
+          title: title,
           leading: GestureDetector(
             onTap: () {
               Scaffold.of(drawerContext).openDrawer();

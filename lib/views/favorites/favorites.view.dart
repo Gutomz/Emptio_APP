@@ -9,14 +9,14 @@ class FavoritesView extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: MainAppBar(
-        title: "Favoritos",
+        title: Text("Favoritos"),
         drawerContext: context,
         actions: [
-          NotificationActionButton(),
           IconButton(
             onPressed: () {},
             icon: Icon(Icons.search),
           ),
+          NotificationActionButton(),
         ],
       ),
     );
