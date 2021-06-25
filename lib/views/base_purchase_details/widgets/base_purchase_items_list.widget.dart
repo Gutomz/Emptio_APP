@@ -2,7 +2,6 @@ import 'package:emptio/common/widgets/empty_placeholder.widget.dart';
 import 'package:emptio/core/app_assets.dart';
 import 'package:emptio/models/base_purchase_item.model.dart';
 import 'package:emptio/views/base_purchase_details/store/base_purchase_details.store.dart';
-import 'package:emptio/views/base_purchase_details/store/base_purchase_item.store.dart';
 import 'package:emptio/views/base_purchase_details/widgets/base_purchase_item_tile.widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
@@ -35,11 +34,7 @@ class BasePurchaseItemsList extends StatelessWidget {
 
           return BasePurchaseItemTile(
             item: item,
-            store: BasePurchaseItemStore(
-              purchaseStore: store,
-              itemId: item.sId,
-              quantity: item.quantity,
-            ),
+            purchaseStore: store,
           );
         },
       );

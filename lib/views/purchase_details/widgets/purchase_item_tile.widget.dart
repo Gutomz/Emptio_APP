@@ -1,11 +1,12 @@
 import 'package:emptio/common/widgets/dismissible_background.widget.dart';
 import 'package:emptio/common/widgets/dismissible_confirm_dialog.widget.dart';
+import 'package:emptio/common/widgets/image_builder.widget.dart';
 import 'package:emptio/common/widgets/subtitle_item.widget.dart';
 import 'package:emptio/core/app_colors.dart';
 import 'package:emptio/models/purchase_item.model.dart';
 import 'package:emptio/view-models/update_purchase_item.view-model.dart';
 import 'package:emptio/views/edit_purchase_item/edit_puchase_item.view.dart';
-import 'package:emptio/views/edit_purchase_item/store/edit_purchase_item.store.dart';
+import 'package:emptio/views/purchase_details/store/purchase_details.store.dart';
 import 'package:emptio/views/purchase_details/store/purchase_item.store.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
@@ -17,9 +18,16 @@ class PurchaseItemTile extends StatelessWidget {
 
   PurchaseItemTile({
     required this.item,
-    required this.store,
+    required PurchaseDetailsStore purchaseStore,
     Key? key,
-  }) : super(key: key);
+  })  : store = PurchaseItemStore(
+          purchaseStore: purchaseStore,
+          itemId: item.sId,
+          price: item.price,
+          quantity: item.quantity,
+          checked: item.checked,
+        ),
+        super(key: key);
 
   void onDismissed(DismissDirection direction) {
     if (direction == DismissDirection.startToEnd) {
@@ -33,13 +41,11 @@ class PurchaseItemTile extends StatelessWidget {
     UpdatePurchaseItemViewModel? update = await Navigator.of(context).push(
       MaterialPageRoute(
         builder: (context) => EditPurchaseItemView(
-          purchase: store.purchaseStore.purchase,
+          connectedMarket: store.purchaseStore.purchase.market,
           product: item.product,
-          store: EditPurchaseItemStore(
-            price: store.price,
-            quantity: store.quantity,
-            checked: store.checked,
-          ),
+          initialPrice: store.price,
+          initialChecked: store.checked,
+          initialQuantity: store.quantity,
         ),
       ),
     );
@@ -106,27 +112,10 @@ class PurchaseItemTile extends StatelessWidget {
                 children: [
                   Hero(
                     tag: 'product${item.product.sId}',
-                    child: Container(
-                      width: 60,
-                      height: 60,
-                      decoration: BoxDecoration(
-                        image: hasImage()
-                            ? DecorationImage(
-                                fit: BoxFit.cover,
-                                image: NetworkImage(item.product.image!),
-                              )
-                            : null,
-                        borderRadius: BorderRadius.all(Radius.circular(8.0)),
-                        border: Border.all(color: AppColors.grey),
-                        color: AppColors.lightGrey.withOpacity(0.2),
-                      ),
-                      child: !hasImage()
-                          ? Icon(
-                              Icons.image_not_supported_outlined,
-                              color: AppColors.black,
-                              size: 22,
-                            )
-                          : null,
+                    child: ImageBuilder.fromString(
+                      item.product.image,
+                      size: 60,
+                      iconSize: 22,
                     ),
                   ),
                   SizedBox(width: 10),
@@ -255,9 +244,5 @@ class PurchaseItemTile extends StatelessWidget {
         ),
       ),
     );
-  }
-
-  bool hasImage() {
-    return item.product.image != null && item.product.image!.isNotEmpty;
   }
 }

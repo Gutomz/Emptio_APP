@@ -5,7 +5,6 @@ import 'package:emptio/models/purchase_item.model.dart';
 import 'package:emptio/view-models/add_purchase_item.view-model.dart';
 import 'package:emptio/view-models/update_purchase_item.view-model.dart';
 import 'package:emptio/views/edit_purchase_item/edit_puchase_item.view.dart';
-import 'package:emptio/views/edit_purchase_item/store/edit_purchase_item.store.dart';
 import 'package:emptio/views/new_purchase_item/new_purchase_item.view.dart';
 import 'package:emptio/views/purchase_details/store/purchase_details.store.dart';
 import 'package:emptio/views/purchase_details/widgets/connected_market.widget.dart';
@@ -104,7 +103,7 @@ class _PurchaseDetailsViewState extends State<PurchaseDetailsView> {
     AddPurchaseItemViewModel? item = await Navigator.of(context).push(
       MaterialPageRoute(
         builder: (context) => NewPurchaseItemView(
-          purchase: _store.purchase,
+          connectedMarket: _store.purchase.market,
         ),
       ),
     );
@@ -116,17 +115,13 @@ class _PurchaseDetailsViewState extends State<PurchaseDetailsView> {
 
   Future<void> createExitingProductItem(ProductModel product) async {
     UpdatePurchaseItemViewModel? update = await Navigator.of(context).push(
-      MaterialPageRoute(builder: (context) {
-        return EditPurchaseItemView(
-          purchase: _store.purchase,
+      MaterialPageRoute(
+        builder: (context) => EditPurchaseItemView(
+          connectedMarket: _store.purchase.market,
           product: product,
-          store: EditPurchaseItemStore(
-            price: product.marketPrice ?? 0,
-            quantity: 1,
-            checked: false,
-          ),
-        );
-      }),
+          initialPrice: product.marketPrice,
+        ),
+      ),
     );
 
     if (update != null) {

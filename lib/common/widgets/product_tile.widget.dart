@@ -1,3 +1,4 @@
+import 'package:emptio/common/widgets/image_builder.widget.dart';
 import 'package:emptio/common/widgets/subtitle_item.widget.dart';
 import 'package:emptio/core/app_colors.dart';
 import 'package:emptio/models/product.model.dart';
@@ -9,12 +10,9 @@ class ProductTile extends StatelessWidget {
   final Function onTap;
   final bool hidePrice;
 
-  const ProductTile(
-    this.product, {
-    Key? key,
-    required this.onTap,
-    this.hidePrice = false
-  }) : super(key: key);
+  const ProductTile(this.product,
+      {Key? key, required this.onTap, this.hidePrice = false})
+      : super(key: key);
 
   String getDateText() {
     if (product.marketPrice != null) {
@@ -28,10 +26,6 @@ class ProductTile extends StatelessWidget {
     return (product.marketPrice ?? 0).formatMoney();
   }
 
-  bool hasImage() {
-    return product.image?.isNotEmpty ?? false;
-  }
-
   @override
   Widget build(BuildContext context) {
     return InkWell(
@@ -42,27 +36,10 @@ class ProductTile extends StatelessWidget {
           children: [
             Hero(
               tag: 'product${product.sId}',
-              child: Container(
-                width: 60,
-                height: 60,
-                decoration: BoxDecoration(
-                  image: hasImage()
-                      ? DecorationImage(
-                          fit: BoxFit.cover,
-                          image: NetworkImage(product.image!),
-                        )
-                      : null,
-                  borderRadius: BorderRadius.all(Radius.circular(8.0)),
-                  border: Border.all(color: AppColors.grey),
-                  color: AppColors.lightGrey.withOpacity(0.2),
-                ),
-                child: !hasImage()
-                    ? Icon(
-                        Icons.image_not_supported_outlined,
-                        color: AppColors.black,
-                        size: 26,
-                      )
-                    : null,
+              child: ImageBuilder.fromString(
+                product.image,
+                size: 60,
+                iconSize: 22,
               ),
             ),
             SizedBox(width: 10),

@@ -9,6 +9,21 @@ part of 'edit_purchase_item.store.dart';
 // ignore_for_file: non_constant_identifier_names, unnecessary_brace_in_string_interps, unnecessary_lambdas, prefer_expression_function_bodies, lines_longer_than_80_chars, avoid_as, avoid_annotating_with_dynamic
 
 mixin _$EditPurchaseItemStore on _EditPurchaseItemStoreBase, Store {
+  Computed<UpdatePurchaseItemViewModel>? _$itemModelComputed;
+
+  @override
+  UpdatePurchaseItemViewModel get itemModel => (_$itemModelComputed ??=
+          Computed<UpdatePurchaseItemViewModel>(() => super.itemModel,
+              name: '_EditPurchaseItemStoreBase.itemModel'))
+      .value;
+  Computed<UpdateBasePurchaseItemViewModel>? _$itemBaseModelComputed;
+
+  @override
+  UpdateBasePurchaseItemViewModel get itemBaseModel =>
+      (_$itemBaseModelComputed ??= Computed<UpdateBasePurchaseItemViewModel>(
+              () => super.itemBaseModel,
+              name: '_EditPurchaseItemStoreBase.itemBaseModel'))
+          .value;
   Computed<double>? _$totalComputed;
 
   @override
@@ -110,6 +125,8 @@ mixin _$EditPurchaseItemStore on _EditPurchaseItemStoreBase, Store {
 price: ${price},
 quantity: ${quantity},
 checked: ${checked},
+itemModel: ${itemModel},
+itemBaseModel: ${itemBaseModel},
 total: ${total},
 minQuantityReached: ${minQuantityReached}
     ''';

@@ -65,6 +65,21 @@ mixin _$NewPurchaseItemStore on _NewPurchaseItemStoreBase, Store {
               name: '_NewPurchaseItemStoreBase.formValid'))
           .value;
 
+  final _$imageAtom = Atom(name: '_NewPurchaseItemStoreBase.image');
+
+  @override
+  File? get image {
+    _$imageAtom.reportRead();
+    return super.image;
+  }
+
+  @override
+  set image(File? value) {
+    _$imageAtom.reportWrite(value, super.image, () {
+      super.image = value;
+    });
+  }
+
   final _$brandAtom = Atom(name: '_NewPurchaseItemStoreBase.brand');
 
   @override
@@ -172,6 +187,17 @@ mixin _$NewPurchaseItemStore on _NewPurchaseItemStoreBase, Store {
 
   final _$_NewPurchaseItemStoreBaseActionController =
       ActionController(name: '_NewPurchaseItemStoreBase');
+
+  @override
+  void setImage(File? _value) {
+    final _$actionInfo = _$_NewPurchaseItemStoreBaseActionController
+        .startAction(name: '_NewPurchaseItemStoreBase.setImage');
+    try {
+      return super.setImage(_value);
+    } finally {
+      _$_NewPurchaseItemStoreBaseActionController.endAction(_$actionInfo);
+    }
+  }
 
   @override
   void setBrand(String _value) {
@@ -295,8 +321,20 @@ mixin _$NewPurchaseItemStore on _NewPurchaseItemStoreBase, Store {
   }
 
   @override
+  AddBasePurchaseItemViewModel getBaseModel() {
+    final _$actionInfo = _$_NewPurchaseItemStoreBaseActionController
+        .startAction(name: '_NewPurchaseItemStoreBase.getBaseModel');
+    try {
+      return super.getBaseModel();
+    } finally {
+      _$_NewPurchaseItemStoreBaseActionController.endAction(_$actionInfo);
+    }
+  }
+
+  @override
   String toString() {
     return '''
+image: ${image},
 brand: ${brand},
 name: ${name},
 variation: ${variation},

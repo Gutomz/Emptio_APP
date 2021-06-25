@@ -1,51 +1,30 @@
+import 'package:emptio/common/widgets/image_builder.widget.dart';
 import 'package:emptio/core/app_colors.dart';
+import 'package:emptio/models/market.model.dart';
 import 'package:emptio/models/product.model.dart';
-import 'package:emptio/models/purchase.model.dart';
 import 'package:flutter/material.dart';
 import 'package:emptio/helpers/extensions.dart';
 
 class ProductMarketIndicator extends StatelessWidget {
   const ProductMarketIndicator({
     Key? key,
-    required this.purchase,
+    required this.market,
     required this.product,
   }) : super(key: key);
 
-  final PurchaseModel purchase;
+  final MarketModel market;
   final ProductModel product;
-
-  bool hasImage() {
-    return purchase.market != null &&
-        purchase.market!.image != null &&
-        purchase.market!.image!.isNotEmpty;
-  }
 
   @override
   Widget build(BuildContext context) {
     return Row(
       children: [
-        Container(
-          width: 35,
-          height: 35,
-          decoration: BoxDecoration(
-            image: hasImage()
-                ? DecorationImage(
-                    fit: BoxFit.cover,
-                    image: NetworkImage(
-                      purchase.market!.image!,
-                    ),
-                  )
-                : null,
-            borderRadius: BorderRadius.circular(20),
-            color: Colors.white,
-          ),
-          child: !hasImage()
-              ? Icon(
-                  Icons.image_not_supported_outlined,
-                  color: AppColors.black,
-                  size: 18,
-                )
-              : null,
+        ImageBuilder.fromString(
+          market.image,
+          size: 35,
+          iconSize: 18,
+          borderRadius: 20,
+          backgroundColor: Colors.white,
         ),
         SizedBox(width: 20),
         Expanded(
@@ -54,7 +33,7 @@ class ProductMarketIndicator extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  purchase.market!.name,
+                  market.name,
                   style: TextStyle(
                     color: AppColors.orange,
                   ),

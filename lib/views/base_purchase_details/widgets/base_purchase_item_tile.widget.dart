@@ -1,12 +1,13 @@
 import 'package:emptio/common/widgets/dismissible_background.widget.dart';
 import 'package:emptio/common/widgets/dismissible_confirm_dialog.widget.dart';
+import 'package:emptio/common/widgets/image_builder.widget.dart';
 import 'package:emptio/common/widgets/subtitle_item.widget.dart';
 import 'package:emptio/core/app_colors.dart';
 import 'package:emptio/models/base_purchase_item.model.dart';
 import 'package:emptio/view-models/update_base_purchase_item.view-model.dart';
+import 'package:emptio/views/base_purchase_details/store/base_purchase_details.store.dart';
 import 'package:emptio/views/base_purchase_details/store/base_purchase_item.store.dart';
-import 'package:emptio/views/edit_base_purchase_item/edit_puchase_item.view.dart';
-import 'package:emptio/views/edit_base_purchase_item/store/edit_base_purchase_item.store.dart';
+import 'package:emptio/views/edit_purchase_item/edit_puchase_item.view.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 
@@ -16,17 +17,22 @@ class BasePurchaseItemTile extends StatelessWidget {
 
   BasePurchaseItemTile({
     required this.item,
-    required this.store,
+    required BasePurchaseDetailsStore purchaseStore,
     Key? key,
-  }) : super(key: key);
+  })  : store = BasePurchaseItemStore(
+          purchaseStore: purchaseStore,
+          itemId: item.sId,
+          quantity: item.quantity,
+        ),
+        super(key: key);
 
   Future<void> onPressed(BuildContext context) async {
     UpdateBasePurchaseItemViewModel? update = await Navigator.of(context).push(
       MaterialPageRoute(
-        builder: (context) => EditBasePurchaseItemView(
-          purchase: store.purchaseStore.purchase,
+        builder: (context) => EditPurchaseItemView(
           product: item.product,
-          store: EditBasePurchaseItemStore(quantity: store.quantity),
+          initialQuantity: store.quantity,
+          isBaseItem: true,
         ),
       ),
     );
@@ -86,28 +92,7 @@ class BasePurchaseItemTile extends StatelessWidget {
             children: [
               Hero(
                 tag: 'product${item.product.sId}',
-                child: Container(
-                  width: 80,
-                  height: 80,
-                  decoration: BoxDecoration(
-                    image: hasImage()
-                        ? DecorationImage(
-                            fit: BoxFit.cover,
-                            image: NetworkImage(item.product.image!),
-                          )
-                        : null,
-                    borderRadius: BorderRadius.all(Radius.circular(8.0)),
-                    border: Border.all(color: AppColors.grey),
-                    color: AppColors.lightGrey.withOpacity(0.2),
-                  ),
-                  child: !hasImage()
-                      ? Icon(
-                          Icons.image_not_supported_outlined,
-                          color: AppColors.black,
-                          size: 32,
-                        )
-                      : null,
-                ),
+                child: ImageBuilder.fromString(item.product.image),
               ),
               SizedBox(width: 10),
               Expanded(
@@ -167,8 +152,7 @@ class BasePurchaseItemTile extends StatelessWidget {
                                           BoxConstraints.tight(Size(135, 35)),
                                       decoration: BoxDecoration(
                                         color: AppColors.blue,
-                                        borderRadius:
-                                            BorderRadius.circular(10),
+                                        borderRadius: BorderRadius.circular(10),
                                       ),
                                       child: Row(
                                         mainAxisAlignment:
@@ -178,8 +162,7 @@ class BasePurchaseItemTile extends StatelessWidget {
                                         children: [
                                           Observer(builder: (_) {
                                             return IconButton(
-                                              onPressed: store
-                                                      .quantityMinLimit
+                                              onPressed: store.quantityMinLimit
                                                   ? null
                                                   : store.decrementQuantity,
                                               color: Colors.white,
@@ -199,8 +182,7 @@ class BasePurchaseItemTile extends StatelessWidget {
                                           }),
                                           Observer(builder: (_) {
                                             return IconButton(
-                                              onPressed: store
-                                                      .quantityMaxLimit
+                                              onPressed: store.quantityMaxLimit
                                                   ? null
                                                   : store.incrementQuantity,
                                               color: Colors.white,
@@ -229,9 +211,5 @@ class BasePurchaseItemTile extends StatelessWidget {
         ),
       ),
     );
-  }
-
-  bool hasImage() {
-    return item.product.image != null && item.product.image!.isNotEmpty;
   }
 }

@@ -1,3 +1,4 @@
+import 'package:emptio/common/widgets/image_builder.widget.dart';
 import 'package:emptio/common/widgets/product_tag.widget.dart';
 import 'package:emptio/core/app_colors.dart';
 import 'package:emptio/models/product.model.dart';
@@ -11,10 +12,6 @@ class ProductHeader extends StatelessWidget {
 
   final ProductModel product;
 
-  bool hasImage() {
-    return product.image != null && product.image!.isNotEmpty;
-  }
-
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -24,32 +21,7 @@ class ProductHeader extends StatelessWidget {
         children: [
           Hero(
             tag: 'product${product.sId}',
-            child: Material(
-              elevation: 5,
-              borderRadius: BorderRadius.all(Radius.circular(8.0)),
-              child: Container(
-                width: 80,
-                height: 80,
-                decoration: BoxDecoration(
-                  image: hasImage()
-                      ? DecorationImage(
-                          fit: BoxFit.cover,
-                          image: NetworkImage(product.image!),
-                        )
-                      : null,
-                  borderRadius: BorderRadius.all(Radius.circular(8.0)),
-                  border: Border.all(color: AppColors.grey),
-                  color: AppColors.white,
-                ),
-                child: !hasImage()
-                    ? Icon(
-                        Icons.image_not_supported_outlined,
-                        color: AppColors.black,
-                        size: 32,
-                      )
-                    : null,
-              ),
-            ),
+            child: ImageBuilder.fromString(product.image, elevation: 5),
           ),
           Padding(
             padding: EdgeInsets.only(

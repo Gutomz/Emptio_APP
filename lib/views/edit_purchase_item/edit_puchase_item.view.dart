@@ -1,8 +1,7 @@
 import 'package:emptio/common/widgets/add_item_bottom_appbar.widget.dart';
 import 'package:emptio/core/app_colors.dart';
+import 'package:emptio/models/market.model.dart';
 import 'package:emptio/models/product.model.dart';
-import 'package:emptio/models/purchase.model.dart';
-import 'package:emptio/view-models/update_purchase_item.view-model.dart';
 import 'package:emptio/views/edit_purchase_item/store/edit_purchase_item.store.dart';
 import 'package:emptio/views/edit_purchase_item/widgets/product_header.widget.dart';
 import 'package:emptio/views/edit_purchase_item/widgets/product_market_indicator.widget.dart';
@@ -12,25 +11,40 @@ import 'package:emptio/helpers/extensions.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 
 class EditPurchaseItemView extends StatelessWidget {
-  late final MoneyMaskedTextController controller;
-
   final EditPurchaseItemStore store;
-  final PurchaseModel purchase;
+  final MarketModel? connectedMarket;
   final ProductModel product;
+  final bool isBaseItem;
+
+  final MoneyMaskedTextController controller;
 
   EditPurchaseItemView({
-    required this.store,
-    required this.purchase,
     required this.product,
+    this.connectedMarket,
+    double? initialPrice,
+    int? initialQuantity,
+    bool? initialChecked,
+    this.isBaseItem = false,
     Key? key,
-  }) {
-    controller = MoneyMaskedTextController(
-      decimalSeparator: ',',
-      thousandSeparator: '.',
-      leftSymbol: 'R\$ ',
-      initialValue: store.price,
-      precision: 2,
-    );
+  })  : store = EditPurchaseItemStore(
+          price: initialPrice ?? 0,
+          quantity: initialQuantity ?? 1,
+          checked: initialChecked ?? false,
+        ),
+        controller = MoneyMaskedTextController(
+          decimalSeparator: ',',
+          thousandSeparator: '.',
+          leftSymbol: 'R\$ ',
+          initialValue: initialPrice ?? 0,
+          precision: 2,
+        );
+
+  void onAddPressed(BuildContext context) {
+    if (isBaseItem) {
+      return Navigator.of(context).pop(store.itemBaseModel);
+    }
+
+    return Navigator.of(context).pop(store.itemModel);
   }
 
   @override
@@ -38,7 +52,7 @@ class EditPurchaseItemView extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: Text(product.name),
-        bottom: purchase.market != null
+        bottom: connectedMarket != null
             ? PreferredSize(
                 preferredSize: Size.fromHeight(60),
                 child: Padding(
@@ -48,7 +62,7 @@ class EditPurchaseItemView extends StatelessWidget {
                     bottom: 10,
                   ),
                   child: ProductMarketIndicator(
-                    purchase: purchase,
+                    market: connectedMarket!,
                     product: product,
                   ),
                 ),
@@ -61,93 +75,87 @@ class EditPurchaseItemView extends StatelessWidget {
           child: Column(
             children: [
               ProductHeader(product: product),
-              SizedBox(height: 25),
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                mainAxisAlignment: MainAxisAlignment.start,
-                children: [
-                  Text(
-                    "Preço",
-                    style: TextStyle(
-                      color: AppColors.blue,
-                      fontWeight: FontWeight.w600,
-                      fontSize: 16,
+              if (!isBaseItem) SizedBox(height: 25),
+              if (!isBaseItem)
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: [
+                    Text(
+                      "Preço",
+                      style: TextStyle(
+                        color: AppColors.blue,
+                        fontWeight: FontWeight.w600,
+                        fontSize: 16,
+                      ),
                     ),
-                  ),
-                  SizedBox(height: 5),
-                  TextField(
-                    controller: controller,
-                    keyboardType: TextInputType.numberWithOptions(
-                      signed: false,
-                      decimal: false,
+                    SizedBox(height: 5),
+                    TextField(
+                      controller: controller,
+                      keyboardType: TextInputType.numberWithOptions(
+                        signed: false,
+                        decimal: false,
+                      ),
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                        fontWeight: FontWeight.w600,
+                      ),
+                      onChanged: (value) {
+                        store.setPrice(controller.numberValue);
+                      },
                     ),
-                    textAlign: TextAlign.center,
-                    style: TextStyle(
-                      fontWeight: FontWeight.w600,
-                    ),
-                    onChanged: (value) {
-                      store.setPrice(controller.numberValue);
-                    },
-                  ),
-                  SizedBox(height: 5),
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      if (product.marketPrice != null)
+                    SizedBox(height: 5),
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        if (product.marketPrice != null)
+                          RichText(
+                            text: TextSpan(
+                              text: 'O valor encontrado foi de ',
+                              style: TextStyle(
+                                color: AppColors.black,
+                                fontWeight: FontWeight.w300,
+                                fontSize: 12,
+                              ),
+                              children: [
+                                TextSpan(
+                                  text:
+                                      'R\$ ${product.marketPrice!.formatMoney()}',
+                                  style: TextStyle(
+                                    color: AppColors.black,
+                                    fontWeight: FontWeight.w500,
+                                    fontSize: 12,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
                         RichText(
                           text: TextSpan(
-                            text: 'O valor encontrado foi de ',
+                            text: 'Altere o valor caso necessário.',
                             style: TextStyle(
                               color: AppColors.black,
                               fontWeight: FontWeight.w300,
                               fontSize: 12,
                             ),
-                            children: [
-                              TextSpan(
-                                text:
-                                    'R\$ ${product.marketPrice!.formatMoney()}',
-                                style: TextStyle(
-                                  color: AppColors.black,
-                                  fontWeight: FontWeight.w500,
-                                  fontSize: 12,
-                                ),
-                              ),
-                            ],
                           ),
                         ),
-                      RichText(
-                        text: TextSpan(
-                          text: 'Altere o valor caso necessário.',
-                          style: TextStyle(
-                            color: AppColors.black,
-                            fontWeight: FontWeight.w300,
-                            fontSize: 12,
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                ],
-              ),
+                      ],
+                    ),
+                  ],
+                ),
             ],
           ),
         ),
       ),
       bottomNavigationBar: Observer(builder: (context) {
         return AddItemBottomAppBar(
+          hideTotal: isBaseItem,
           onDecrementPressed:
               store.minQuantityReached ? null : store.decrementQuantity,
           onIncrementPressed:
               store.maxQuantityReached ? null : store.incrementQuantity,
-          onAddPressed: () {
-            Navigator.of(context).pop(
-              UpdatePurchaseItemViewModel(
-                price: store.price,
-                quantity: store.quantity,
-                checked: store.checked,
-              ),
-            );
-          },
+          onAddPressed: () => onAddPressed(context),
           quantity: store.quantity,
           total: store.total,
         );

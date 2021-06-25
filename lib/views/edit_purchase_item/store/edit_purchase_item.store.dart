@@ -1,3 +1,5 @@
+import 'package:emptio/view-models/update_base_purchase_item.view-model.dart';
+import 'package:emptio/view-models/update_purchase_item.view-model.dart';
 import 'package:mobx/mobx.dart';
 part 'edit_purchase_item.store.g.dart';
 
@@ -32,6 +34,14 @@ abstract class _EditPurchaseItemStoreBase with Store {
   void decrementQuantity() {
     if (quantity - 1 >= 1) quantity -= 1;
   }
+
+  @computed
+  UpdatePurchaseItemViewModel get itemModel => UpdatePurchaseItemViewModel(
+      price: price, quantity: quantity, checked: checked);
+
+  @computed
+  UpdateBasePurchaseItemViewModel get itemBaseModel =>
+      UpdateBasePurchaseItemViewModel(quantity: quantity);
 
   @computed
   double get total => price * quantity;
