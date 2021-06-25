@@ -1,6 +1,5 @@
 import 'package:emptio/core/app_assets.dart';
 import 'package:emptio/core/app_colors.dart';
-import 'package:emptio/data/database.dart';
 import 'package:emptio/helpers/location.dart';
 import 'package:emptio/stores/auth.store.dart';
 import 'package:emptio/stores/connectivity.store.dart';
@@ -10,7 +9,6 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get_it/get_it.dart';
-import 'package:mobx/mobx.dart';
 
 class SplashView extends StatefulWidget {
   @override
@@ -21,43 +19,6 @@ class _SplashViewState extends State<SplashView> {
   AuthStore _authStore = GetIt.I<AuthStore>();
   ConnectivityStore _connectivityStore = GetIt.I<ConnectivityStore>();
 
-  late ReactionDisposer _disposer;
-
-  @override
-  void initState() {
-    super.initState();
-
-    _disposer = reaction(
-      (_) => _connectivityStore.isConnected,
-      (bool connected) {
-        if (_authStore.isActive) {
-          if (connected) {
-            _authStore.initAuthenticated();
-          }
-
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-              content: Text(
-                !connected
-                    ? 'Sem conexão com a internet!'
-                    : 'Conectado à internet!',
-              ),
-              backgroundColor: AppColors.darkGrey,
-              duration: Duration(seconds: 5),
-            ),
-          );
-        }
-      },
-    );
-  }
-
-  @override
-  void dispose() {
-    _disposer();
-    Database.dispose();
-    super.dispose();
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -67,7 +28,7 @@ class _SplashViewState extends State<SplashView> {
           builder: (context, AsyncSnapshot<bool> snapshot) {
             if (snapshot.hasError) {
               return Center(
-                child: Text('Oops! Ocorreu um erro. ${snapshot.error}'),
+                child: Text('${snapshot.error}'),
               );
             }
 

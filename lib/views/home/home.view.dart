@@ -1,21 +1,24 @@
 import 'package:emptio/common/widgets/main_bottom_navigator.widget.dart';
 import 'package:emptio/common/widgets/main_drawer.widget.dart';
+import 'package:emptio/core/app_colors.dart';
 import 'package:emptio/models/base_purchase.model.dart';
 import 'package:emptio/models/purchase.model.dart';
 import 'package:emptio/stores/app.store.dart';
+import 'package:emptio/stores/auth.store.dart';
+import 'package:emptio/stores/connectivity.store.dart';
 import 'package:emptio/view-models/create_purchase.view-model.dart';
 import 'package:emptio/views/base_purchase_details/base_purchase_details.view.dart';
 import 'package:emptio/views/base_purchases/base_purchases.view.dart';
 import 'package:emptio/views/base_purchases/store/base_purchases.store.dart';
 import 'package:emptio/views/favorites/favorites.view.dart';
 import 'package:emptio/views/feed/feed.view.dart';
-import 'package:emptio/views/home/store/home.store.dart';
 import 'package:emptio/views/purchase_details/purchase_details.view.dart';
 import 'package:emptio/views/purchases/purchases.view.dart';
 import 'package:emptio/views/purchases/store/purchases.store.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:get_it/get_it.dart';
+import 'package:mobx/mobx.dart';
 
 class HomeView extends StatefulWidget {
   @override
@@ -23,6 +26,8 @@ class HomeView extends StatefulWidget {
 }
 
 class _HomeViewState extends State<HomeView> {
+  ConnectivityStore _connectivityStore = GetIt.I<ConnectivityStore>();
+  AuthStore _authStore = GetIt.I<AuthStore>();
   final AppStore _appStore = GetIt.I<AppStore>();
 
   final List<IconData> icons = [
@@ -48,7 +53,7 @@ class _HomeViewState extends State<HomeView> {
 
   final List<Future<void> Function(BuildContext)> actions = [];
 
-  final HomeStore _homeStore = GetIt.I<AppStore>().homeStore;
+  late ReactionDisposer _disposer;
 
   void onFabPressed(BuildContext context, int currentTab) {
     Function(BuildContext) action = actions[currentTab];
@@ -64,33 +69,66 @@ class _HomeViewState extends State<HomeView> {
       feedViewAction,
     ]);
 
+    _disposer = reaction(
+      (_) => _connectivityStore.isConnected,
+      (bool connected) {
+        if (_authStore.isActive) {
+          if (connected) {
+            _authStore.initAuthenticated();
+          }
+
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text(
+                !connected
+                    ? 'Sem conexão com a internet!'
+                    : 'Conectado à internet!',
+              ),
+              backgroundColor: AppColors.darkGrey,
+              duration: Duration(seconds: 5),
+            ),
+          );
+
+          Navigator.of(context).popUntil((route) => route.isFirst);
+        }
+      },
+    );
+
     super.initState();
   }
 
   @override
+  void dispose() {
+    _disposer();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
-    return Observer(builder: (context) {
-      return Scaffold(
-        body: PageStorage(
-          child: screens[_homeStore.currentTab],
-          bucket: _homeStore.bucket,
-        ),
-        floatingActionButton: FloatingActionButton(
-          onPressed: () => onFabPressed(context, _homeStore.currentTab),
-          child: Icon(
-            Icons.add,
-            color: Colors.white,
+    return Scaffold(
+      body: Observer(builder: (context) {
+        return Scaffold(
+          body: PageStorage(
+            child: screens[_appStore.homeStore.currentTab],
+            bucket: _appStore.homeStore.bucket,
           ),
-        ),
-        drawer: MainDrawer(),
-        floatingActionButtonLocation: FloatingActionButtonLocation.endDocked,
-        bottomNavigationBar: MainBottomNavigationBar(
-          icons: icons,
-          labels: labels,
-          homeStore: _homeStore,
-        ),
-      );
-    });
+          floatingActionButton: FloatingActionButton(
+            onPressed: () =>
+                onFabPressed(context, _appStore.homeStore.currentTab),
+            child: Icon(
+              Icons.add,
+              color: Colors.white,
+            ),
+          ),
+          drawer: MainDrawer(),
+          floatingActionButtonLocation: FloatingActionButtonLocation.endDocked,
+          bottomNavigationBar: MainBottomNavigationBar(
+            icons: icons,
+            labels: labels,
+          ),
+        );
+      }),
+    );
   }
 
   Future<void> purchasesViewAction(BuildContext context) async {

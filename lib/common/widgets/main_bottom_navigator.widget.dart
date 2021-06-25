@@ -1,5 +1,6 @@
 import 'package:animated_bottom_navigation_bar/animated_bottom_navigation_bar.dart';
 import 'package:emptio/core/app_colors.dart';
+import 'package:emptio/stores/app.store.dart';
 import 'package:emptio/stores/auth.store.dart';
 import 'package:emptio/views/home/store/home.store.dart';
 import 'package:flutter/material.dart';
@@ -11,13 +12,11 @@ class MainBottomNavigationBar extends StatelessWidget {
     Key? key,
     required this.icons,
     required this.labels,
-    required HomeStore homeStore,
-  })  : _homeStore = homeStore,
-        super(key: key);
+  }) : super(key: key);
 
   final List<IconData> icons;
   final List<String> labels;
-  final HomeStore _homeStore;
+  final HomeStore _homeStore = GetIt.I<AppStore>().homeStore;
   final AuthStore _authStore = GetIt.I<AuthStore>();
 
   @override

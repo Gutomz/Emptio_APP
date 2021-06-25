@@ -1,4 +1,5 @@
 import 'package:emptio/data/models/base_purchase/base_purchase.dart';
+import 'package:emptio/data/models/base_purchase_item/base_purchase_item.dart';
 import 'package:emptio/data/models/market/market.dart';
 import 'package:emptio/data/models/measurement/measurement.dart';
 import 'package:emptio/data/models/product/product.dart';
@@ -30,7 +31,7 @@ class Database {
     Hive.registerAdapter(MarketAdapter());
     Hive.registerAdapter(PurchaseItemAdapter());
     Hive.registerAdapter(PurchaseAdapter());
-
+    Hive.registerAdapter(BasePurchaseItemAdapter());
     Hive.registerAdapter(BasePurchaseAdapter());
   }
 
