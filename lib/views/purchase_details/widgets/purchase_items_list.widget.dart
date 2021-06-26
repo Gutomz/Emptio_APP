@@ -2,7 +2,6 @@ import 'package:emptio/common/widgets/empty_placeholder.widget.dart';
 import 'package:emptio/core/app_assets.dart';
 import 'package:emptio/models/purchase_item.model.dart';
 import 'package:emptio/views/purchase_details/store/purchase_details.store.dart';
-import 'package:emptio/views/purchase_details/store/purchase_item.store.dart';
 import 'package:emptio/views/purchase_details/widgets/checked_purchase_item_tile.widget.dart';
 import 'package:emptio/views/purchase_details/widgets/purchase_item_tile.widget.dart';
 import 'package:flutter/material.dart';
@@ -29,6 +28,7 @@ class PurchaseItemsList extends StatelessWidget {
       }
 
       return ListView.builder(
+        key: PageStorageKey<String>('purchase_details_items_list'),
         itemCount: store.itemsCount,
         itemBuilder: (context, index) {
           PurchaseItemModel item = store.filtredItems[index];
@@ -36,25 +36,13 @@ class PurchaseItemsList extends StatelessWidget {
           if (store.showChecked) {
             return CheckedPurchaseItemTile(
               item: item,
-              store: PurchaseItemStore(
-                purchaseStore: store,
-                itemId: item.sId,
-                price: item.price,
-                quantity: item.quantity,
-                checked: item.checked,
-              ),
+              purchaseStore: store,
             );
           }
 
           return PurchaseItemTile(
             item: item,
-            store: PurchaseItemStore(
-              purchaseStore: store,
-              itemId: item.sId,
-              price: item.price,
-              quantity: item.quantity,
-              checked: item.checked,
-            ),
+            purchaseStore: store,
           );
         },
       );

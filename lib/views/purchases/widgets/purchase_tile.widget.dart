@@ -1,3 +1,4 @@
+import 'package:emptio/common/widgets/image_builder.widget.dart';
 import 'package:emptio/common/widgets/subtitle_item.widget.dart';
 import 'package:emptio/core/app_colors.dart';
 import 'package:emptio/models/purchase.model.dart';
@@ -50,50 +51,16 @@ class PurchaseTile extends StatelessWidget {
     return purchase.cost.formatMoney();
   }
 
-  bool hasImage() {
-    return purchase.market != null &&
-        purchase.market!.image != null &&
-        purchase.market!.image!.isNotEmpty;
-  }
-
   @override
   Widget build(BuildContext context) {
     return InkWell(
       onTap: () => onTap(),
       child: Container(
         padding: EdgeInsets.symmetric(horizontal: 10, vertical: 10),
-        decoration: BoxDecoration(
-          border: Border(
-            bottom: BorderSide(
-              color: AppColors.lightGrey,
-              width: 1,
-            ),
-          ),
-        ),
         child: Row(
           children: [
-            Container(
-              width: 80,
-              height: 80,
-              decoration: BoxDecoration(
-                image: hasImage()
-                    ? DecorationImage(
-                        fit: BoxFit.cover,
-                        image: NetworkImage(purchase.market!.image!),
-                      )
-                    : null,
-                borderRadius: BorderRadius.all(Radius.circular(8.0)),
-                border: Border.all(color: AppColors.grey),
-                color: AppColors.lightGrey.withOpacity(0.2),
-              ),
-              child: !hasImage()
-                  ? Icon(
-                      Icons.image_not_supported_outlined,
-                      color: AppColors.black,
-                      size: 32,
-                    )
-                  : null,
-            ),
+            ImageBuilder.fromString(
+                purchase.market != null ? purchase.market!.image : null),
             SizedBox(width: 10),
             Expanded(
               child: Column(

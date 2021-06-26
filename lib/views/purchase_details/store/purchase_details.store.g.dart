@@ -87,10 +87,8 @@ mixin _$PurchaseDetailsStore on _PurchaseDetailsStoreBase, Store {
       AsyncAction('_PurchaseDetailsStoreBase.updateItem');
 
   @override
-  Future<void> updateItem(String itemId, UpdatePurchaseItemViewModel model,
-      {bool shouldRefresh = false}) {
-    return _$updateItemAsyncAction.run(
-        () => super.updateItem(itemId, model, shouldRefresh: shouldRefresh));
+  Future<void> updateItem(String itemId, UpdatePurchaseItemViewModel model) {
+    return _$updateItemAsyncAction.run(() => super.updateItem(itemId, model));
   }
 
   final _$deleteItemAsyncAction =
@@ -101,19 +99,18 @@ mixin _$PurchaseDetailsStore on _PurchaseDetailsStoreBase, Store {
     return _$deleteItemAsyncAction.run(() => super.deleteItem(itemId));
   }
 
-  final _$_PurchaseDetailsStoreBaseActionController =
-      ActionController(name: '_PurchaseDetailsStoreBase');
+  final _$toggleCheckedAsyncAction =
+      AsyncAction('_PurchaseDetailsStoreBase.toggleChecked');
 
   @override
-  void setPurchase(PurchaseModel _value) {
-    final _$actionInfo = _$_PurchaseDetailsStoreBaseActionController
-        .startAction(name: '_PurchaseDetailsStoreBase.setPurchase');
-    try {
-      return super.setPurchase(_value);
-    } finally {
-      _$_PurchaseDetailsStoreBaseActionController.endAction(_$actionInfo);
-    }
+  Future<void> toggleChecked(
+      String itemsId, UpdatePurchaseItemViewModel model) {
+    return _$toggleCheckedAsyncAction
+        .run(() => super.toggleChecked(itemsId, model));
   }
+
+  final _$_PurchaseDetailsStoreBaseActionController =
+      ActionController(name: '_PurchaseDetailsStoreBase');
 
   @override
   void changeFilter(bool _value) {
@@ -127,11 +124,22 @@ mixin _$PurchaseDetailsStore on _PurchaseDetailsStoreBase, Store {
   }
 
   @override
-  void refreshItems() {
+  void updateItems(List<PurchaseItemModel> models) {
     final _$actionInfo = _$_PurchaseDetailsStoreBaseActionController
-        .startAction(name: '_PurchaseDetailsStoreBase.refreshItems');
+        .startAction(name: '_PurchaseDetailsStoreBase.updateItems');
     try {
-      return super.refreshItems();
+      return super.updateItems(models);
+    } finally {
+      _$_PurchaseDetailsStoreBaseActionController.endAction(_$actionInfo);
+    }
+  }
+
+  @override
+  void updatePurchase(PurchaseModel model) {
+    final _$actionInfo = _$_PurchaseDetailsStoreBaseActionController
+        .startAction(name: '_PurchaseDetailsStoreBase.updatePurchase');
+    try {
+      return super.updatePurchase(model);
     } finally {
       _$_PurchaseDetailsStoreBaseActionController.endAction(_$actionInfo);
     }

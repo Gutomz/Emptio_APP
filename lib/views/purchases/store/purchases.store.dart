@@ -1,6 +1,7 @@
 import 'package:emptio/models/purchase.model.dart';
 import 'package:emptio/repositories/purchase.repository.dart';
 import 'package:emptio/stores/auth.store.dart';
+import 'package:emptio/view-models/create_purchase.view-model.dart';
 import 'package:emptio/view-models/purchase_filter.view-model.dart';
 import 'package:get_it/get_it.dart';
 import 'package:mobx/mobx.dart';
@@ -84,19 +85,26 @@ abstract class _PurchasesStoreBase with Store {
   }
 
   @action
-  Future<PurchaseModel?> createPurchase() async {
+  Future<PurchaseModel?> createPurchase(
+      CreatePurchaseViewModel createModel) async {
     loading = true;
     error = "";
 
     try {
-      PurchaseModel model = await PurchaseRepository().create();
+      PurchaseModel model = await PurchaseRepository().create(createModel);
       purchaseList.insert(0, model);
       return model;
     } on String catch (_error) {
       error = _error;
+    } finally {
+      loading = false;
     }
+  }
 
-    loading = false;
+  @action
+  void updatePurchase(PurchaseModel model) {
+    int index = purchaseList.indexWhere((element) => element.sId == model.sId);
+    purchaseList[index] = model;
   }
 
   @action

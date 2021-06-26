@@ -111,8 +111,9 @@ mixin _$PurchasesStore on _PurchasesStoreBase, Store {
       AsyncAction('_PurchasesStoreBase.createPurchase');
 
   @override
-  Future<PurchaseModel?> createPurchase() {
-    return _$createPurchaseAsyncAction.run(() => super.createPurchase());
+  Future<PurchaseModel?> createPurchase(CreatePurchaseViewModel createModel) {
+    return _$createPurchaseAsyncAction
+        .run(() => super.createPurchase(createModel));
   }
 
   final _$deletePurchaseAsyncAction =
@@ -161,6 +162,17 @@ mixin _$PurchasesStore on _PurchasesStoreBase, Store {
         name: '_PurchasesStoreBase.setError');
     try {
       return super.setError(_value);
+    } finally {
+      _$_PurchasesStoreBaseActionController.endAction(_$actionInfo);
+    }
+  }
+
+  @override
+  void updatePurchase(PurchaseModel model) {
+    final _$actionInfo = _$_PurchasesStoreBaseActionController.startAction(
+        name: '_PurchasesStoreBase.updatePurchase');
+    try {
+      return super.updatePurchase(model);
     } finally {
       _$_PurchasesStoreBaseActionController.endAction(_$actionInfo);
     }

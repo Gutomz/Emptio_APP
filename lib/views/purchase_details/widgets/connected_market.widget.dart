@@ -1,5 +1,5 @@
+import 'package:emptio/common/widgets/image_builder.widget.dart';
 import 'package:emptio/core/app_colors.dart';
-import 'package:emptio/models/purchase.model.dart';
 import 'package:emptio/views/purchase_details/store/purchase_details.store.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
@@ -12,14 +12,6 @@ class ConnectedMarketIndicator extends StatelessWidget {
     Key? key,
   }) : super(key: key);
 
-  bool hasImage() {
-    PurchaseModel? purchase = detailsStore.purchase;
-
-    return purchase.market != null &&
-        purchase.market!.image != null &&
-        purchase.market!.image!.isNotEmpty;
-  }
-
   @override
   Widget build(BuildContext context) {
     return Observer(builder: (context) {
@@ -29,28 +21,14 @@ class ConnectedMarketIndicator extends StatelessWidget {
           children: [
             Row(
               children: [
-                Container(
-                  width: 35,
-                  height: 35,
-                  decoration: BoxDecoration(
-                    image: hasImage()
-                        ? DecorationImage(
-                            fit: BoxFit.cover,
-                            image: NetworkImage(
-                              detailsStore.purchase.market!.image!,
-                            ),
-                          )
-                        : null,
-                    borderRadius: BorderRadius.circular(20),
-                    color: Colors.white,
-                  ),
-                  child: !hasImage()
-                      ? Icon(
-                          Icons.image_not_supported_outlined,
-                          color: AppColors.black,
-                          size: 18,
-                        )
+                ImageBuilder.fromString(
+                  detailsStore.purchase.market != null
+                      ? detailsStore.purchase.market!.image
                       : null,
+                  size: 35,
+                  iconSize: 18,
+                  borderRadius: 20,
+                  backgroundColor: Colors.white,
                 ),
                 SizedBox(width: 20),
                 Text(

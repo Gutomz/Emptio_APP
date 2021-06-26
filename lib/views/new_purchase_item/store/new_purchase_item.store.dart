@@ -1,13 +1,21 @@
+import 'dart:io';
+
 import 'package:emptio/models/measurement.model.dart';
+import 'package:emptio/view-models/add_base_purchase_item.view-model.dart';
 import 'package:emptio/view-models/add_purchase_item.view-model.dart';
 import 'package:emptio/view-models/product_create.view-model.dart';
 import 'package:mobx/mobx.dart';
+import 'package:emptio/helpers/extensions.dart';
+
 part 'new_purchase_item.store.g.dart';
 
 class NewPurchaseItemStore = _NewPurchaseItemStoreBase
     with _$NewPurchaseItemStore;
 
 abstract class _NewPurchaseItemStoreBase with Store {
+  @observable
+  File? image;
+
   @observable
   String? brand;
 
@@ -30,6 +38,9 @@ abstract class _NewPurchaseItemStoreBase with Store {
 
   @observable
   int quantity = 1;
+
+  @action
+  void setImage(File? _value) => image = _value;
 
   @action
   void setBrand(String _value) => brand = _value;
@@ -65,21 +76,34 @@ abstract class _NewPurchaseItemStoreBase with Store {
   @action
   void removeTag(String tag) => tags.removeWhere((element) => element == tag);
 
+  ProductCreateViewModel getProductModel() {
+    return ProductCreateViewModel(
+      brand: brand!,
+      name: name!,
+      variation: variation,
+      weight: MeasurementModel(
+        value: weightValue,
+        unit: weightUnit,
+      ),
+      tags: tags.toList(),
+      image: image != null ? image!.parseToBase64() : "",
+    );
+  }
+
   @action
   AddPurchaseItemViewModel getModel() {
     return AddPurchaseItemViewModel(
       price: price,
       quantity: quantity,
-      productModel: ProductCreateViewModel(
-        brand: brand!,
-        name: name!,
-        variation: variation,
-        weight: MeasurementModel(
-          value: weightValue,
-          unit: weightUnit,
-        ),
-        tags: tags.toList(),
-      ),
+      productModel: getProductModel(),
+    );
+  }
+
+  @action
+  AddBasePurchaseItemViewModel getBaseModel() {
+    return AddBasePurchaseItemViewModel(
+      quantity: quantity,
+      productModel: getProductModel(),
     );
   }
 

@@ -80,9 +80,8 @@ mixin _$PurchaseItemStore on _PurchaseItemStoreBase, Store {
       AsyncAction('_PurchaseItemStoreBase.updateItem');
 
   @override
-  Future<void> updateItem({bool shoulRefresh = false}) {
-    return _$updateItemAsyncAction
-        .run(() => super.updateItem(shoulRefresh: shoulRefresh));
+  Future<void> updateItem() {
+    return _$updateItemAsyncAction.run(() => super.updateItem());
   }
 
   final _$deleteItemAsyncAction =

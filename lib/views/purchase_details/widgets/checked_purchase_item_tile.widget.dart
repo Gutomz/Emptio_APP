@@ -1,7 +1,9 @@
 import 'package:emptio/common/widgets/dismissible_background.widget.dart';
+import 'package:emptio/common/widgets/image_builder.widget.dart';
 import 'package:emptio/common/widgets/subtitle_item.widget.dart';
 import 'package:emptio/core/app_colors.dart';
 import 'package:emptio/models/purchase_item.model.dart';
+import 'package:emptio/views/purchase_details/store/purchase_details.store.dart';
 import 'package:emptio/views/purchase_details/store/purchase_item.store.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
@@ -13,9 +15,16 @@ class CheckedPurchaseItemTile extends StatelessWidget {
 
   CheckedPurchaseItemTile({
     required this.item,
-    required this.store,
+    required PurchaseDetailsStore purchaseStore,
     Key? key,
-  }) : super(key: key);
+  })  : store = PurchaseItemStore(
+          purchaseStore: purchaseStore,
+          itemId: item.sId,
+          price: item.price,
+          quantity: item.quantity,
+          checked: item.checked,
+        ),
+        super(key: key);
 
   void onDismissed(DismissDirection direction) {
     store.toggleChecked();
@@ -26,11 +35,12 @@ class CheckedPurchaseItemTile extends StatelessWidget {
     return Dismissible(
       key: Key(item.sId),
       onDismissed: onDismissed,
-      direction: DismissDirection.startToEnd,
+      direction: DismissDirection.endToStart,
       background: DismissibleBackground(
         icon: Icons.remove_done_rounded,
         title: 'Remover',
         color: AppColors.red,
+        secondary: true,
       ),
       child: Container(
         padding: EdgeInsets.symmetric(horizontal: 10, vertical: 10),
@@ -44,27 +54,9 @@ class CheckedPurchaseItemTile extends StatelessWidget {
         ),
         child: Row(
           children: [
-            Container(
-              width: 95,
-              height: 95,
-              decoration: BoxDecoration(
-                image: hasImage()
-                    ? DecorationImage(
-                        fit: BoxFit.cover,
-                        image: NetworkImage(item.product.image!),
-                      )
-                    : null,
-                borderRadius: BorderRadius.all(Radius.circular(8.0)),
-                border: Border.all(color: AppColors.grey),
-                color: AppColors.lightGrey.withOpacity(0.2),
-              ),
-              child: !hasImage()
-                  ? Icon(
-                      Icons.image_not_supported_outlined,
-                      color: AppColors.black,
-                      size: 32,
-                    )
-                  : null,
+            Hero(
+              tag: 'product${item.product.sId}',
+              child: ImageBuilder.fromString(item.product.image, size: 95),
             ),
             SizedBox(width: 10),
             Expanded(
@@ -158,9 +150,5 @@ class CheckedPurchaseItemTile extends StatelessWidget {
         ),
       ),
     );
-  }
-
-  bool hasImage() {
-    return item.product.image != null && item.product.image!.isNotEmpty;
   }
 }

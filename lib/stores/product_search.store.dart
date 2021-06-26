@@ -9,7 +9,11 @@ class ProductSearchStore = _ProductSearchStoreBase with _$ProductSearchStore;
 abstract class _ProductSearchStoreBase with Store {
   int limit;
 
-  _ProductSearchStoreBase({String purchaseId = "", this.limit = 10}) {
+  _ProductSearchStoreBase({
+    String purchaseId = "",
+    String basePurchaseId = "",
+    this.limit = 10,
+  }) {
     autorun((_) async {
       if (query.isNotEmpty) {
         setLoading(true);
@@ -18,6 +22,7 @@ abstract class _ProductSearchStoreBase with Store {
           limit: limit,
           skip: skip,
           purchaseId: purchaseId,
+          basePurchaseId: basePurchaseId,
         );
 
         await loadProducts(filter);

@@ -6,7 +6,7 @@ import 'package:get_it/get_it.dart';
 import 'package:http/http.dart' as http;
 
 class AppApi {
-  static final String _url = '192.168.15.15:3000';
+  static final String _url = '192.168.0.194:3000';
 
   static String getUrl(String? extension) {
     return "http://" + _url + _getPath(extension);

@@ -9,7 +9,7 @@ class FeedView extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: MainAppBar(
-        title: "Notícias",
+        title: Text("Notícias"),
         drawerContext: context,
         actions: [
           NotificationActionButton(),

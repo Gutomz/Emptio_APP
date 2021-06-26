@@ -4,6 +4,7 @@ import 'package:emptio/data/dao/purchase/purchase.dao.dart';
 import 'package:emptio/models/purchase.model.dart';
 import 'package:emptio/stores/auth.store.dart';
 import 'package:emptio/view-models/add_purchase_item.view-model.dart';
+import 'package:emptio/view-models/create_purchase.view-model.dart';
 import 'package:emptio/view-models/purchase_filter.view-model.dart';
 import 'package:emptio/view-models/update_purchase_item.view-model.dart';
 import 'package:get_it/get_it.dart';
@@ -13,10 +14,10 @@ class PurchaseRepository {
   final AppApi _api = AppApi();
   final AuthStore _authStore = GetIt.I<AuthStore>();
 
-  Future<PurchaseModel> create() async {
+  Future<PurchaseModel> create(CreatePurchaseViewModel model) async {
     try {
       if (_authStore.isLogged) {
-        dynamic data = await _api.post("/purchases");
+        dynamic data = await _api.post("/purchases", body: model.toJson());
         return PurchaseModel.fromJson(data);
       }
 
@@ -34,8 +35,7 @@ class PurchaseRepository {
         List data =
             await _api.get('/purchases', queryParameters: filter.toQuery());
         var list = data
-            .map((purchase) => PurchaseModel.fromJson(purchase))
-            .cast<PurchaseModel>()
+            .map<PurchaseModel>((purchase) => PurchaseModel.fromJson(purchase))
             .toList();
         return list;
       }
@@ -102,7 +102,8 @@ class PurchaseRepository {
   Future<PurchaseModel> removeItem(String purchaseId, String itemId) async {
     try {
       if (_authStore.isLogged) {
-        return await _api.delete("/purchases/$purchaseId/$itemId");
+        var data = await _api.delete("/purchases/$purchaseId/$itemId");
+        return PurchaseModel.fromJson(data);
       }
 
       return PurchaseDao.removeItemParsed(

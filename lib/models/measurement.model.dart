@@ -10,19 +10,16 @@ class MeasurementTypes {
 }
 
 class MeasurementModel {
-  String? sId;
   double value;
   String unit;
 
   MeasurementModel({
-    this.sId,
     required this.value,
     required this.unit,
   });
 
   factory MeasurementModel.fromJson(Map<String, dynamic> json) {
     var model = MeasurementModel(
-      sId: json['_id'],
       value: json['value'].toDouble(),
       unit: json['unit'],
     );
@@ -32,7 +29,6 @@ class MeasurementModel {
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['_id'] = this.sId;
     data['value'] = this.value;
     data['unit'] = this.unit;
     return data;

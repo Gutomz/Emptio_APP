@@ -130,7 +130,6 @@ class ProductDao {
       variation: product.variation,
       tags: product.tags,
       weight: MeasurementModel(
-        sId: product.key.toString(),
         unit: product.weight.unit,
         value: product.weight.value,
       ),

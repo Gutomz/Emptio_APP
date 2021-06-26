@@ -4,13 +4,11 @@ import 'package:emptio/common/widgets/empty_placeholder.widget.dart';
 import 'package:emptio/core/app_assets.dart';
 import 'package:emptio/core/app_colors.dart';
 import 'package:emptio/models/purchase.model.dart';
-import 'package:emptio/stores/app.store.dart';
 import 'package:emptio/views/purchase_details/purchase_details.view.dart';
 import 'package:emptio/views/purchases/store/purchases.store.dart';
 import 'package:emptio/views/purchases/widgets/purchase_tile.widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
-import 'package:get_it/get_it.dart';
 
 class PurchaseList extends StatefulWidget {
   final PurchasesStore store;
@@ -26,8 +24,7 @@ class PurchaseList extends StatefulWidget {
   _PurchaseListState createState() => _PurchaseListState(purchasesStore: store);
 }
 
-class _PurchaseListState extends State<PurchaseList>
-    with AutomaticKeepAliveClientMixin<PurchaseList> {
+class _PurchaseListState extends State<PurchaseList> {
   final PurchasesStore purchasesStore;
 
   _PurchaseListState({required this.purchasesStore});
@@ -48,21 +45,13 @@ class _PurchaseListState extends State<PurchaseList>
 
   Future<void> onPurchaseTap(
       BuildContext context, PurchaseModel purchase) async {
-    await Navigator.of(context).push(
-      MaterialPageRoute(
-        builder: (context) => PurchaseDetailsView(
-          purchase: purchase,
-        ),
-      ),
-    );
-
-    GetIt.I<AppStore>().dismissPurchaseDetails();
+    Navigator.of(context).push(MaterialPageRoute(
+      builder: (context) => PurchaseDetailsView(purchase: purchase),
+    ));
   }
 
   @override
   Widget build(BuildContext context) {
-    super.build(context);
-
     return Observer(builder: (context) {
       if (purchasesStore.error.isNotEmpty) {
         return Center(
@@ -91,7 +80,14 @@ class _PurchaseListState extends State<PurchaseList>
         backgroundColor: AppColors.lighBlue,
         color: Colors.white,
         onRefresh: purchasesStore.resetPage,
-        child: ListView.builder(
+        child: ListView.separated(
+          key:
+              PageStorageKey<String>('purchases_list-${purchasesStore.status}'),
+          padding: EdgeInsets.only(bottom: 50),
+          separatorBuilder: (context, index) => Divider(
+            height: 1,
+            color: AppColors.grey,
+          ),
           itemCount: purchasesStore.itemCount,
           itemBuilder: (context, index) {
             if (index < purchasesStore.purchaseList.length) {
@@ -100,11 +96,12 @@ class _PurchaseListState extends State<PurchaseList>
               if (widget.canDelete) {
                 return Dismissible(
                   key: Key(purchase.sId),
-                  direction: DismissDirection.startToEnd,
+                  direction: DismissDirection.endToStart,
                   background: DismissibleBackground(
                     icon: Icons.delete,
                     title: "Excluir",
                     color: AppColors.red,
+                    secondary: true,
                   ),
                   onDismissed: (_) => purchasesStore.deletePurchase(index),
                   confirmDismiss: confirmDismiss,
@@ -133,7 +130,4 @@ class _PurchaseListState extends State<PurchaseList>
       );
     });
   }
-
-  @override
-  bool get wantKeepAlive => true;
 }

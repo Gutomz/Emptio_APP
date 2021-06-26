@@ -1,21 +1,31 @@
+import 'dart:io';
+
 import 'package:emptio/common/widgets/add_item_bottom_appbar.widget.dart';
+import 'package:emptio/common/widgets/image_builder.widget.dart';
 import 'package:emptio/common/widgets/input_new_tag_confirm_dialog.widget.dart';
 import 'package:emptio/common/widgets/market_indicator.widget.dart';
 import 'package:emptio/common/widgets/product_tag.widget.dart';
 import 'package:emptio/common/widgets/underlined_text_field.widget.dart';
 import 'package:emptio/core/app_colors.dart';
+import 'package:emptio/helpers/pick_image.dart';
+import 'package:emptio/models/market.model.dart';
 import 'package:emptio/models/measurement.model.dart';
-import 'package:emptio/models/purchase.model.dart';
 import 'package:emptio/views/new_purchase_item/store/new_purchase_item.store.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_masked_text2/flutter_masked_text2.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 
 class NewPurchaseItemView extends StatelessWidget {
-  NewPurchaseItemView({required this.purchase, Key? key}) : super(key: key);
+  NewPurchaseItemView({
+    this.connectedMarket,
+    this.isBaseItem = false,
+    Key? key,
+  }) : super(key: key);
 
-  final PurchaseModel purchase;
+  final MarketModel? connectedMarket;
   final NewPurchaseItemStore store = NewPurchaseItemStore();
+  final PickImage picker = PickImage();
+  final bool isBaseItem;
 
   final priceFieldController = MoneyMaskedTextController(
     decimalSeparator: ',',
@@ -30,6 +40,19 @@ class NewPurchaseItemView extends StatelessWidget {
     initialValue: 0,
   );
 
+  _selectImage(BuildContext context, File? _current) async {
+    File? image = await picker.showPicker(context, _current != null);
+    store.setImage(image);
+  }
+
+  void onAddPressed(BuildContext context) {
+    if (isBaseItem) {
+      return Navigator.of(context).pop(store.getBaseModel());
+    }
+
+    return Navigator.of(context).pop(store.getModel());
+  }
+
   @override
   Widget build(BuildContext context) {
     final node = FocusScope.of(context);
@@ -37,11 +60,11 @@ class NewPurchaseItemView extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: Text("Novo Produto"),
-        bottom: purchase.market != null
+        bottom: connectedMarket != null
             ? PreferredSize(
                 child: Padding(
                   padding: const EdgeInsets.only(left: 15, bottom: 15),
-                  child: MarketIndicator(market: purchase.market!),
+                  child: MarketIndicator(market: connectedMarket!),
                 ),
                 preferredSize: Size.fromHeight(60),
               )
@@ -54,27 +77,23 @@ class NewPurchaseItemView extends StatelessWidget {
             children: [
               Container(
                 alignment: Alignment.center,
-                child: Material(
-                  elevation: 5,
-                  borderRadius: BorderRadius.all(Radius.circular(8.0)),
-                  child: Container(
-                    width: 80,
-                    height: 80,
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.all(Radius.circular(8.0)),
-                      border: Border.all(color: AppColors.grey),
-                      color: AppColors.white,
-                    ),
-                    child: Icon(
-                      Icons.image_not_supported_outlined,
-                      color: AppColors.black,
-                      size: 32,
-                    ),
-                  ),
-                ),
+                child: ImageBuilder.fromFile(store.image),
               ),
-              TextButton(onPressed: () {}, child: Text("Adicionar foto")),
-              SizedBox(height: 25),
+              Observer(builder: (context) {
+                return TextButton(
+                  onPressed: () => _selectImage(context, store.image),
+                  child: Text(
+                    store.image != null
+                        ? 'Alterar imagem'
+                        : 'Selecionar imagem',
+                  ),
+                  style: ButtonStyle(
+                    foregroundColor:
+                        MaterialStateProperty.all(AppColors.orange),
+                    overlayColor: MaterialStateProperty.all(Colors.orange[50]),
+                  ),
+                );
+              }),
               Observer(builder: (_) {
                 return UnderlinedTextField(
                   label: "Marca",
@@ -139,17 +158,18 @@ class NewPurchaseItemView extends StatelessWidget {
                       );
                     }),
                   ),
-                  SizedBox(width: 25),
-                  Flexible(
-                    child: UnderlinedTextField(
-                      label: "Preço",
-                      controller: priceFieldController,
-                      keyboardType: TextInputType.numberWithOptions(),
-                      textInputAction: TextInputAction.done,
-                      onChanged: (value) =>
-                          store.setPrice(priceFieldController.numberValue),
+                  if (!isBaseItem) SizedBox(width: 25),
+                  if (!isBaseItem)
+                    Flexible(
+                      child: UnderlinedTextField(
+                        label: "Preço",
+                        controller: priceFieldController,
+                        keyboardType: TextInputType.numberWithOptions(),
+                        textInputAction: TextInputAction.done,
+                        onChanged: (value) =>
+                            store.setPrice(priceFieldController.numberValue),
+                      ),
                     ),
-                  ),
                 ],
               ),
               SizedBox(height: 40),
@@ -235,15 +255,12 @@ class NewPurchaseItemView extends StatelessWidget {
       ),
       bottomNavigationBar: Observer(builder: (context) {
         return AddItemBottomAppBar(
+          hideTotal: isBaseItem,
           onDecrementPressed:
               store.minQuantityReached ? null : store.decrementQuantity,
           onIncrementPressed:
               store.maxQuantityReached ? null : store.incrementQuantity,
-          onAddPressed: store.formValid
-              ? () {
-                  Navigator.of(context).pop(store.getModel());
-                }
-              : null,
+          onAddPressed: store.formValid ? () => onAddPressed(context) : null,
           quantity: store.quantity,
           total: store.total,
         );

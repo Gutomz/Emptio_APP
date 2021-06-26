@@ -9,7 +9,8 @@ class AddItemBottomAppBar extends StatelessWidget {
     this.onIncrementPressed,
     this.onAddPressed,
     required this.quantity,
-    required this.total,
+    this.total = 0,
+    this.hideTotal = false,
   }) : super(key: key);
 
   final Function()? onDecrementPressed;
@@ -17,6 +18,7 @@ class AddItemBottomAppBar extends StatelessWidget {
   final Function()? onAddPressed;
   final int quantity;
   final double total;
+  final bool hideTotal;
 
   @override
   Widget build(BuildContext context) {
@@ -78,13 +80,22 @@ class AddItemBottomAppBar extends StatelessWidget {
                   ),
                 ),
                 child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  mainAxisAlignment: !hideTotal
+                      ? MainAxisAlignment.spaceBetween
+                      : MainAxisAlignment.center,
                   children: [
-                    Text("Adicionar"),
                     Text(
-                      "R\$${total.formatMoney()}",
-                      style: TextStyle(fontWeight: FontWeight.w700),
+                      "Adicionar",
+                      style: TextStyle(
+                        fontWeight:
+                            !hideTotal ? FontWeight.w500 : FontWeight.w700,
+                      ),
                     ),
+                    if (!hideTotal)
+                      Text(
+                        "R\$${total.formatMoney()}",
+                        style: TextStyle(fontWeight: FontWeight.w700),
+                      ),
                   ],
                 ),
               ),

@@ -2,10 +2,9 @@ import 'package:emptio/common/widgets/dismissible_background.widget.dart';
 import 'package:emptio/common/widgets/market_indicator.widget.dart';
 import 'package:emptio/common/widgets/product_tile.widget.dart';
 import 'package:emptio/core/app_colors.dart';
+import 'package:emptio/models/market.model.dart';
 import 'package:emptio/models/product.model.dart';
 import 'package:emptio/stores/product_search.store.dart';
-import 'package:emptio/view-models/add_purchase_item.view-model.dart';
-import 'package:emptio/views/purchase_details/store/purchase_details.store.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 
@@ -19,23 +18,21 @@ class ProductSearchResponse {
 
 class ProductSearch extends SearchDelegate<ProductSearchResponse?> {
   late ProductSearchStore _store;
-  final PurchaseDetailsStore detailsStore;
 
-  ProductSearch({required this.detailsStore}) {
+  final Function(ProductModel) onQuickSelect;
+  final MarketModel? connectedMarket;
+
+  ProductSearch({
+    required this.onQuickSelect,
+    this.connectedMarket,
+    String purchaseId = "",
+    String basePurchaseId = "",
+  }) {
     _store = ProductSearchStore(
-      purchaseId: this.detailsStore.purchase.sId,
+      purchaseId: purchaseId,
+      basePurchaseId: basePurchaseId,
       limit: 10,
     );
-  }
-
-  void onQuickSelect(ProductModel product) {
-    detailsStore.addItem(AddPurchaseItemViewModel(
-      price: product.marketPrice ?? 0,
-      quantity: 1,
-      productId: product.sId,
-    ));
-
-    _store.removeProduct(product.sId);
   }
 
   @override
@@ -91,11 +88,11 @@ class ProductSearch extends SearchDelegate<ProductSearchResponse?> {
 
   @override
   PreferredSizeWidget? buildBottom(BuildContext context) {
-    if (detailsStore.isMarketConnected) {
+    if (connectedMarket != null) {
       return PreferredSize(
         child: Padding(
           padding: const EdgeInsets.only(left: 15, bottom: 15),
-          child: MarketIndicator(market: detailsStore.purchase.market!),
+          child: MarketIndicator(market: connectedMarket!),
         ),
         preferredSize: Size.fromHeight(75),
       );
@@ -168,7 +165,10 @@ class ProductSearch extends SearchDelegate<ProductSearchResponse?> {
             return Dismissible(
               key: Key(product.sId),
               direction: DismissDirection.startToEnd,
-              onDismissed: (direction) => onQuickSelect(product),
+              onDismissed: (direction) {
+                onQuickSelect(product);
+                _store.removeProduct(product.sId);
+              },
               background: DismissibleBackground(
                 icon: Icons.check_rounded,
                 title: "Adicionar",
@@ -178,6 +178,7 @@ class ProductSearch extends SearchDelegate<ProductSearchResponse?> {
                 product,
                 onTap: () =>
                     close(context, ProductSearchResponse(product: product)),
+                hidePrice: connectedMarket == null,
               ),
             );
           }

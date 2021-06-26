@@ -5,6 +5,8 @@ class AppAssets {
   static String get svgIcPurchasesEmpty => "assets/svg/ic_purchases_empty.svg";
   static String get svgIcPurchaseItemsEmpty =>
       "assets/svg/ic_purchase_items_empty.svg";
+  static String get svgIcBasePurchasesEmpty =>
+      "assets/svg/ic_base_purchases_empty.svg";
 
   // Images
   static String get imageMarket => "assets/images/market.jpg";
