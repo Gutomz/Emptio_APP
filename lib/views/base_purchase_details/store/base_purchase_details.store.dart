@@ -3,6 +3,7 @@ import 'package:emptio/models/base_purchase_item.model.dart';
 import 'package:emptio/repositories/base_purchase.repository.dart';
 import 'package:emptio/stores/app.store.dart';
 import 'package:emptio/view-models/add_base_purchase_item.view-model.dart';
+import 'package:emptio/view-models/update_base_purchase.view-model.dart';
 import 'package:emptio/view-models/update_base_purchase_item.view-model.dart';
 import 'package:emptio/views/base_purchases/store/base_purchases.store.dart';
 import 'package:get_it/get_it.dart';
@@ -19,17 +20,40 @@ abstract class _BasePurchaseDetailsStoreBase with Store {
   _BasePurchaseDetailsStoreBase({
     required this.purchase,
     required this.items,
-  });
+  }) : name = purchase.name;
 
   BasePurchaseModel purchase;
 
   ObservableList<BasePurchaseItemModel> items;
 
   @observable
+  String name;
+
+  @observable
   bool loading = false;
 
   @observable
   String error = "";
+
+  @action
+  Future<void> changeName(String _value) async {
+    loading = true;
+    error = "";
+    name = _value;
+
+    var model = UpdateBasePurchaseViewModel(name: _value);
+
+    try {
+      BasePurchaseModel _purchase =
+          await BasePurchaseRepository().updatePurchase(purchase.sId, model);
+
+      updatePurchase(_purchase);
+    } on String catch (_error) {
+      error = _error;
+    }
+
+    loading = false;
+  }
 
   @action
   Future<void> addItem(AddBasePurchaseItemViewModel model) async {
@@ -55,8 +79,8 @@ abstract class _BasePurchaseDetailsStoreBase with Store {
     error = "";
 
     try {
-      BasePurchaseModel _purchase =
-          await BasePurchaseRepository().updateItem(purchase.sId, itemId, model);
+      BasePurchaseModel _purchase = await BasePurchaseRepository()
+          .updateItem(purchase.sId, itemId, model);
 
       updatePurchase(_purchase);
     } on String catch (_error) {

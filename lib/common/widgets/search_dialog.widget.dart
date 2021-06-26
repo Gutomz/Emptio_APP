@@ -2,13 +2,17 @@ import 'package:emptio/core/app_colors.dart';
 import 'package:flutter/material.dart';
 
 class SearchDialog extends StatelessWidget {
-  SearchDialog({required this.currentSearch, Key? key})
-      : _controller = TextEditingController(text: currentSearch),
+  SearchDialog({
+    required this.currentSearch,
+    this.textInputAction,
+    Key? key,
+  })  : _controller = TextEditingController(text: currentSearch),
         super(key: key);
 
   final String currentSearch;
 
   final TextEditingController _controller;
+  final TextInputAction? textInputAction;
 
   @override
   Widget build(BuildContext context) {
@@ -23,7 +27,7 @@ class SearchDialog extends StatelessWidget {
             child: TextField(
               controller: _controller,
               autofocus: true,
-              textInputAction: TextInputAction.search,
+              textInputAction: textInputAction ?? TextInputAction.search,
               decoration: InputDecoration(
                 border: InputBorder.none,
                 focusedBorder: InputBorder.none,

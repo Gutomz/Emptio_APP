@@ -1,4 +1,5 @@
 import 'package:emptio/common/delegates/purchase_item_search/purchase_item_search.dart';
+import 'package:emptio/common/widgets/search_dialog.widget.dart';
 import 'package:emptio/models/base_purchase.model.dart';
 import 'package:emptio/models/base_purchase_item.model.dart';
 import 'package:emptio/models/product.model.dart';
@@ -9,6 +10,7 @@ import 'package:emptio/views/base_purchase_details/widgets/base_purchase_items_l
 import 'package:emptio/views/edit_purchase_item/edit_puchase_item.view.dart';
 import 'package:emptio/views/new_purchase_item/new_purchase_item.view.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:mobx/mobx.dart';
 
 class BasePurchaseDetailsView extends StatefulWidget {
@@ -89,6 +91,29 @@ class _BasePurchaseDetailsViewState extends State<BasePurchaseDetailsView> {
     }
   }
 
+  Future<void> openEditPurchaseName(BuildContext context) async {
+    String? name = await showDialog(
+      context: context,
+      builder: (context) => SearchDialog(
+        currentSearch: _store.name,
+        textInputAction: TextInputAction.done,
+      ),
+    );
+
+    if (name != null && name != _store.name) {
+      if (name.isNotEmpty) {
+        _store.changeName(name);
+      } else {
+        ScaffoldMessenger.of(context).hideCurrentSnackBar();
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text("Nome inválido!"),
+          ),
+        );
+      }
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -99,7 +124,25 @@ class _BasePurchaseDetailsViewState extends State<BasePurchaseDetailsView> {
             Navigator.of(context).pop();
           },
         ),
-        title: Text("Detalhes"),
+        title: GestureDetector(
+          onTap: () => openEditPurchaseName(context),
+          child: LayoutBuilder(
+            builder: (context, constraints) {
+              return Container(
+                width: constraints.biggest.width,
+                child: Observer(builder: (_) {
+                  return Text(_store.name);
+                }),
+              );
+            },
+          ),
+        ),
+        actions: [
+          IconButton(
+            onPressed: () => openEditPurchaseName(context),
+            icon: Icon(Icons.edit_outlined),
+          )
+        ],
       ),
       body: BasePurchaseItemsList(store: _store),
       floatingActionButton: FloatingActionButton(

@@ -24,6 +24,21 @@ mixin _$BasePurchaseDetailsStore on _BasePurchaseDetailsStoreBase, Store {
               name: '_BasePurchaseDetailsStoreBase.itemsCount'))
           .value;
 
+  final _$nameAtom = Atom(name: '_BasePurchaseDetailsStoreBase.name');
+
+  @override
+  String get name {
+    _$nameAtom.reportRead();
+    return super.name;
+  }
+
+  @override
+  set name(String value) {
+    _$nameAtom.reportWrite(value, super.name, () {
+      super.name = value;
+    });
+  }
+
   final _$loadingAtom = Atom(name: '_BasePurchaseDetailsStoreBase.loading');
 
   @override
@@ -52,6 +67,14 @@ mixin _$BasePurchaseDetailsStore on _BasePurchaseDetailsStoreBase, Store {
     _$errorAtom.reportWrite(value, super.error, () {
       super.error = value;
     });
+  }
+
+  final _$changeNameAsyncAction =
+      AsyncAction('_BasePurchaseDetailsStoreBase.changeName');
+
+  @override
+  Future<void> changeName(String _value) {
+    return _$changeNameAsyncAction.run(() => super.changeName(_value));
   }
 
   final _$addItemAsyncAction =
@@ -107,6 +130,7 @@ mixin _$BasePurchaseDetailsStore on _BasePurchaseDetailsStoreBase, Store {
   @override
   String toString() {
     return '''
+name: ${name},
 loading: ${loading},
 error: ${error},
 filtredItems: ${filtredItems},

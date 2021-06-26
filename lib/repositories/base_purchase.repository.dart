@@ -5,6 +5,7 @@ import 'package:emptio/models/base_purchase.model.dart';
 import 'package:emptio/stores/auth.store.dart';
 import 'package:emptio/view-models/add_base_purchase_item.view-model.dart';
 import 'package:emptio/view-models/base_purchase_filter.view-model.dart';
+import 'package:emptio/view-models/update_base_purchase.view-model.dart';
 import 'package:emptio/view-models/update_base_purchase_item.view-model.dart';
 import 'package:get_it/get_it.dart';
 
@@ -109,6 +110,23 @@ class BasePurchaseRepository {
 
       return BasePurchaseDao.removeItemParsed(
           int.parse(purchaseId), int.parse(itemId));
+    } catch (error) {
+      print('$TAG.removeItem: $error');
+
+      return Future.error(AppApiErrors.handleError(error));
+    }
+  }
+
+  Future<BasePurchaseModel> updatePurchase(
+      String purchaseId, UpdateBasePurchaseViewModel model) async {
+    try {
+      if (_authStore.isLogged) {
+        var data =
+            await _api.put("/base-purchases/$purchaseId", model.toJson());
+        return BasePurchaseModel.fromJson(data);
+      }
+
+      return BasePurchaseDao.updateParsed(int.parse(purchaseId), model);
     } catch (error) {
       print('$TAG.removeItem: $error');
 

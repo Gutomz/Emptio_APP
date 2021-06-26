@@ -8,6 +8,7 @@ import 'package:emptio/models/base_purchase.model.dart';
 import 'package:emptio/models/base_purchase_item.model.dart';
 import 'package:emptio/view-models/add_base_purchase_item.view-model.dart';
 import 'package:emptio/view-models/base_purchase_filter.view-model.dart';
+import 'package:emptio/view-models/update_base_purchase.view-model.dart';
 import 'package:emptio/view-models/update_base_purchase_item.view-model.dart';
 import 'package:hive/hive.dart';
 
@@ -25,11 +26,28 @@ class BasePurchaseDao {
 
     final createdAt = DateTime.now().toIso8601String();
     int key = await _mBox!.add(BasePurchase(
-      name: 'Unamed',
+      name: "Lista ${_mBox!.length + 1}",
       itemsKey: List.empty(growable: true),
       createdAt: createdAt,
       updatedAt: createdAt,
     ));
+
+    return _mBox!.get(key)!;
+  }
+
+  static Future<BasePurchase> update(
+      int key, UpdateBasePurchaseViewModel model) async {
+    await _openBox();
+
+    BasePurchase? purchase = _mBox!.get(key);
+
+    if (purchase == null)
+      throw DatabaseError.notFoundError(AppErrors.PURCHASE_NOT_FOUND);
+
+    purchase.name = model.name;
+    purchase.updatedAt = DateTime.now().toIso8601String();
+
+    await purchase.save();
 
     return _mBox!.get(key)!;
   }
@@ -142,6 +160,12 @@ class BasePurchaseDao {
 
   static Future<BasePurchaseModel> createParsed() async {
     var purchase = await create();
+    return await parseToBasePurchaseModel(purchase);
+  }
+
+  static Future<BasePurchaseModel> updateParsed(
+      int key, UpdateBasePurchaseViewModel model) async {
+    var purchase = await update(key, model);
     return await parseToBasePurchaseModel(purchase);
   }
 
