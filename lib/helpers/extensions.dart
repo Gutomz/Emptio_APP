@@ -21,7 +21,7 @@ extension StringExtension on String {
   }
 }
 
-extension IterableExtension on Iterable {
+extension IterableExtension<T> on Iterable<T> {
   bool containElement(bool Function(dynamic) checkFunction) {
     for (var element in this) {
       if (checkFunction(element)) {
@@ -30,6 +30,11 @@ extension IterableExtension on Iterable {
     }
 
     return false;
+  }
+
+  T? safeFirstWhere(bool Function(T) test) {
+    final sublist = where(test);
+    return sublist.isEmpty ? null : sublist.first;
   }
 }
 

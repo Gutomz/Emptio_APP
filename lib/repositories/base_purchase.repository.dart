@@ -87,7 +87,9 @@ class BasePurchaseRepository {
     try {
       if (_authStore.isLogged) {
         var data = await _api.put(
-            "/base-purchases/$purchaseId/$itemId", model.toJson());
+          "/base-purchases/$purchaseId/$itemId",
+          body: model.toJson(),
+        );
 
         return BasePurchaseModel.fromJson(data);
       }
@@ -121,14 +123,16 @@ class BasePurchaseRepository {
       String purchaseId, UpdateBasePurchaseViewModel model) async {
     try {
       if (_authStore.isLogged) {
-        var data =
-            await _api.put("/base-purchases/$purchaseId", model.toJson());
+        var data = await _api.put(
+          "/base-purchases/$purchaseId",
+          body: model.toJson(),
+        );
         return BasePurchaseModel.fromJson(data);
       }
 
       return BasePurchaseDao.updateParsed(int.parse(purchaseId), model);
     } catch (error) {
-      print('$TAG.removeItem: $error');
+      print('$TAG.updatePurchase: $error');
 
       return Future.error(AppApiErrors.handleError(error));
     }

@@ -1,4 +1,5 @@
 import 'package:emptio/core/app_errors.dart';
+import 'package:emptio/data/dao/product_market/product_market.dao.dart';
 import 'package:emptio/data/dao/purchase/purchase.dao.dart';
 import 'package:emptio/data/dao/purchase_item/purchase_item.dao.dart';
 import 'package:emptio/data/database.dart';
@@ -48,7 +49,7 @@ class ProductDao {
 
   static Future<List<Product>> getAll(ProductFilterViewModel filter) async {
     await _openBox();
-    // String marketId = "";
+    int? marketKey;
     List<int> excludeIds = List.empty(growable: true);
     if (filter.purchaseId.isNotEmpty) {
       Purchase purchase = await PurchaseDao.get(int.parse(filter.purchaseId));
@@ -56,7 +57,7 @@ class ProductDao {
         var productKey = (await PurchaseItemDao.get(itemKey)).productKey;
         excludeIds.add(productKey);
       }
-      // TODO - get market_id from purchase to get market product relation
+      marketKey = purchase.marketKey;
     }
 
     print(_mBox!.values);
@@ -81,7 +82,19 @@ class ProductDao {
     }).toList())
       ..skip(filter.skip).take(filter.limit);
 
-    // TODO - add product market relation price to each product
+    if (marketKey != null) {
+      for (var product in products) {
+        var productMarket = await ProductMarketDao.find(
+          marketKey: marketKey,
+          productKey: product.key,
+        );
+
+        if (productMarket != null) {
+          product.marketPrice = productMarket.price;
+          product.marketPriceUpdatedAt = productMarket.updatedAt;
+        }
+      }
+    }
 
     return products;
   }

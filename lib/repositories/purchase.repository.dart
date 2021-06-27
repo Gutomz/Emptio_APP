@@ -21,7 +21,7 @@ class PurchaseRepository {
         return PurchaseModel.fromJson(data);
       }
 
-      return await PurchaseDao.createParsed();
+      return await PurchaseDao.createParsed(model);
     } catch (error) {
       print('$TAG.create: $error');
 
@@ -84,8 +84,10 @@ class PurchaseRepository {
       UpdatePurchaseItemViewModel model) async {
     try {
       if (_authStore.isLogged) {
-        var data =
-            await _api.put("/purchases/$purchaseId/$itemId", model.toJson());
+        var data = await _api.put(
+          "/purchases/$purchaseId/$itemId",
+          body: model.toJson(),
+        );
 
         return PurchaseModel.fromJson(data);
       }
@@ -110,6 +112,21 @@ class PurchaseRepository {
           int.parse(purchaseId), int.parse(itemId));
     } catch (error) {
       print('$TAG.removeItem: $error');
+
+      return Future.error(AppApiErrors.handleError(error));
+    }
+  }
+
+  Future<PurchaseModel> complete(String purchaseId) async {
+    try {
+      if (_authStore.isLogged) {
+        var data = await _api.put("/purchases/$purchaseId");
+        return PurchaseModel.fromJson(data);
+      }
+
+      return PurchaseDao.completeParsed(int.parse(purchaseId));
+    } catch (error) {
+      print('$TAG.complete: $error');
 
       return Future.error(AppApiErrors.handleError(error));
     }

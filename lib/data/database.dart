@@ -3,6 +3,7 @@ import 'package:emptio/data/models/base_purchase_item/base_purchase_item.dart';
 import 'package:emptio/data/models/market/market.dart';
 import 'package:emptio/data/models/measurement/measurement.dart';
 import 'package:emptio/data/models/product/product.dart';
+import 'package:emptio/data/models/product_market/product_market.dart';
 import 'package:emptio/data/models/purchase/purchase.dart';
 import 'package:emptio/data/models/purchase_item/purchase_item.dart';
 import 'package:hive/hive.dart';
@@ -15,6 +16,7 @@ class Database {
   static const String purchaseItemsBoxName = "purchaseItems";
   static const String basePurchaseBoxName = "basePurchases";
   static const String basePurchaseItemsBoxName = "basePurchaseItems";
+  static const String productMarketBoxName = "productMarket";
 
   static const int measurementAdapterId = 0;
   static const int productAdapterId = 1;
@@ -23,6 +25,7 @@ class Database {
   static const int purchaseAdapterId = 4;
   static const int basePurchaseItemAdapterId = 5;
   static const int basePurchaseAdapterId = 6;
+  static const int productMarketAdapterId = 7;
 
   static Future<void> init() async {
     await Hive.initFlutter();
@@ -33,6 +36,7 @@ class Database {
     Hive.registerAdapter(PurchaseAdapter());
     Hive.registerAdapter(BasePurchaseItemAdapter());
     Hive.registerAdapter(BasePurchaseAdapter());
+    Hive.registerAdapter(ProductMarketAdapter());
   }
 
   static Future<void> dispose() async {

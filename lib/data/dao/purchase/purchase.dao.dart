@@ -1,5 +1,8 @@
 import 'package:emptio/core/app_errors.dart';
+import 'package:emptio/data/dao/base_purchase/base_purchase.dao.dart';
+import 'package:emptio/data/dao/base_purchase_item/base_purchase_item.dao.dart';
 import 'package:emptio/data/dao/market/market.dao.dart';
+import 'package:emptio/data/dao/product_market/product_market.dao.dart';
 import 'package:emptio/data/dao/purchase_item/purchase_item.dao.dart';
 import 'package:emptio/data/database.dart';
 import 'package:emptio/data/database_errors.dart';
@@ -9,6 +12,7 @@ import 'package:emptio/models/market.model.dart';
 import 'package:emptio/models/purchase.model.dart';
 import 'package:emptio/models/purchase_item.model.dart';
 import 'package:emptio/view-models/add_purchase_item.view-model.dart';
+import 'package:emptio/view-models/create_purchase.view-model.dart';
 import 'package:emptio/view-models/purchase_filter.view-model.dart';
 import 'package:emptio/view-models/update_purchase_item.view-model.dart';
 import 'package:hive/hive.dart';
@@ -22,7 +26,7 @@ class PurchaseDao {
     }
   }
 
-  static Future<Purchase> create() async {
+  static Future<Purchase> create(CreatePurchaseViewModel model) async {
     await _openBox();
 
     final createdAt = DateTime.now().toIso8601String();
@@ -34,6 +38,26 @@ class PurchaseDao {
       createdAt: createdAt,
       updatedAt: createdAt,
     ));
+
+    if (model.basePurchaseId.isNotEmpty) {
+      var purchase = _mBox!.get(key)!;
+
+      var basePurchase =
+          await BasePurchaseDao.get(int.parse(model.basePurchaseId));
+
+      for (var baseItemKey in basePurchase.itemsKey) {
+        var baseItem = await BasePurchaseItemDao.get(baseItemKey);
+        var item = await PurchaseItemDao.create(AddPurchaseItemViewModel(
+          productId: baseItem.productKey.toString(),
+          price: 0,
+          quantity: baseItem.quantity,
+        ));
+
+        purchase.itemsKey.add(item.key);
+      }
+
+      purchase.save();
+    }
 
     return _mBox!.get(key)!;
   }
@@ -146,8 +170,34 @@ class PurchaseDao {
     return purchase;
   }
 
-  static Future<PurchaseModel> createParsed() async {
-    var purchase = await create();
+  static Future<Purchase> complete(int key) async {
+    await _openBox();
+
+    Purchase purchase = await get(key);
+
+    purchase.status = PurchaseStatusTypes.CLOSED;
+    purchase.updatedAt = DateTime.now().toIso8601String();
+
+    await purchase.save();
+
+    if (purchase.marketKey != null) {
+      for (var itemKey in purchase.itemsKey) {
+        var item = await PurchaseItemDao.get(itemKey);
+
+        await ProductMarketDao.update(
+          productKey: item.productKey,
+          marketKey: purchase.marketKey!,
+          price: item.price,
+        );
+      }
+    }
+
+    return _mBox!.get(key)!;
+  }
+
+  static Future<PurchaseModel> createParsed(
+      CreatePurchaseViewModel model) async {
+    var purchase = await create(model);
     return await parseToPurchaseModel(purchase);
   }
 
@@ -183,6 +233,11 @@ class PurchaseDao {
   static Future<PurchaseModel> updateItemParsed(
       int key, int itemKey, UpdatePurchaseItemViewModel model) async {
     var purchase = await updateItem(key, itemKey, model);
+    return await parseToPurchaseModel(purchase);
+  }
+
+  static Future<PurchaseModel> completeParsed(int key) async {
+    var purchase = await complete(key);
     return await parseToPurchaseModel(purchase);
   }
 
