@@ -46,7 +46,7 @@ abstract class _PurchaseItemStoreBase with Store {
   @action
   void toggleChecked() {
     checked = !checked;
-    purchaseStore.toggleChecked(
+    purchaseStore.updateItem(
       itemId,
       UpdatePurchaseItemViewModel(
         price: price,

@@ -17,10 +17,13 @@ abstract class _PurchaseDetailsStoreBase with Store {
 
   _PurchaseDetailsStoreBase({
     required this.purchase,
-    required this.items,
-    required this.checkedItems,
-  });
+  })  : items = ObservableList<PurchaseItemModel>()
+          ..addAll(purchase.items.where((v) => !v.checked)),
+        checkedItems = ObservableList<PurchaseItemModel>()
+          ..addAll(purchase.items.where((v) => v.checked)),
+        showChecked = PurchaseStatusTypes.CLOSED.contains(purchase.status);
 
+  @observable
   PurchaseModel purchase;
 
   ObservableList<PurchaseItemModel> items;
@@ -36,8 +39,11 @@ abstract class _PurchaseDetailsStoreBase with Store {
   bool showChecked = false;
 
   @action
-  void changeFilter(bool _value) {
-    showChecked = _value;
+  void setFilter(bool _value) => showChecked = _value;
+
+  @action
+  void toggleFilter() {
+    setFilter(!showChecked);
   }
 
   @action
@@ -107,14 +113,6 @@ abstract class _PurchaseDetailsStoreBase with Store {
     _purchasesStore.updatePurchase(model);
   }
 
-  @action
-  Future<void> toggleChecked(
-      String itemsId, UpdatePurchaseItemViewModel model) async {
-    items.removeWhere((v) => v.sId == itemsId);
-    checkedItems.removeWhere((v) => v.sId == itemsId);
-    updateItem(itemsId, model);
-  }
-
   @computed
   bool get isMarketConnected => purchase.market != null;
 
@@ -124,4 +122,11 @@ abstract class _PurchaseDetailsStoreBase with Store {
 
   @computed
   int get itemsCount => filtredItems.length;
+
+  @computed
+  int get productsCount =>
+      checkedItems.length + (showChecked ? 0 : items.length);
+
+  @computed
+  bool get isClosed => PurchaseStatusTypes.CLOSED.contains(purchase.status);
 }

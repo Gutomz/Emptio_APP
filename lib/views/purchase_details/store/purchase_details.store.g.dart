@@ -30,6 +30,35 @@ mixin _$PurchaseDetailsStore on _PurchaseDetailsStoreBase, Store {
       (_$itemsCountComputed ??= Computed<int>(() => super.itemsCount,
               name: '_PurchaseDetailsStoreBase.itemsCount'))
           .value;
+  Computed<int>? _$productsCountComputed;
+
+  @override
+  int get productsCount =>
+      (_$productsCountComputed ??= Computed<int>(() => super.productsCount,
+              name: '_PurchaseDetailsStoreBase.productsCount'))
+          .value;
+  Computed<bool>? _$isClosedComputed;
+
+  @override
+  bool get isClosed =>
+      (_$isClosedComputed ??= Computed<bool>(() => super.isClosed,
+              name: '_PurchaseDetailsStoreBase.isClosed'))
+          .value;
+
+  final _$purchaseAtom = Atom(name: '_PurchaseDetailsStoreBase.purchase');
+
+  @override
+  PurchaseModel get purchase {
+    _$purchaseAtom.reportRead();
+    return super.purchase;
+  }
+
+  @override
+  set purchase(PurchaseModel value) {
+    _$purchaseAtom.reportWrite(value, super.purchase, () {
+      super.purchase = value;
+    });
+  }
 
   final _$loadingAtom = Atom(name: '_PurchaseDetailsStoreBase.loading');
 
@@ -99,25 +128,26 @@ mixin _$PurchaseDetailsStore on _PurchaseDetailsStoreBase, Store {
     return _$deleteItemAsyncAction.run(() => super.deleteItem(itemId));
   }
 
-  final _$toggleCheckedAsyncAction =
-      AsyncAction('_PurchaseDetailsStoreBase.toggleChecked');
-
-  @override
-  Future<void> toggleChecked(
-      String itemsId, UpdatePurchaseItemViewModel model) {
-    return _$toggleCheckedAsyncAction
-        .run(() => super.toggleChecked(itemsId, model));
-  }
-
   final _$_PurchaseDetailsStoreBaseActionController =
       ActionController(name: '_PurchaseDetailsStoreBase');
 
   @override
-  void changeFilter(bool _value) {
+  void setFilter(bool _value) {
     final _$actionInfo = _$_PurchaseDetailsStoreBaseActionController
-        .startAction(name: '_PurchaseDetailsStoreBase.changeFilter');
+        .startAction(name: '_PurchaseDetailsStoreBase.setFilter');
     try {
-      return super.changeFilter(_value);
+      return super.setFilter(_value);
+    } finally {
+      _$_PurchaseDetailsStoreBaseActionController.endAction(_$actionInfo);
+    }
+  }
+
+  @override
+  void toggleFilter() {
+    final _$actionInfo = _$_PurchaseDetailsStoreBaseActionController
+        .startAction(name: '_PurchaseDetailsStoreBase.toggleFilter');
+    try {
+      return super.toggleFilter();
     } finally {
       _$_PurchaseDetailsStoreBaseActionController.endAction(_$actionInfo);
     }
@@ -148,12 +178,15 @@ mixin _$PurchaseDetailsStore on _PurchaseDetailsStoreBase, Store {
   @override
   String toString() {
     return '''
+purchase: ${purchase},
 loading: ${loading},
 error: ${error},
 showChecked: ${showChecked},
 isMarketConnected: ${isMarketConnected},
 filtredItems: ${filtredItems},
-itemsCount: ${itemsCount}
+itemsCount: ${itemsCount},
+productsCount: ${productsCount},
+isClosed: ${isClosed}
     ''';
   }
 }
