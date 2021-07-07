@@ -1,8 +1,7 @@
-import 'dart:developer';
-
 import 'package:emptio/core/app_api_errors.dart';
 import 'package:emptio/core/app_api.dart';
 import 'package:emptio/data/dao/product/product.dao.dart';
+import 'package:emptio/helpers/logger.dart';
 import 'package:emptio/models/product.model.dart';
 import 'package:emptio/stores/auth.store.dart';
 import 'package:emptio/view-models/product_filter.view-model.dart';
@@ -26,8 +25,8 @@ class ProductRepository {
       }
 
       return await ProductDao.getAllParsed(filter);
-    } catch (error) {
-      log('$tag.get: $error');
+    } catch (error, stack) {
+      Logger.error(tag, "Exception at 'get' function", error, stack);
 
       return Future.error(AppApiErrors.handleError(error));
     }

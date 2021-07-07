@@ -1,8 +1,7 @@
-import 'dart:developer';
-
 import 'package:emptio/core/app_api_errors.dart';
 import 'package:emptio/core/app_api.dart';
 import 'package:emptio/core/app_errors.dart';
+import 'package:emptio/helpers/logger.dart';
 import 'package:emptio/models/auth.model.dart';
 import 'package:emptio/models/user.model.dart';
 import 'package:emptio/view-models/login.view-model.dart';
@@ -18,8 +17,8 @@ class UserRepository {
       final data = await _api.post('/users', body: model.toJson())
           as Map<String, dynamic>;
       return AuthModel.fromJson(data);
-    } catch (error) {
-      log('$tag.register: $error');
+    } catch (error, stack) {
+      Logger.error(tag, "Exception at 'register' function", error, stack);
 
       if (AppApiErrors.isError(error)) {
         final String code = AppApiErrors.getCode(error);
@@ -40,8 +39,8 @@ class UserRepository {
       final data = await _api.post('/auth', body: model.toJson())
           as Map<String, dynamic>;
       return AuthModel.fromJson(data);
-    } catch (error) {
-      log('$tag.login: $error');
+    } catch (error, stack) {
+      Logger.error(tag, "Exception at 'login' function", error, stack);
 
       if (AppApiErrors.isError(error)) {
         final String code = AppApiErrors.getCode(error);
@@ -59,8 +58,8 @@ class UserRepository {
   Future logout() async {
     try {
       await _api.delete('/auth');
-    } catch (error) {
-      log('$tag.logout: $error');
+    } catch (error, stack) {
+      Logger.error(tag, "Exception at 'logout' function", error, stack);
 
       return Future.error(AppApiErrors.handleError(error));
     }
@@ -69,8 +68,8 @@ class UserRepository {
   Future<void> forgotPassword(String email) async {
     try {
       await _api.post('/users/forgot-password', body: {"email": email});
-    } catch (error) {
-      log('$tag.forgotPassword: $error');
+    } catch (error, stack) {
+      Logger.error(tag, "Exception at 'forgotPassword' function", error, stack);
 
       if (AppApiErrors.isError(error)) {
         final String code = AppApiErrors.getCode(error);
@@ -92,8 +91,9 @@ class UserRepository {
         body: model.toJson(),
       ) as Map<String, dynamic>;
       return AuthModel.fromJson(data);
-    } catch (error) {
-      log('$tag.redefinePassword: $error');
+    } catch (error, stack) {
+      Logger.error(
+          tag, "Exception at 'redefinePassword' function", error, stack);
 
       if (AppApiErrors.isError(error)) {
         final String code = AppApiErrors.getCode(error);
@@ -112,8 +112,8 @@ class UserRepository {
     try {
       final data = await _api.get("/users/me") as Map<String, dynamic>;
       return UserModel.fromJson(data);
-    } catch (error) {
-      log('$tag.getMe: $error');
+    } catch (error, stack) {
+      Logger.error(tag, "Exception at 'getMe' function", error, stack);
 
       return Future.error(AppApiErrors.handleError(error));
     }

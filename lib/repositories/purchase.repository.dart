@@ -1,8 +1,7 @@
-import 'dart:developer';
-
 import 'package:emptio/core/app_api_errors.dart';
 import 'package:emptio/core/app_api.dart';
 import 'package:emptio/data/dao/purchase/purchase.dao.dart';
+import 'package:emptio/helpers/logger.dart';
 import 'package:emptio/models/purchase.model.dart';
 import 'package:emptio/stores/auth.store.dart';
 import 'package:emptio/view-models/add_purchase_item.view-model.dart';
@@ -27,8 +26,8 @@ class PurchaseRepository {
       }
 
       return await PurchaseDao.createParsed(model);
-    } catch (error) {
-      log('$tag.create: $error');
+    } catch (error, stack) {
+      Logger.error(tag, "Exception at 'create' function", error, stack);
 
       return Future.error(AppApiErrors.handleError(error));
     }
@@ -49,8 +48,8 @@ class PurchaseRepository {
       }
 
       return PurchaseDao.getAllParsed(filter);
-    } catch (error) {
-      log('$tag.get: $error');
+    } catch (error, stack) {
+      Logger.error(tag, "Exception at 'get' function", error, stack);
 
       return Future.error(AppApiErrors.handleError(error));
     }
@@ -63,8 +62,8 @@ class PurchaseRepository {
       }
 
       return PurchaseDao.delete(int.parse(purchaseId));
-    } catch (error) {
-      log('$tag.delete: $error');
+    } catch (error, stack) {
+      Logger.error(tag, "Exception at 'delete' function", error, stack);
 
       return Future.error(AppApiErrors.handleError(error));
     }
@@ -83,8 +82,8 @@ class PurchaseRepository {
       }
 
       return await PurchaseDao.addItemParsed(int.parse(purchaseId), model);
-    } catch (error) {
-      log('$tag.addItem: $error');
+    } catch (error, stack) {
+      Logger.error(tag, "Exception at 'addItem' function", error, stack);
 
       return Future.error(AppApiErrors.handleError(error));
     }
@@ -104,8 +103,8 @@ class PurchaseRepository {
 
       return await PurchaseDao.updateItemParsed(
           int.parse(purchaseId), int.parse(itemId), model);
-    } catch (error) {
-      log('$tag.updateItem: $error');
+    } catch (error, stack) {
+      Logger.error(tag, "Exception at 'updateItem' function", error, stack);
 
       return Future.error(AppApiErrors.handleError(error));
     }
@@ -121,8 +120,8 @@ class PurchaseRepository {
 
       return PurchaseDao.removeItemParsed(
           int.parse(purchaseId), int.parse(itemId));
-    } catch (error) {
-      log('$tag.removeItem: $error');
+    } catch (error, stack) {
+      Logger.error(tag, "Exception at 'removeItem' function", error, stack);
 
       return Future.error(AppApiErrors.handleError(error));
     }
@@ -137,8 +136,8 @@ class PurchaseRepository {
       }
 
       return PurchaseDao.completeParsed(int.parse(purchaseId));
-    } catch (error) {
-      log('$tag.complete: $error');
+    } catch (error, stack) {
+      Logger.error(tag, "Exception at 'complete' function", error, stack);
 
       return Future.error(AppApiErrors.handleError(error));
     }
