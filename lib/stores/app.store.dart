@@ -10,7 +10,7 @@ class AppStore with Store {
   PurchasesStore openPurchasesStore = PurchasesStore();
 
   PurchasesStore closedPurchasesStore =
-      PurchasesStore(status: PurchaseStatusTypes.CLOSED);
+      PurchasesStore(status: PurchaseStatusTypes.closed);
 
   BasePurchasesStore basePurchasesStore = BasePurchasesStore();
 }

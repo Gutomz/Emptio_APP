@@ -1,3 +1,4 @@
+import 'package:emptio/helpers/parsers.dart';
 import 'package:emptio/models/product.model.dart';
 
 class PurchaseItemModel {
@@ -16,32 +17,32 @@ class PurchaseItemModel {
   });
 
   factory PurchaseItemModel.fromJson(Map<String, dynamic> json) {
-    var model = PurchaseItemModel(
-      sId: json['_id'],
-      product: ProductModel.fromJson(json['product']),
-      price: json['price'].toDouble(),
-      quantity: json['quantity'],
-      checked: json['checked'],
+    final model = PurchaseItemModel(
+      sId: JsonParser.parseToString(json['_id']),
+      product: JsonParser.parseToProduct(json['product'])!,
+      price: JsonParser.parseToDouble(json['price']),
+      quantity: JsonParser.parseToInt(json['quantity']),
+      checked: JsonParser.parseToBool(json['checked']),
     );
 
     return model;
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['_id'] = this.sId;
-    data['product'] = this.product.toJson();
-    data['price'] = this.price;
-    data['quantity'] = this.quantity;
-    data['checked'] = this.checked;
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['_id'] = sId;
+    data['product'] = product.toJson();
+    data['price'] = price;
+    data['quantity'] = quantity;
+    data['checked'] = checked;
     return data;
   }
 
   @override
-  int get hashCode => this.sId.hashCode;
+  int get hashCode => sId.hashCode;
 
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
-      (other is PurchaseItemModel && this.sId == other.sId);
+      (other is PurchaseItemModel && sId == other.sId);
 }

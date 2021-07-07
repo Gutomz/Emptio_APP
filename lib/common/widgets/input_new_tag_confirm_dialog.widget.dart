@@ -44,7 +44,7 @@ class _InputNewTagDialogState extends State<InputNewTagDialog> {
   Widget build(BuildContext context) {
     return AlertDialog(
       title: Text("Nova Categoria"),
-      content: Container(
+      content: SizedBox(
         height: 150,
         child: Column(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -66,20 +66,20 @@ class _InputNewTagDialogState extends State<InputNewTagDialog> {
       actions: [
         ElevatedButton(
           onPressed: () => Navigator.of(context).pop(null),
-          child: Text("cancelar"),
           style: ButtonStyle(
             elevation: MaterialStateProperty.all(0),
             backgroundColor: MaterialStateProperty.all(AppColors.grey),
           ),
+          child: Text("cancelar"),
         ),
         ElevatedButton(
           onPressed: validText
               ? () => Navigator.of(context).pop(text!.formatTag())
               : null,
-          child: Text("Concluir"),
           style: ButtonStyle(
             backgroundColor: MaterialStateProperty.all(AppColors.orange),
           ),
+          child: Text("Concluir"),
         ),
       ],
     );

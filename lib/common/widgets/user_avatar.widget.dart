@@ -26,7 +26,7 @@ class UserAvatar extends StatelessWidget {
     this.icon,
   }) : super(key: key);
 
-  _buildImage(String? _image) {
+  Widget _buildImage(String? _image) {
     if (_image == null || _image.isEmpty) {
       return Icon(
         icon ?? Icons.person,

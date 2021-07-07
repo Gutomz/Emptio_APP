@@ -9,9 +9,7 @@ class MarketDao {
   static Box<Market>? _mBox;
 
   static Future<void> _openBox() async {
-    if (_mBox == null) {
-      _mBox = await Hive.openBox<Market>(Database.marketBoxName);
-    }
+    _mBox ??= await Hive.openBox<Market>(Database.marketBoxName);
   }
 
   static Future<Box<Market>> get instance async {
@@ -23,19 +21,19 @@ class MarketDao {
   static Future<Market> get(int key) async {
     await _openBox();
 
-    Market? market = _mBox!.get(key);
+    final Market? market = _mBox!.get(key);
 
     if (market != null) {
       return market;
     }
 
-    throw DatabaseError.notFoundError(AppErrors.MARKET_NOT_FOUND);
+    throw DatabaseError.notFoundError(AppErrors.marketNotFound);
   }
 
   static Future<MarketModel> getParsed(int key) async {
-    Market market = await get(key);
+    final Market market = await get(key);
 
-    return await parseToMarketModel(market);
+    return parseToMarketModel(market);
   }
 
   static Future<MarketModel> parseToMarketModel(Market market) async {

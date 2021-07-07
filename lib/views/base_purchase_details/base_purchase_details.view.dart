@@ -1,7 +1,6 @@
 import 'package:emptio/common/delegates/purchase_item_search/purchase_item_search.dart';
 import 'package:emptio/common/widgets/search_dialog.widget.dart';
 import 'package:emptio/models/base_purchase.model.dart';
-import 'package:emptio/models/base_purchase_item.model.dart';
 import 'package:emptio/models/product.model.dart';
 import 'package:emptio/view-models/add_base_purchase_item.view-model.dart';
 import 'package:emptio/view-models/update_base_purchase_item.view-model.dart';
@@ -11,33 +10,18 @@ import 'package:emptio/views/edit_purchase_item/edit_puchase_item.view.dart';
 import 'package:emptio/views/new_purchase_item/new_purchase_item.view.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
-import 'package:mobx/mobx.dart';
 
-class BasePurchaseDetailsView extends StatefulWidget {
-  final BasePurchaseModel purchase;
+class BasePurchaseDetailsView extends StatelessWidget {
+  final BasePurchaseDetailsStore _store;
 
   BasePurchaseDetailsView({
-    required this.purchase,
+    required BasePurchaseModel purchase,
     Key? key,
-  }) : super(key: key);
+  })  : _store = BasePurchaseDetailsStore(purchase: purchase),
+        super(key: key);
 
-  @override
-  _BasePurchaseDetailsViewState createState() =>
-      _BasePurchaseDetailsViewState(purchase: purchase);
-}
-
-class _BasePurchaseDetailsViewState extends State<BasePurchaseDetailsView> {
-  late BasePurchaseDetailsStore _store;
-
-  _BasePurchaseDetailsViewState({required BasePurchaseModel purchase}) {
-    _store = BasePurchaseDetailsStore(
-      purchase: purchase,
-      items: ObservableList<BasePurchaseItemModel>()..addAll(purchase.items),
-    );
-  }
-
-  Future<void> searchProduct() async {
-    ProductSearchResponse? response = await showSearch<ProductSearchResponse?>(
+  Future<void> searchProduct(BuildContext context) async {
+    final response = await showSearch<ProductSearchResponse?>(
       context: context,
       delegate: ProductSearch(
         onQuickSelect: onQuickSelectProduct,
@@ -47,9 +31,9 @@ class _BasePurchaseDetailsViewState extends State<BasePurchaseDetailsView> {
 
     if (response != null) {
       if (response.addNew != null) {
-        await createNewProductItem();
+        await createNewProductItem(context);
       } else if (response.product != null) {
-        await createExitingProductItem(response.product!);
+        await createExitingProductItem(context, response.product!);
       }
     }
   }
@@ -61,8 +45,8 @@ class _BasePurchaseDetailsViewState extends State<BasePurchaseDetailsView> {
     ));
   }
 
-  Future<void> createNewProductItem() async {
-    AddBasePurchaseItemViewModel? item = await Navigator.of(context).push(
+  Future<void> createNewProductItem(BuildContext context) async {
+    final item = await Navigator.of(context).push<AddBasePurchaseItemViewModel>(
       MaterialPageRoute(
         builder: (context) => NewPurchaseItemView(isBaseItem: true),
       ),
@@ -73,8 +57,10 @@ class _BasePurchaseDetailsViewState extends State<BasePurchaseDetailsView> {
     }
   }
 
-  Future<void> createExitingProductItem(ProductModel product) async {
-    UpdateBasePurchaseItemViewModel? update = await Navigator.of(context).push(
+  Future<void> createExitingProductItem(
+      BuildContext context, ProductModel product) async {
+    final update =
+        await Navigator.of(context).push<UpdateBasePurchaseItemViewModel>(
       MaterialPageRoute(builder: (context) {
         return EditPurchaseItemView(
           product: product,
@@ -92,7 +78,7 @@ class _BasePurchaseDetailsViewState extends State<BasePurchaseDetailsView> {
   }
 
   Future<void> openEditPurchaseName(BuildContext context) async {
-    String? name = await showDialog(
+    final name = await showDialog<String?>(
       context: context,
       builder: (context) => SearchDialog(
         currentSearch: _store.name,
@@ -128,7 +114,7 @@ class _BasePurchaseDetailsViewState extends State<BasePurchaseDetailsView> {
           onTap: () => openEditPurchaseName(context),
           child: LayoutBuilder(
             builder: (context, constraints) {
-              return Container(
+              return SizedBox(
                 width: constraints.biggest.width,
                 child: Observer(builder: (_) {
                   return Text(_store.name);
@@ -146,9 +132,9 @@ class _BasePurchaseDetailsViewState extends State<BasePurchaseDetailsView> {
       ),
       body: BasePurchaseItemsList(store: _store),
       floatingActionButton: FloatingActionButton(
-        onPressed: searchProduct,
-        child: Icon(Icons.add),
+        onPressed: () => searchProduct(context),
         foregroundColor: Colors.white,
+        child: Icon(Icons.add),
       ),
     );
   }

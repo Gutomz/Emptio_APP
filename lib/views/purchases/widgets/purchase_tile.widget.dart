@@ -16,7 +16,7 @@ class PurchaseTile extends StatelessWidget {
   }) : super(key: key);
 
   String getDateText() {
-    if (purchase.status.contains(PurchaseStatusTypes.OPEN)) {
+    if (purchase.status.contains(PurchaseStatusTypes.open)) {
       return purchase.createdAt.formatDate();
     }
 
@@ -24,7 +24,7 @@ class PurchaseTile extends StatelessWidget {
   }
 
   String getItemsCountText() {
-    if (purchase.items.length == 0) {
+    if (purchase.items.isEmpty) {
       return "Nenhum prduto";
     }
 
@@ -44,7 +44,7 @@ class PurchaseTile extends StatelessWidget {
   }
 
   String getPriceText() {
-    if (purchase.status.contains(PurchaseStatusTypes.OPEN)) {
+    if (purchase.status.contains(PurchaseStatusTypes.open)) {
       return purchase.estimatedCost.formatMoney();
     }
 
@@ -67,61 +67,57 @@ class PurchaseTile extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Container(
-                    child: Text(
-                      getMarketName(),
-                      style: TextStyle(
-                          color: AppColors.darkBlue,
-                          fontWeight: FontWeight.w600,
-                          fontSize: 14),
-                    ),
+                  Text(
+                    getMarketName(),
+                    style: TextStyle(
+                        color: AppColors.darkBlue,
+                        fontWeight: FontWeight.w600,
+                        fontSize: 14),
                   ),
-                  Container(
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      crossAxisAlignment: CrossAxisAlignment.end,
-                      children: [
-                        Flexible(
-                          child: Column(
-                            children: [
-                              SubtitleItem(
-                                icon: Icons.location_on_outlined,
-                                text: purchase.market?.address,
-                              ),
-                              SubtitleItem(
-                                icon: Icons.shopping_cart_outlined,
-                                text: getItemsCountText(),
-                              ),
-                              SubtitleItem(
-                                icon: Icons.event,
-                                text: getDateText(),
-                              ),
-                            ],
-                          ),
-                        ),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.end,
-                          crossAxisAlignment: CrossAxisAlignment.end,
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    crossAxisAlignment: CrossAxisAlignment.end,
+                    children: [
+                      Flexible(
+                        child: Column(
                           children: [
-                            Text(
-                              "R\$",
-                              style: TextStyle(
-                                fontSize: 10,
-                                color: AppColors.lightGrey,
-                              ),
+                            SubtitleItem(
+                              icon: Icons.location_on_outlined,
+                              text: purchase.market?.address,
                             ),
-                            Text(
-                              getPriceText(),
-                              style: TextStyle(
-                                fontSize: 18,
-                                fontWeight: FontWeight.bold,
-                                color: AppColors.orange,
-                              ),
+                            SubtitleItem(
+                              icon: Icons.shopping_cart_outlined,
+                              text: getItemsCountText(),
+                            ),
+                            SubtitleItem(
+                              icon: Icons.event,
+                              text: getDateText(),
                             ),
                           ],
                         ),
-                      ],
-                    ),
+                      ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.end,
+                        crossAxisAlignment: CrossAxisAlignment.end,
+                        children: [
+                          Text(
+                            "R\$",
+                            style: TextStyle(
+                              fontSize: 10,
+                              color: AppColors.lightGrey,
+                            ),
+                          ),
+                          Text(
+                            getPriceText(),
+                            style: TextStyle(
+                              fontSize: 18,
+                              fontWeight: FontWeight.bold,
+                              color: AppColors.orange,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ],
                   ),
                 ],
               ),

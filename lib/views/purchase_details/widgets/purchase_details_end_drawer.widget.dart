@@ -8,6 +8,7 @@ class PurchaseDetailsEndDrawer extends StatelessWidget {
   })  : _store = store,
         super(key: key);
 
+  // ignore: unused_field
   final PurchaseDetailsStore _store;
 
   @override

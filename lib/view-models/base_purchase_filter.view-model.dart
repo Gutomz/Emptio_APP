@@ -14,22 +14,22 @@ class BasePurchasesFilterViewModel {
   });
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['search'] = this.search;
-    data['limit'] = this.limit;
-    data['skip'] = this.skip;
-    data['isDesc'] = this.isDesc;
-    data['orderBy'] = this.orderBy;
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['search'] = search;
+    data['limit'] = limit;
+    data['skip'] = skip;
+    data['isDesc'] = isDesc;
+    data['orderBy'] = orderBy;
     return data;
   }
 
   Map<String, String> toQuery() {
-    final Map<String, String> data = new Map<String, String>();
-    data['search'] = this.search;
-    data['limit'] = this.limit.toString();
-    data['skip'] = this.skip.toString();
-    data['isDesc'] = this.isDesc.toString();
-    if (this.orderBy != null) data['orderBy'] = this.orderBy!;
+    final Map<String, String> data = <String, String>{};
+    data['search'] = search;
+    data['limit'] = limit.toString();
+    data['skip'] = skip.toString();
+    data['isDesc'] = isDesc.toString();
+    if (orderBy != null) data['orderBy'] = orderBy!;
     return data;
   }
 }

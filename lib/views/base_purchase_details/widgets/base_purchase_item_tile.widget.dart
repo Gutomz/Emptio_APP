@@ -27,7 +27,8 @@ class BasePurchaseItemTile extends StatelessWidget {
         super(key: key);
 
   Future<void> onPressed(BuildContext context) async {
-    UpdateBasePurchaseItemViewModel? update = await Navigator.of(context).push(
+    final update =
+        await Navigator.of(context).push<UpdateBasePurchaseItemViewModel>(
       MaterialPageRoute(
         builder: (context) => EditPurchaseItemView(
           product: item.product,
@@ -45,7 +46,7 @@ class BasePurchaseItemTile extends StatelessWidget {
   Future<bool> confirmDismiss(
       BuildContext context, DismissDirection direction) async {
     if (direction == DismissDirection.endToStart) {
-      bool? response = await showDialog(
+      final response = await showDialog<bool>(
           context: context,
           builder: (context) {
             return ConfirmDismissDialog(
@@ -82,10 +83,7 @@ class BasePurchaseItemTile extends StatelessWidget {
           padding: EdgeInsets.symmetric(horizontal: 10, vertical: 10),
           decoration: BoxDecoration(
             border: Border(
-              bottom: BorderSide(
-                color: AppColors.lightGrey,
-                width: 1,
-              ),
+              bottom: BorderSide(color: AppColors.lightGrey),
             ),
           ),
           child: Row(
@@ -96,7 +94,7 @@ class BasePurchaseItemTile extends StatelessWidget {
               ),
               SizedBox(width: 10),
               Expanded(
-                child: Container(
+                child: SizedBox(
                   height: 80,
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -157,8 +155,6 @@ class BasePurchaseItemTile extends StatelessWidget {
                                       child: Row(
                                         mainAxisAlignment:
                                             MainAxisAlignment.spaceAround,
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.center,
                                         children: [
                                           Observer(builder: (_) {
                                             return IconButton(

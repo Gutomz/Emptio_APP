@@ -14,10 +14,9 @@ class ProductHeader extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
+    return SizedBox(
       width: double.infinity,
       child: Column(
-        crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           Hero(
             tag: 'product${product.sId}',

@@ -18,13 +18,13 @@ class ProductCreateViewModel {
   });
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['brand'] = this.brand;
-    data['name'] = this.name;
-    data['variation'] = this.variation;
-    data['weight'] = this.weight.toJson();
-    data['tags'] = this.tags;
-    data['image'] = this.image;
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['brand'] = brand;
+    data['name'] = name;
+    data['variation'] = variation;
+    data['weight'] = weight.toJson();
+    data['tags'] = tags;
+    data['image'] = image;
     return data;
   }
 }

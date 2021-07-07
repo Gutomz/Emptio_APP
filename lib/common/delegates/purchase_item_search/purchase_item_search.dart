@@ -90,11 +90,11 @@ class ProductSearch extends SearchDelegate<ProductSearchResponse?> {
   PreferredSizeWidget? buildBottom(BuildContext context) {
     if (connectedMarket != null) {
       return PreferredSize(
+        preferredSize: Size.fromHeight(75),
         child: Padding(
           padding: const EdgeInsets.only(left: 15, bottom: 15),
           child: MarketIndicator(market: connectedMarket!),
         ),
-        preferredSize: Size.fromHeight(75),
       );
     }
 
@@ -160,7 +160,7 @@ class ProductSearch extends SearchDelegate<ProductSearchResponse?> {
           }
 
           if (index - 1 < _store.productsList.length) {
-            ProductModel product = _store.productsList[index - 1];
+            final product = _store.productsList[index - 1];
 
             return Dismissible(
               key: Key(product.sId),
@@ -184,7 +184,7 @@ class ProductSearch extends SearchDelegate<ProductSearchResponse?> {
           }
 
           _store.loadNextPage();
-          return Container(
+          return SizedBox(
             height: 5,
             child: LinearProgressIndicator(
               valueColor: AlwaysStoppedAnimation(AppColors.darkOrange),

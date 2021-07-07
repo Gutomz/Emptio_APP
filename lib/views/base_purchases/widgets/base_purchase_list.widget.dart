@@ -24,7 +24,7 @@ class _BasePurchaseListState extends State<BasePurchaseList> {
       GetIt.I<AppStore>().basePurchasesStore;
 
   Future<bool> confirmDismiss(DismissDirection direction) async {
-    bool? response = await showDialog(
+    final response = await showDialog<bool>(
         context: context,
         builder: (context) {
           return ConfirmDismissDialog(
@@ -46,7 +46,7 @@ class _BasePurchaseListState extends State<BasePurchaseList> {
 
   Future<void> onCreatePurchaseTap(
       BuildContext context, BasePurchaseModel model) async {
-    var purchase = await purchasesStore.createPurchaseWithBaseModel(model);
+    final purchase = await purchasesStore.createPurchaseWithBaseModel(model);
 
     if (purchase != null) {
       Navigator.of(context).push(
@@ -106,7 +106,7 @@ class _BasePurchaseListState extends State<BasePurchaseList> {
           itemCount: purchasesStore.itemCount,
           itemBuilder: (context, index) {
             if (index < purchasesStore.purchaseList.length) {
-              BasePurchaseModel purchase = purchasesStore.purchaseList[index];
+              final purchase = purchasesStore.purchaseList[index];
 
               return Dismissible(
                 key: Key(purchase.sId),
@@ -151,10 +151,10 @@ class _BasePurchaseListState extends State<BasePurchaseList> {
                         ],
                       ),
                       trailing: Observer(builder: (context) {
-                        if (purchasesStore.loadingTile == purchase.sId)
+                        if (purchasesStore.loadingTile == purchase.sId) {
                           return Padding(
                             padding: const EdgeInsets.only(right: 12),
-                            child: Container(
+                            child: SizedBox(
                               width: 20,
                               height: 20,
                               child: CircularProgressIndicator(
@@ -163,6 +163,7 @@ class _BasePurchaseListState extends State<BasePurchaseList> {
                               ),
                             ),
                           );
+                        }
 
                         return IconButton(
                           onPressed: purchasesStore.isLoadingTile
@@ -179,7 +180,7 @@ class _BasePurchaseListState extends State<BasePurchaseList> {
             }
 
             purchasesStore.loadNextPage();
-            return Container(
+            return SizedBox(
               height: 5,
               child: LinearProgressIndicator(
                 valueColor: AlwaysStoppedAnimation(AppColors.darkOrange),

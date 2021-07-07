@@ -14,11 +14,11 @@ class AddPurchaseItemViewModel {
   }) : assert(productId != null || productModel != null);
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['price'] = this.price;
-    data['quantity'] = this.quantity;
-    if (this.productId != null) data['product_id'] = this.productId;
-    if(productModel != null) data['product'] = this.productModel!.toJson();
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['price'] = price;
+    data['quantity'] = quantity;
+    if (productId != null) data['product_id'] = productId;
+    if (productModel != null) data['product'] = productModel!.toJson();
     return data;
   }
 }

@@ -1,4 +1,3 @@
-import 'package:emptio/models/auth.model.dart';
 import 'package:emptio/repositories/user.repository.dart';
 import 'package:emptio/stores/auth.store.dart';
 import 'package:emptio/view-models/login.view-model.dart';
@@ -51,7 +50,7 @@ abstract class _LoginStoreBase with Store {
     final model = LoginViewModel(email: email!, password: password!);
 
     try {
-      AuthModel auth = await UserRepository().login(model);
+      final auth = await UserRepository().login(model);
       await GetIt.I<AuthStore>().login(auth);
       logged = true;
     } catch (_error) {
@@ -83,13 +82,13 @@ abstract class _LoginStoreBase with Store {
 
   @computed
   bool get emailValid {
-    String _email = email ?? "";
+    final _email = email ?? "";
     return _email.isNotEmpty && _email.isEmailValid();
   }
 
   @computed
   String? get emailError {
-    String _email = email ?? "";
+    final _email = email ?? "";
 
     if (email == null || emailValid) {
       return null;
@@ -102,13 +101,13 @@ abstract class _LoginStoreBase with Store {
 
   @computed
   bool get passwordValid {
-    String _password = password ?? "";
+    final _password = password ?? "";
     return _password.isNotEmpty && _password.length >= 6;
   }
 
   @computed
   String? get passwordError {
-    String _password = password ?? "";
+    final _password = password ?? "";
 
     if (password == null || _password.isNotEmpty || passwordValid) {
       return null;

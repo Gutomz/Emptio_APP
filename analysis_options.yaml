@@ -1,0 +1,9 @@
+include: package:lint/analysis_options.yaml
+
+linter:
+  rules:
+    avoid_classes_with_only_static_members: false
+    prefer_const_constructors: false
+    prefer_const_literals_to_create_immutables: false
+    prefer_const_constructors_in_immutables: false
+    use_setters_to_change_properties: false

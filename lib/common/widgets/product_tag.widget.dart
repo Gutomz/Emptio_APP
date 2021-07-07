@@ -20,10 +20,7 @@ class ProductTag extends StatelessWidget {
     return Chip(
       backgroundColor: Colors.transparent,
       padding: EdgeInsets.zero,
-      labelPadding: EdgeInsets.symmetric(
-        vertical: 0,
-        horizontal: 10,
-      ),
+      labelPadding: EdgeInsets.symmetric(horizontal: 10),
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(5),
         side: BorderSide(

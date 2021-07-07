@@ -23,18 +23,18 @@ class ConfirmDismissDialog extends StatelessWidget {
       actions: [
         ElevatedButton(
           onPressed: () => Navigator.of(context).pop(false),
-          child: Text(rejectText),
           style: ButtonStyle(
             elevation: MaterialStateProperty.all(0),
             backgroundColor: MaterialStateProperty.all(AppColors.grey),
           ),
+          child: Text(rejectText),
         ),
         ElevatedButton(
           onPressed: () => Navigator.of(context).pop(true),
-          child: Text(acceptText),
           style: ButtonStyle(
             backgroundColor: MaterialStateProperty.all(AppColors.red),
           ),
+          child: Text(acceptText),
         ),
       ],
     );

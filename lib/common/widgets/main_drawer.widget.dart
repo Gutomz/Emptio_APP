@@ -40,32 +40,31 @@ class MainDrawerBottom extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Observer(builder: (context) {
-      if (_authStore.isLogged)
-        return Container(
-          child: ListTile(
-            leading: _authStore.loading
-                ? SizedBox(
-                    width: 20,
-                    height: 20,
-                    child: CircularProgressIndicator(
-                      color: AppColors.red,
-                      strokeWidth: 1.5,
-                    ),
-                  )
-                : Icon(
-                    Icons.logout_rounded,
+      if (_authStore.isLogged) {
+        return ListTile(
+          leading: _authStore.loading
+              ? SizedBox(
+                  width: 20,
+                  height: 20,
+                  child: CircularProgressIndicator(
                     color: AppColors.red,
+                    strokeWidth: 1.5,
                   ),
-            title: Text(
-              "Desconectar",
-              style: TextStyle(
-                color: AppColors.red,
-                fontWeight: FontWeight.w600,
-              ),
+                )
+              : Icon(
+                  Icons.logout_rounded,
+                  color: AppColors.red,
+                ),
+          title: Text(
+            "Desconectar",
+            style: TextStyle(
+              color: AppColors.red,
+              fontWeight: FontWeight.w600,
             ),
-            onTap: _authStore.logout,
           ),
+          onTap: _authStore.logout,
         );
+      }
 
       return Container();
     });
@@ -144,65 +143,63 @@ class MainDrawerHeader extends StatelessWidget {
       color: AppColors.orange,
       width: double.infinity,
       child: SafeArea(
-        child: Container(
-          child: Padding(
-            padding: EdgeInsets.symmetric(horizontal: 15, vertical: 20),
-            child: Column(
-              children: [
-                UserAvatar(
-                  radius: 40,
-                  borderGap: 5,
-                  iconSize: 50,
-                  backgroundColor: AppColors.white,
-                  iconColor: AppColors.black,
-                ),
-                SizedBox(height: 10),
-                Observer(builder: (_) {
-                  if (!_connectivityStore.isConnected) {
-                    return Text(
-                      "Sem conexão com a internet!",
+        child: Padding(
+          padding: EdgeInsets.symmetric(horizontal: 15, vertical: 20),
+          child: Column(
+            children: [
+              UserAvatar(
+                radius: 40,
+                borderGap: 5,
+                iconSize: 50,
+                backgroundColor: AppColors.white,
+                iconColor: AppColors.black,
+              ),
+              SizedBox(height: 10),
+              Observer(builder: (_) {
+                if (!_connectivityStore.isConnected) {
+                  return Text(
+                    "Sem conexão com a internet!",
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontWeight: FontWeight.w500,
+                      fontSize: 16,
+                    ),
+                  );
+                }
+
+                if (!_authStore.isLogged) {
+                  return TextButton(
+                    onPressed: () {
+                      Navigator.of(context).push(
+                        MaterialPageRoute(
+                          builder: (_ctx) => LoginView(),
+                        ),
+                      );
+                    },
+                    child: Text(
+                      "Clique aqui para fazer o login",
                       textAlign: TextAlign.center,
                       style: TextStyle(
                         color: Colors.white,
                         fontWeight: FontWeight.w500,
                         fontSize: 16,
                       ),
-                    );
-                  }
-
-                  if (!_authStore.isLogged) {
-                    return TextButton(
-                      onPressed: () {
-                        Navigator.of(context).push(
-                          MaterialPageRoute(
-                            builder: (_ctx) => LoginView(),
-                          ),
-                        );
-                      },
-                      child: Text(
-                        "Clique aqui para fazer o login",
-                        textAlign: TextAlign.center,
-                        style: TextStyle(
-                          color: Colors.white,
-                          fontWeight: FontWeight.w500,
-                          fontSize: 16,
-                        ),
-                      ),
-                    );
-                  }
-
-                  return Text(
-                    _authStore.user!.name,
-                    textAlign: TextAlign.center,
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontWeight: FontWeight.bold,
-                      fontSize: 16,
                     ),
                   );
-                }),
-              ],
-            ),
+                }
+
+                return Text(
+                  _authStore.user!.name,
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontWeight: FontWeight.bold,
+                    fontSize: 16,
+                  ),
+                );
+              }),
+            ],
           ),
         ),
       ),

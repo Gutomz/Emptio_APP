@@ -40,7 +40,7 @@ abstract class _AuthStoreBase with Store {
       try {
         user = await UserRepository().getMe();
 
-        SharedPreferences prefs = await SharedPreferences.getInstance();
+        final SharedPreferences prefs = await SharedPreferences.getInstance();
         await prefs.setString(_authKey, jsonEncode(authModel.toJson()));
       } catch (error) {
         auth = null;
@@ -55,7 +55,7 @@ abstract class _AuthStoreBase with Store {
     loading = true;
 
     try {
-      SharedPreferences prefs = await SharedPreferences.getInstance();
+      final SharedPreferences prefs = await SharedPreferences.getInstance();
       await prefs.remove(_authKey);
 
       await UserRepository().logout();
@@ -72,16 +72,17 @@ abstract class _AuthStoreBase with Store {
     loading = true;
 
     try {
-      SharedPreferences prefs = await SharedPreferences.getInstance();
+      final SharedPreferences prefs = await SharedPreferences.getInstance();
 
-      bool? _keepLoggedOut = prefs.getBool(_keepLoggedOuthKey);
+      final bool? _keepLoggedOut = prefs.getBool(_keepLoggedOuthKey);
       if (_keepLoggedOut != null) {
         keepLoggedOut = _keepLoggedOut;
       }
 
-      String? authString = prefs.getString(_authKey);
+      final String? authString = prefs.getString(_authKey);
       if (authString != null) {
-        AuthModel authModel = AuthModel.fromJson(jsonDecode(authString));
+        final AuthModel authModel =
+            AuthModel.fromJson(jsonDecode(authString) as Map<String, dynamic>);
         await login(authModel);
 
         return Future.value(true);
@@ -97,11 +98,11 @@ abstract class _AuthStoreBase with Store {
   }
 
   @action
-  Future<void> setKeepLoggedOut(bool _value) async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
+  Future<void> setKeepLoggedOut() async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
 
-    prefs.setBool(_keepLoggedOuthKey, _value);
-    keepLoggedOut = _value;
+    prefs.setBool(_keepLoggedOuthKey, true);
+    keepLoggedOut = true;
   }
 
   @computed

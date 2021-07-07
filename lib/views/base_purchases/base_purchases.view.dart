@@ -14,7 +14,7 @@ class BasePurchasesView extends StatelessWidget {
   final BasePurchasesStore _store = GetIt.I<AppStore>().basePurchasesStore;
 
   Future<void> openSearch(BuildContext context) async {
-    final search = await showDialog(
+    final search = await showDialog<String?>(
       context: context,
       builder: (context) => SearchDialog(currentSearch: _store.search),
     );
@@ -34,7 +34,7 @@ class BasePurchasesView extends StatelessWidget {
               onTap: () => openSearch(context),
               child: LayoutBuilder(
                 builder: (context, constraints) {
-                  return Container(
+                  return SizedBox(
                     width: constraints.biggest.width,
                     child: Text(_store.search),
                   );

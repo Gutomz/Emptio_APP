@@ -21,16 +21,14 @@ class PurchaseList extends StatefulWidget {
   }) : super(key: key);
 
   @override
-  _PurchaseListState createState() => _PurchaseListState(purchasesStore: store);
+  _PurchaseListState createState() => _PurchaseListState();
 }
 
 class _PurchaseListState extends State<PurchaseList> {
-  final PurchasesStore purchasesStore;
-
-  _PurchaseListState({required this.purchasesStore});
+  late PurchasesStore purchasesStore = widget.store;
 
   Future<bool> confirmDismiss(DismissDirection direction) async {
-    bool? response = await showDialog(
+    final response = await showDialog<bool>(
         context: context,
         builder: (context) {
           return ConfirmDismissDialog(
@@ -91,7 +89,7 @@ class _PurchaseListState extends State<PurchaseList> {
           itemCount: purchasesStore.itemCount,
           itemBuilder: (context, index) {
             if (index < purchasesStore.purchaseList.length) {
-              PurchaseModel purchase = purchasesStore.purchaseList[index];
+              final purchase = purchasesStore.purchaseList[index];
 
               if (widget.canDelete) {
                 return Dismissible(
@@ -119,7 +117,7 @@ class _PurchaseListState extends State<PurchaseList> {
             }
 
             purchasesStore.loadNextPage();
-            return Container(
+            return SizedBox(
               height: 5,
               child: LinearProgressIndicator(
                 valueColor: AlwaysStoppedAnimation(AppColors.darkOrange),

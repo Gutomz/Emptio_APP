@@ -21,39 +21,36 @@ class PurchaseDao {
   static Box<Purchase>? _mBox;
 
   static Future<void> _openBox() async {
-    if (_mBox == null) {
-      _mBox = await Hive.openBox<Purchase>(Database.purchaseBoxName);
-    }
+    _mBox ??= await Hive.openBox<Purchase>(Database.purchaseBoxName);
   }
 
   static Future<Purchase> create(CreatePurchaseViewModel model) async {
     await _openBox();
 
     final createdAt = DateTime.now().toIso8601String();
-    int key = await _mBox!.add(Purchase(
-      status: PurchaseStatusTypes.OPEN,
+    final int key = await _mBox!.add(Purchase(
+      status: PurchaseStatusTypes.open,
       limit: 0,
-      marketKey: null,
       itemsKey: List.empty(growable: true),
       createdAt: createdAt,
       updatedAt: createdAt,
     ));
 
     if (model.basePurchaseId.isNotEmpty) {
-      var purchase = _mBox!.get(key)!;
+      final purchase = _mBox!.get(key)!;
 
-      var basePurchase =
+      final basePurchase =
           await BasePurchaseDao.get(int.parse(model.basePurchaseId));
 
-      for (var baseItemKey in basePurchase.itemsKey) {
-        var baseItem = await BasePurchaseItemDao.get(baseItemKey);
-        var item = await PurchaseItemDao.create(AddPurchaseItemViewModel(
+      for (final baseItemKey in basePurchase.itemsKey) {
+        final baseItem = await BasePurchaseItemDao.get(baseItemKey);
+        final item = await PurchaseItemDao.create(AddPurchaseItemViewModel(
           productId: baseItem.productKey.toString(),
           price: 0,
           quantity: baseItem.quantity,
         ));
 
-        purchase.itemsKey.add(item.key);
+        purchase.itemsKey.add(item.key as int);
       }
 
       purchase.save();
@@ -64,23 +61,24 @@ class PurchaseDao {
 
   static Future<void> delete(int key) async {
     await _openBox();
-    Purchase? purchase = _mBox!.get(key);
+    final Purchase? purchase = _mBox!.get(key);
 
     if (purchase != null) {
-      for (int itemKey in purchase.itemsKey) {
+      for (final int itemKey in purchase.itemsKey) {
         await PurchaseItemDao.deleteItem(itemKey);
       }
     }
 
-    return await _mBox!.delete(key);
+    return _mBox!.delete(key);
   }
 
   static Future<Purchase> get(int key) async {
     await _openBox();
-    var purchase = _mBox!.get(key);
+    final purchase = _mBox!.get(key);
 
-    if (purchase == null)
-      throw DatabaseError.notFoundError(AppErrors.PURCHASE_NOT_FOUND);
+    if (purchase == null) {
+      throw DatabaseError.notFoundError(AppErrors.purchaseNotFound);
+    }
 
     return purchase;
   }
@@ -88,9 +86,9 @@ class PurchaseDao {
   static Future<List<Purchase>> getAll(PurchasesFilterViewModel filter) async {
     await _openBox();
 
-    List<Purchase> purchases = (_mBox!.values
+    final List<Purchase> purchases = (_mBox!.values
             .where((element) => element.status
-                .contains(filter.status ?? PurchaseStatusTypes.OPEN))
+                .contains(filter.status ?? PurchaseStatusTypes.open))
             .toList()
               ..sort((a, b) {
                 if (filter.orderBy != null &&
@@ -117,14 +115,15 @@ class PurchaseDao {
   static Future<Purchase> addItem(
       int key, AddPurchaseItemViewModel model) async {
     await _openBox();
-    Purchase? purchase = _mBox!.get(key);
+    final Purchase? purchase = _mBox!.get(key);
 
-    if (purchase == null)
-      throw DatabaseError.notFoundError(AppErrors.PURCHASE_NOT_FOUND);
+    if (purchase == null) {
+      throw DatabaseError.notFoundError(AppErrors.purchaseNotFound);
+    }
 
-    var item = await PurchaseItemDao.create(model);
+    final item = await PurchaseItemDao.create(model);
 
-    purchase.itemsKey.add(item.key);
+    purchase.itemsKey.add(item.key as int);
 
     await purchase.save();
 
@@ -135,15 +134,17 @@ class PurchaseDao {
       int key, int itemKey, UpdatePurchaseItemViewModel model) async {
     await _openBox();
 
-    Purchase? purchase = _mBox!.get(key);
+    final Purchase? purchase = _mBox!.get(key);
 
-    if (purchase == null)
-      throw DatabaseError.notFoundError(AppErrors.PURCHASE_NOT_FOUND);
+    if (purchase == null) {
+      throw DatabaseError.notFoundError(AppErrors.purchaseNotFound);
+    }
 
-    if (!purchase.itemsKey.contains(itemKey))
-      throw DatabaseError.notFoundError(AppErrors.PURCHASE_ITEM_NOT_FOUND);
+    if (!purchase.itemsKey.contains(itemKey)) {
+      throw DatabaseError.notFoundError(AppErrors.purchaseItemNotFound);
+    }
 
-    PurchaseItem item = await PurchaseItemDao.get(itemKey);
+    final PurchaseItem item = await PurchaseItemDao.get(itemKey);
 
     item.price = model.price;
     item.quantity = model.quantity;
@@ -157,10 +158,11 @@ class PurchaseDao {
   static Future<Purchase> removeItem(int key, int itemKey) async {
     await _openBox();
 
-    Purchase? purchase = _mBox!.get(key);
+    final Purchase? purchase = _mBox!.get(key);
 
-    if (purchase == null)
-      throw DatabaseError.notFoundError(AppErrors.PURCHASE_NOT_FOUND);
+    if (purchase == null) {
+      throw DatabaseError.notFoundError(AppErrors.purchaseNotFound);
+    }
 
     await PurchaseItemDao.deleteItem(key);
     purchase.itemsKey.removeWhere((element) => element == itemKey);
@@ -173,16 +175,16 @@ class PurchaseDao {
   static Future<Purchase> complete(int key) async {
     await _openBox();
 
-    Purchase purchase = await get(key);
+    final Purchase purchase = await get(key);
 
-    purchase.status = PurchaseStatusTypes.CLOSED;
+    purchase.status = PurchaseStatusTypes.closed;
     purchase.updatedAt = DateTime.now().toIso8601String();
 
     await purchase.save();
 
     if (purchase.marketKey != null) {
-      for (var itemKey in purchase.itemsKey) {
-        var item = await PurchaseItemDao.get(itemKey);
+      for (final itemKey in purchase.itemsKey) {
+        final item = await PurchaseItemDao.get(itemKey);
 
         await ProductMarketDao.update(
           productKey: item.productKey,
@@ -197,22 +199,22 @@ class PurchaseDao {
 
   static Future<PurchaseModel> createParsed(
       CreatePurchaseViewModel model) async {
-    var purchase = await create(model);
-    return await parseToPurchaseModel(purchase);
+    final purchase = await create(model);
+    return parseToPurchaseModel(purchase);
   }
 
   static Future<PurchaseModel> getParsed(int key) async {
-    var purchase = await get(key);
-    return await parseToPurchaseModel(purchase);
+    final purchase = await get(key);
+    return parseToPurchaseModel(purchase);
   }
 
   static Future<List<PurchaseModel>> getAllParsed(
       PurchasesFilterViewModel filter) async {
-    List<PurchaseModel> models = List.empty(growable: true);
-    var purchases = await getAll(filter);
+    final List<PurchaseModel> models = List.empty(growable: true);
+    final purchases = await getAll(filter);
 
-    for (var purchase in purchases) {
-      var model = await parseToPurchaseModel(purchase);
+    for (final purchase in purchases) {
+      final model = await parseToPurchaseModel(purchase);
       models.add(model);
     }
 
@@ -221,32 +223,32 @@ class PurchaseDao {
 
   static Future<PurchaseModel> addItemParsed(
       int key, AddPurchaseItemViewModel model) async {
-    var purchase = await addItem(key, model);
-    return await parseToPurchaseModel(purchase);
+    final purchase = await addItem(key, model);
+    return parseToPurchaseModel(purchase);
   }
 
   static Future<PurchaseModel> removeItemParsed(int key, int itemKey) async {
-    var purchase = await removeItem(key, itemKey);
-    return await parseToPurchaseModel(purchase);
+    final purchase = await removeItem(key, itemKey);
+    return parseToPurchaseModel(purchase);
   }
 
   static Future<PurchaseModel> updateItemParsed(
       int key, int itemKey, UpdatePurchaseItemViewModel model) async {
-    var purchase = await updateItem(key, itemKey, model);
-    return await parseToPurchaseModel(purchase);
+    final purchase = await updateItem(key, itemKey, model);
+    return parseToPurchaseModel(purchase);
   }
 
   static Future<PurchaseModel> completeParsed(int key) async {
-    var purchase = await complete(key);
-    return await parseToPurchaseModel(purchase);
+    final purchase = await complete(key);
+    return parseToPurchaseModel(purchase);
   }
 
   static Future<PurchaseModel> parseToPurchaseModel(Purchase purchase) async {
-    List<PurchaseItemModel> items = List.empty(growable: true);
+    final List<PurchaseItemModel> items = List.empty(growable: true);
     double cost = 0;
     double estimatedCost = 0;
-    for (var itemKey in purchase.itemsKey) {
-      var itemModel = await PurchaseItemDao.getParsed(itemKey);
+    for (final itemKey in purchase.itemsKey) {
+      final itemModel = await PurchaseItemDao.getParsed(itemKey);
       if (itemModel.checked) {
         cost += itemModel.price * itemModel.quantity;
       }

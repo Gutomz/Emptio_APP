@@ -1,4 +1,4 @@
-import 'package:emptio/core/app_api.dart';
+import 'package:emptio/helpers/parsers.dart';
 import 'package:emptio/models/measurement.model.dart';
 
 class ProductModel {
@@ -32,40 +32,41 @@ class ProductModel {
   });
 
   factory ProductModel.fromJson(Map<String, dynamic> json) {
-    var model = ProductModel(
-      sId: json['_id'],
-      brand: json['brand'],
-      name: json['name'],
-      variation: json['variation'],
-      image: json['image'] != null && json['image'].isNotEmpty
-          ? AppApi.getUrl(json['image'])
-          : null,
-      weight: MeasurementModel.fromJson(json['weight']),
-      tags: json['tags'].cast<String>(),
-      updatedAt: json['updatedAt'],
-      createdAt: json['createdAt'],
+    final model = ProductModel(
+      sId: JsonParser.parseToString(json['_id']),
+      brand: JsonParser.parseToString(json['brand']),
+      name: JsonParser.parseToString(json['name']),
+      variation: JsonParser.parseToString(json['variation']),
+      image: JsonParser.parseToImageUrl(json['image']),
+      weight: JsonParser.parseToMeasurement(json['weight'])!,
+      tags: JsonParser.parseToStringList(json['tags']),
+      updatedAt: JsonParser.parseToString(json['updatedAt']),
+      createdAt: JsonParser.parseToString(json['createdAt']),
     );
 
-    if (json['productMarket'] != null) {
-      model.marketPrice = json['productMarket']['price']?.toDouble();
-      model.marketPriceUpdatedAt = json['productMarket']['updatedAt'];
-      model.marketPriceUpdatedBy = json['productMarket']['updatedBy']['name'];
+    final productMarket =
+        JsonParser.parseToProductMarket(json['productMarket']);
+
+    if (productMarket != null) {
+      model.marketPrice = productMarket.price;
+      model.marketPriceUpdatedAt = productMarket.updatedAt;
+      model.marketPriceUpdatedBy = productMarket.updatedBy;
     }
 
     return model;
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['_id'] = this.sId;
-    data['brand'] = this.brand;
-    data['name'] = this.name;
-    data['variation'] = this.variation;
-    data['image'] = this.image;
-    data['weight'] = this.weight.toJson();
-    data['tags'] = this.tags;
-    data['updatedAt'] = this.updatedAt;
-    data['createdAt'] = this.createdAt;
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['_id'] = sId;
+    data['brand'] = brand;
+    data['name'] = name;
+    data['variation'] = variation;
+    data['image'] = image;
+    data['weight'] = weight.toJson();
+    data['tags'] = tags;
+    data['updatedAt'] = updatedAt;
+    data['createdAt'] = createdAt;
     return data;
   }
 

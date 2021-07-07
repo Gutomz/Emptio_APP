@@ -1,4 +1,6 @@
-import 'package:emptio/core/app_api-errors.dart';
+import 'dart:developer';
+
+import 'package:emptio/core/app_api_errors.dart';
 import 'package:emptio/core/app_api.dart';
 import 'package:emptio/data/dao/base_purchase/base_purchase.dao.dart';
 import 'package:emptio/models/base_purchase.model.dart';
@@ -10,20 +12,20 @@ import 'package:emptio/view-models/update_base_purchase_item.view-model.dart';
 import 'package:get_it/get_it.dart';
 
 class BasePurchaseRepository {
-  static const String TAG = "BasePurchaseRepository";
+  static const String tag = "BasePurchaseRepository";
   final AppApi _api = AppApi();
   final AuthStore _authStore = GetIt.I<AuthStore>();
 
   Future<BasePurchaseModel> create() async {
     try {
       if (_authStore.isLogged) {
-        dynamic data = await _api.post("/base-purchases");
+        final data = await _api.post("/base-purchases") as Map<String, dynamic>;
         return BasePurchaseModel.fromJson(data);
       }
 
       return await BasePurchaseDao.createParsed();
     } catch (error) {
-      print('$TAG.create: $error');
+      log('$tag.create: $error');
 
       return Future.error(AppApiErrors.handleError(error));
     }
@@ -33,18 +35,20 @@ class BasePurchaseRepository {
       BasePurchasesFilterViewModel filter) async {
     try {
       if (_authStore.isLogged) {
-        List data = await _api.get('/base-purchases',
-            queryParameters: filter.toQuery());
-        var list = data
-            .map<BasePurchaseModel>(
-                (purchase) => BasePurchaseModel.fromJson(purchase))
+        final data = await _api.get(
+          '/base-purchases',
+          queryParameters: filter.toQuery(),
+        ) as List<dynamic>;
+        final list = data
+            .map<BasePurchaseModel>((purchase) =>
+                BasePurchaseModel.fromJson(purchase as Map<String, dynamic>))
             .toList();
         return list;
       }
 
       return BasePurchaseDao.getAllParsed(filter);
     } catch (error) {
-      print('$TAG.get: $error');
+      log('$tag.get: $error');
 
       return Future.error(AppApiErrors.handleError(error));
     }
@@ -58,7 +62,7 @@ class BasePurchaseRepository {
 
       return BasePurchaseDao.delete(int.parse(purchaseId));
     } catch (error) {
-      print('$TAG.delete: $error');
+      log('$tag.delete: $error');
 
       return Future.error(AppApiErrors.handleError(error));
     }
@@ -68,15 +72,15 @@ class BasePurchaseRepository {
       String purchaseId, AddBasePurchaseItemViewModel model) async {
     try {
       if (_authStore.isLogged) {
-        var data = await _api.post("/base-purchases/$purchaseId",
-            body: model.toJson());
+        final data = await _api.post("/base-purchases/$purchaseId",
+            body: model.toJson()) as Map<String, dynamic>;
 
         return BasePurchaseModel.fromJson(data);
       }
 
       return await BasePurchaseDao.addItemParsed(int.parse(purchaseId), model);
     } catch (error) {
-      print('$TAG.addItem: $error');
+      log('$tag.addItem: $error');
 
       return Future.error(AppApiErrors.handleError(error));
     }
@@ -86,10 +90,10 @@ class BasePurchaseRepository {
       UpdateBasePurchaseItemViewModel model) async {
     try {
       if (_authStore.isLogged) {
-        var data = await _api.put(
+        final data = await _api.put(
           "/base-purchases/$purchaseId/$itemId",
           body: model.toJson(),
-        );
+        ) as Map<String, dynamic>;
 
         return BasePurchaseModel.fromJson(data);
       }
@@ -97,7 +101,7 @@ class BasePurchaseRepository {
       return await BasePurchaseDao.updateItemParsed(
           int.parse(purchaseId), int.parse(itemId), model);
     } catch (error) {
-      print('$TAG.updateItem: $error');
+      log('$tag.updateItem: $error');
 
       return Future.error(AppApiErrors.handleError(error));
     }
@@ -106,14 +110,15 @@ class BasePurchaseRepository {
   Future<BasePurchaseModel> removeItem(String purchaseId, String itemId) async {
     try {
       if (_authStore.isLogged) {
-        var data = await _api.delete("/base-purchases/$purchaseId/$itemId");
+        final data = await _api.delete("/base-purchases/$purchaseId/$itemId")
+            as Map<String, dynamic>;
         return BasePurchaseModel.fromJson(data);
       }
 
       return BasePurchaseDao.removeItemParsed(
           int.parse(purchaseId), int.parse(itemId));
     } catch (error) {
-      print('$TAG.removeItem: $error');
+      log('$tag.removeItem: $error');
 
       return Future.error(AppApiErrors.handleError(error));
     }
@@ -123,16 +128,16 @@ class BasePurchaseRepository {
       String purchaseId, UpdateBasePurchaseViewModel model) async {
     try {
       if (_authStore.isLogged) {
-        var data = await _api.put(
+        final data = await _api.put(
           "/base-purchases/$purchaseId",
           body: model.toJson(),
-        );
+        ) as Map<String, dynamic>;
         return BasePurchaseModel.fromJson(data);
       }
 
       return BasePurchaseDao.updateParsed(int.parse(purchaseId), model);
     } catch (error) {
-      print('$TAG.updatePurchase: $error');
+      log('$tag.updatePurchase: $error');
 
       return Future.error(AppApiErrors.handleError(error));
     }

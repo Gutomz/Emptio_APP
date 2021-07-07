@@ -24,7 +24,6 @@ class EmptyPlaceholder extends StatelessWidget {
   Widget build(BuildContext context) {
     return Column(
       mainAxisAlignment: MainAxisAlignment.center,
-      crossAxisAlignment: CrossAxisAlignment.center,
       children: [
         SvgPicture.asset(asset),
         SizedBox(height: 15),

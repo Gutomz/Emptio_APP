@@ -1,4 +1,6 @@
-import 'package:emptio/core/app_api-errors.dart';
+import 'dart:developer';
+
+import 'package:emptio/core/app_api_errors.dart';
 import 'package:emptio/core/app_api.dart';
 import 'package:emptio/core/app_errors.dart';
 import 'package:emptio/models/auth.model.dart';
@@ -8,20 +10,22 @@ import 'package:emptio/view-models/redefine_password.view-model.dart';
 import 'package:emptio/view-models/register.view-model.dart';
 
 class UserRepository {
-  static const String TAG = "UserRepository";
+  static const String tag = "UserRepository";
   final AppApi _api = AppApi();
 
   Future<AuthModel> register(RegisterViewModel model) async {
     try {
-      dynamic data = await _api.post('/users', body: model.toJson());
+      final data = await _api.post('/users', body: model.toJson())
+          as Map<String, dynamic>;
       return AuthModel.fromJson(data);
     } catch (error) {
-      print('$TAG.register: $error');
+      log('$tag.register: $error');
+
       if (AppApiErrors.isError(error)) {
-        String code = AppApiErrors.getCode(error);
+        final String code = AppApiErrors.getCode(error);
 
         if (code.isNotEmpty) {
-          if (code.contains(AppErrors.UNIQUE_FIELD)) {
+          if (code.contains(AppErrors.uniqueField)) {
             return Future.error("E-mail já cadastrado!");
           }
         }
@@ -33,16 +37,17 @@ class UserRepository {
 
   Future<AuthModel> login(LoginViewModel model) async {
     try {
-      dynamic data = await _api.post('/auth', body: model.toJson());
+      final data = await _api.post('/auth', body: model.toJson())
+          as Map<String, dynamic>;
       return AuthModel.fromJson(data);
     } catch (error) {
-      print('$TAG.login: $error');
+      log('$tag.login: $error');
 
       if (AppApiErrors.isError(error)) {
-        String code = AppApiErrors.getCode(error);
+        final String code = AppApiErrors.getCode(error);
 
-        if (code.contains(AppErrors.USER_NOT_FOUND) ||
-            code.contains(AppErrors.INVALID_FIELD)) {
+        if (code.contains(AppErrors.userNotFound) ||
+            code.contains(AppErrors.invalidField)) {
           return Future.error("E-mail e/ou senha inválidos!");
         }
       }
@@ -55,7 +60,7 @@ class UserRepository {
     try {
       await _api.delete('/auth');
     } catch (error) {
-      print('$TAG.logout: $error');
+      log('$tag.logout: $error');
 
       return Future.error(AppApiErrors.handleError(error));
     }
@@ -65,13 +70,13 @@ class UserRepository {
     try {
       await _api.post('/users/forgot-password', body: {"email": email});
     } catch (error) {
-      print('$TAG.forgotPassword: $error');
+      log('$tag.forgotPassword: $error');
 
       if (AppApiErrors.isError(error)) {
-        String code = AppApiErrors.getCode(error);
+        final String code = AppApiErrors.getCode(error);
 
-        if (code.contains(AppErrors.USER_NOT_FOUND) ||
-            code.contains(AppErrors.INVALID_FIELD)) {
+        if (code.contains(AppErrors.userNotFound) ||
+            code.contains(AppErrors.invalidField)) {
           return Future.error("E-mail não cadastrado!");
         }
       }
@@ -82,14 +87,16 @@ class UserRepository {
 
   Future<AuthModel> redefinePassword(RedefinePasswordViewModel model) async {
     try {
-      dynamic data =
-          await _api.post('/users/redefine-password', body: model.toJson());
+      final data = await _api.post(
+        '/users/redefine-password',
+        body: model.toJson(),
+      ) as Map<String, dynamic>;
       return AuthModel.fromJson(data);
     } catch (error) {
-      print('$TAG.redefinePassword: $error');
+      log('$tag.redefinePassword: $error');
 
       if (AppApiErrors.isError(error)) {
-        String code = AppApiErrors.getCode(error);
+        final String code = AppApiErrors.getCode(error);
 
         if (code.contains("user_not_found_error") ||
             code.contains("invalid_field_error")) {
@@ -103,10 +110,10 @@ class UserRepository {
 
   Future<UserModel> getMe() async {
     try {
-      dynamic data = await _api.get("/users/me");
+      final data = await _api.get("/users/me") as Map<String, dynamic>;
       return UserModel.fromJson(data);
     } catch (error) {
-      print('$TAG.getMe: $error');
+      log('$tag.getMe: $error');
 
       return Future.error(AppApiErrors.handleError(error));
     }

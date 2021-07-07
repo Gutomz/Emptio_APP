@@ -28,63 +28,61 @@ class ProductMarketIndicator extends StatelessWidget {
         ),
         SizedBox(width: 20),
         Expanded(
-          child: Container(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  market.name,
-                  style: TextStyle(
-                    color: AppColors.orange,
-                  ),
-                  overflow: TextOverflow.ellipsis,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                market.name,
+                style: TextStyle(
+                  color: AppColors.orange,
                 ),
-                if (product.marketPrice != null)
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Row(
-                        children: [
-                          Icon(
-                            Icons.event_available_rounded,
+                overflow: TextOverflow.ellipsis,
+              ),
+              if (product.marketPrice != null)
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Row(
+                      children: [
+                        Icon(
+                          Icons.event_available_rounded,
+                          color: Colors.white,
+                          size: 12,
+                        ),
+                        SizedBox(width: 5),
+                        Text(
+                          product.marketPriceUpdatedAt!.formatDate(),
+                          style: TextStyle(
                             color: Colors.white,
-                            size: 12,
+                            fontSize: 12,
                           ),
-                          SizedBox(width: 5),
-                          Text(
-                            product.marketPriceUpdatedAt!.formatDate(),
-                            style: TextStyle(
-                              color: Colors.white,
-                              fontSize: 12,
-                            ),
+                        ),
+                      ],
+                    ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.end,
+                      crossAxisAlignment: CrossAxisAlignment.end,
+                      children: [
+                        Text(
+                          "R\$",
+                          style: TextStyle(
+                            fontSize: 10,
+                            color: AppColors.lightGrey,
                           ),
-                        ],
-                      ),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.end,
-                        crossAxisAlignment: CrossAxisAlignment.end,
-                        children: [
-                          Text(
-                            "R\$",
-                            style: TextStyle(
-                              fontSize: 10,
-                              color: AppColors.lightGrey,
-                            ),
+                        ),
+                        Text(
+                          product.marketPrice!.formatMoney(),
+                          style: TextStyle(
+                            fontSize: 14,
+                            fontWeight: FontWeight.bold,
+                            color: AppColors.orange,
                           ),
-                          Text(
-                            product.marketPrice!.formatMoney(),
-                            style: TextStyle(
-                              fontSize: 14,
-                              fontWeight: FontWeight.bold,
-                              color: AppColors.orange,
-                            ),
-                          ),
-                        ],
-                      ),
-                    ],
-                  ),
-              ],
-            ),
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
+            ],
           ),
         ),
       ],

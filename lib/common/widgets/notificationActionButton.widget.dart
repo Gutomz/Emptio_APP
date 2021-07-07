@@ -12,7 +12,7 @@ class NotificationActionButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Observer(builder: (_) {
-      if (_authStore.isLogged)
+      if (_authStore.isLogged) {
         return Badge(
           badgeContent: Text(
             "${_authStore.user!.notificationCount}",
@@ -28,6 +28,7 @@ class NotificationActionButton extends StatelessWidget {
             icon: Icon(Icons.notifications_none_outlined),
           ),
         );
+      }
 
       return Container();
     });

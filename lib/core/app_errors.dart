@@ -1,19 +1,19 @@
 class AppErrors {
-  static const UNIMPLEMENTED = "unimplemented_error";
-  static const INTERNAL_SERVER = "internal_server_error";
-  static const UNAUTHORIZED = "unauthorized_error";
-  static const NOT_ALLOWED = "not_allowed_error";
-  static const USER_NOT_FOUND = "user_not_found_error";
-  static const FRIENDSHIP_NOT_FOUND = "friendship_not_found_error";
-  static const MARKET_NOT_FOUND = "market_not_found_error";
-  static const PURCHASE_NOT_FOUND = "purchase_not_found_error";
-  static const PURCHASE_ITEM_NOT_FOUND = "purchase_item_not_found_error";
-  static const PRODUCT_NOT_FOUND = "product_not_found_error";
-  static const FAVORITE_NOT_FOUND = "favorite_not_found_error";
-  static const INVALID_FIELD = "invalid_field_error";
-  static const MISSING_FIELD = "missing_field_error";
-  static const UNIQUE_FIELD = "unique_field_error";
-  static const DUPLICATED_DOCUMENT = "duplicated_document_error";
-  static const DUPLICATED_ITEM = "duplicated_item_error";
-  static const DUPLICATED_FAVORITE = "duplicated_favorite_error";
+  static const unimplemented = "unimplemented_error";
+  static const internalServer = "internal_server_error";
+  static const unauthorized = "unauthorized_error";
+  static const notAllowed = "not_allowed_error";
+  static const userNotFound = "user_not_found_error";
+  static const friendshipNotFound = "friendship_not_found_error";
+  static const marketNotFound = "market_not_found_error";
+  static const purchaseNotFound = "purchase_not_found_error";
+  static const purchaseItemNotFound = "purchase_item_not_found_error";
+  static const productNotFound = "product_not_found_error";
+  static const favoriteNotFound = "favorite_not_found_error";
+  static const invalidField = "invalid_field_error";
+  static const missingField = "missing_field_error";
+  static const uniqueField = "unique_field_error";
+  static const duplicatedDocument = "duplicated_document_error";
+  static const duplicatedItem = "duplicated_item_error";
+  static const duplicatedFavorite = "duplicated_favorite_error";
 }

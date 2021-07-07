@@ -1,20 +1,18 @@
+import 'dart:developer';
+
 import 'package:emptio/common/widgets/main_bottom_navigator.widget.dart';
 import 'package:emptio/common/widgets/main_drawer.widget.dart';
 import 'package:emptio/core/app_colors.dart';
-import 'package:emptio/models/base_purchase.model.dart';
-import 'package:emptio/models/purchase.model.dart';
 import 'package:emptio/stores/app.store.dart';
 import 'package:emptio/stores/auth.store.dart';
 import 'package:emptio/stores/connectivity.store.dart';
 import 'package:emptio/view-models/create_purchase.view-model.dart';
 import 'package:emptio/views/base_purchase_details/base_purchase_details.view.dart';
 import 'package:emptio/views/base_purchases/base_purchases.view.dart';
-import 'package:emptio/views/base_purchases/store/base_purchases.store.dart';
 import 'package:emptio/views/favorites/favorites.view.dart';
 import 'package:emptio/views/feed/feed.view.dart';
 import 'package:emptio/views/purchase_details/purchase_details.view.dart';
 import 'package:emptio/views/purchases/purchases.view.dart';
-import 'package:emptio/views/purchases/store/purchases.store.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:get_it/get_it.dart';
@@ -26,9 +24,9 @@ class HomeView extends StatefulWidget {
 }
 
 class _HomeViewState extends State<HomeView> {
-  ConnectivityStore _connectivityStore = GetIt.I<ConnectivityStore>();
-  AuthStore _authStore = GetIt.I<AuthStore>();
-  final AppStore _appStore = GetIt.I<AppStore>();
+  final _connectivityStore = GetIt.I<ConnectivityStore>();
+  final _authStore = GetIt.I<AuthStore>();
+  final _appStore = GetIt.I<AppStore>();
 
   final List<IconData> icons = [
     Icons.local_grocery_store_rounded,
@@ -56,8 +54,7 @@ class _HomeViewState extends State<HomeView> {
   late ReactionDisposer _disposer;
 
   void onFabPressed(BuildContext context, int currentTab) {
-    Function(BuildContext) action = actions[currentTab];
-    action(context);
+    actions[currentTab](context);
   }
 
   @override
@@ -109,8 +106,8 @@ class _HomeViewState extends State<HomeView> {
       body: Observer(builder: (context) {
         return Scaffold(
           body: PageStorage(
-            child: screens[_appStore.homeStore.currentTab],
             bucket: _appStore.homeStore.bucket,
+            child: screens[_appStore.homeStore.currentTab],
           ),
           floatingActionButton: FloatingActionButton(
             onPressed: () =>
@@ -132,8 +129,8 @@ class _HomeViewState extends State<HomeView> {
   }
 
   Future<void> purchasesViewAction(BuildContext context) async {
-    PurchasesStore _purchasesStore = _appStore.openPurchasesStore;
-    PurchaseModel? purchase =
+    final _purchasesStore = _appStore.openPurchasesStore;
+    final purchase =
         await _purchasesStore.createPurchase(CreatePurchaseViewModel());
 
     if (purchase != null) {
@@ -144,8 +141,8 @@ class _HomeViewState extends State<HomeView> {
   }
 
   Future<void> basePurchasesViewAction(BuildContext context) async {
-    BasePurchasesStore _basePurchasesStore = _appStore.basePurchasesStore;
-    BasePurchaseModel? purchase = await _basePurchasesStore.createPurchase();
+    final _basePurchasesStore = _appStore.basePurchasesStore;
+    final purchase = await _basePurchasesStore.createPurchase();
 
     if (purchase != null) {
       Navigator.of(context).push(MaterialPageRoute(
@@ -156,11 +153,11 @@ class _HomeViewState extends State<HomeView> {
 
   Future<void> favoritesViewAction(BuildContext context) async {
     // TODO - Favorites View action
-    print('Add favorite');
+    log('Add favorite');
   }
 
   Future<void> feedViewAction(BuildContext context) async {
     // TODO - Feed View action
-    print('Add post');
+    log('Add post');
   }
 }

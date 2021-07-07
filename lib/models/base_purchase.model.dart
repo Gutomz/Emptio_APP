@@ -1,3 +1,4 @@
+import 'package:emptio/helpers/parsers.dart';
 import 'package:emptio/models/base_purchase_item.model.dart';
 
 class BasePurchaseModel {
@@ -16,30 +17,24 @@ class BasePurchaseModel {
   });
 
   factory BasePurchaseModel.fromJson(Map<String, dynamic> json) {
-    var model = BasePurchaseModel(
-      sId: json['_id'],
-      name: json['name'],
-      items: List.empty(growable: true),
-      createdAt: json['createdAt'],
-      updatedAt: json['updatedAt'],
+    final model = BasePurchaseModel(
+      sId: JsonParser.parseToString(json['_id']),
+      name: JsonParser.parseToString(json['name']),
+      items: JsonParser.parseToBasePurchaseItemList(json['items']),
+      createdAt: JsonParser.parseToString(json['createdAt']),
+      updatedAt: JsonParser.parseToString(json['updatedAt']),
     );
-
-    if (json['items'] != null) {
-      json['items'].forEach((v) {
-        model.items.add(BasePurchaseItemModel.fromJson(v));
-      });
-    }
 
     return model;
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['_id'] = this.sId;
-    data['name'] = this.name;
-    data['items'] = this.items.map((v) => v.toJson()).toList();
-    data['createdAt'] = this.createdAt;
-    data['updatedAt'] = this.updatedAt;
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['_id'] = sId;
+    data['name'] = name;
+    data['items'] = items.map((v) => v.toJson()).toList();
+    data['createdAt'] = createdAt;
+    data['updatedAt'] = updatedAt;
     return data;
   }
 }

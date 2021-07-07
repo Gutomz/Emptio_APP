@@ -16,8 +16,8 @@ class SplashView extends StatefulWidget {
 }
 
 class _SplashViewState extends State<SplashView> {
-  AuthStore _authStore = GetIt.I<AuthStore>();
-  ConnectivityStore _connectivityStore = GetIt.I<ConnectivityStore>();
+  final AuthStore _authStore = GetIt.I<AuthStore>();
+  final ConnectivityStore _connectivityStore = GetIt.I<ConnectivityStore>();
 
   @override
   Widget build(BuildContext context) {
@@ -59,15 +59,15 @@ class _SplashViewState extends State<SplashView> {
     try {
       await Firebase.initializeApp();
       await requestLocation();
-      bool authenticated = await validateAuth();
+      final bool authenticated = await validateAuth();
       return Future.value(authenticated);
     } catch (error) {
       return Future.error(error);
     }
   }
 
-  Future validateAuth() async {
-    bool authenticated = await _authStore.initAuthenticated();
+  Future<bool> validateAuth() async {
+    final bool authenticated = await _authStore.initAuthenticated();
     return Future.value(authenticated);
   }
 }

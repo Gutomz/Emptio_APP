@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:mobx/mobx.dart';
 part 'connectivity.store.g.dart';
@@ -7,7 +9,7 @@ class ConnectivityStore = _ConnectivityStoreBase with _$ConnectivityStore;
 abstract class _ConnectivityStoreBase with Store {
   _ConnectivityStoreBase() {
     autorun((_) {
-      print('Connectivity status changed: ${connectivityStream.status}');
+      log('Connectivity status changed: ${connectivityStream.status}');
     });
   }
 
@@ -20,7 +22,7 @@ abstract class _ConnectivityStoreBase with Store {
 
   @computed
   bool get isConnected =>
-      isActive ? connectivityStream.value != ConnectivityResult.none : false;
+      isActive && connectivityStream.value != ConnectivityResult.none;
 
   void dispose() {}
 }

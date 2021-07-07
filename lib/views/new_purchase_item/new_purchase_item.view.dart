@@ -27,21 +27,11 @@ class NewPurchaseItemView extends StatelessWidget {
   final PickImage picker = PickImage();
   final bool isBaseItem;
 
-  final priceFieldController = MoneyMaskedTextController(
-    decimalSeparator: ',',
-    thousandSeparator: '.',
-    leftSymbol: 'R\$ ',
-    initialValue: 0,
-  );
+  final priceFieldController = MoneyMaskedTextController(leftSymbol: 'R\$ ');
+  final weightFieldController = MoneyMaskedTextController();
 
-  final weightFieldController = MoneyMaskedTextController(
-    decimalSeparator: ',',
-    thousandSeparator: '.',
-    initialValue: 0,
-  );
-
-  _selectImage(BuildContext context, File? _current) async {
-    File? image = await picker.showPicker(context, _current != null);
+  Future<void> _selectImage(BuildContext context, File? _current) async {
+    final image = await picker.showPicker(context, canRemove: _current != null);
     store.setImage(image);
   }
 
@@ -62,11 +52,11 @@ class NewPurchaseItemView extends StatelessWidget {
         title: Text("Novo Produto"),
         bottom: connectedMarket != null
             ? PreferredSize(
+                preferredSize: Size.fromHeight(60),
                 child: Padding(
-                  padding: const EdgeInsets.only(left: 15, bottom: 15),
+                  padding: EdgeInsets.only(left: 15, bottom: 15),
                   child: MarketIndicator(market: connectedMarket!),
                 ),
-                preferredSize: Size.fromHeight(60),
               )
             : null,
       ),
@@ -82,15 +72,15 @@ class NewPurchaseItemView extends StatelessWidget {
               Observer(builder: (context) {
                 return TextButton(
                   onPressed: () => _selectImage(context, store.image),
-                  child: Text(
-                    store.image != null
-                        ? 'Alterar imagem'
-                        : 'Selecionar imagem',
-                  ),
                   style: ButtonStyle(
                     foregroundColor:
                         MaterialStateProperty.all(AppColors.orange),
                     overlayColor: MaterialStateProperty.all(Colors.orange[50]),
+                  ),
+                  child: Text(
+                    store.image != null
+                        ? 'Alterar imagem'
+                        : 'Selecionar imagem',
                   ),
                 );
               }),
@@ -148,8 +138,8 @@ class NewPurchaseItemView extends StatelessWidget {
                             items: MeasurementTypes.list
                                 .map<DropdownMenuItem<String>>(
                                   (value) => DropdownMenuItem(
-                                    child: Text(value),
                                     value: value,
+                                    child: Text(value),
                                   ),
                                 )
                                 .toList(),
@@ -173,13 +163,12 @@ class NewPurchaseItemView extends StatelessWidget {
                 ],
               ),
               SizedBox(height: 40),
-              Container(
+              SizedBox(
                 width: double.infinity,
                 child: Column(
                   children: [
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
                         Text(
                           "Categorias",
@@ -191,18 +180,7 @@ class NewPurchaseItemView extends StatelessWidget {
                           ),
                         ),
                         TextButton(
-                          onPressed: () async {
-                            String? tag = await showDialog(
-                              context: context,
-                              builder: (context) => InputNewTagDialog(
-                                excludeList: store.tags.toList(),
-                              ),
-                            );
-
-                            if (tag != null) {
-                              store.addTag(tag);
-                            }
-                          },
+                          onPressed: () => _onNewCategoryPressed(context),
                           style: ButtonStyle(
                             foregroundColor:
                                 MaterialStateProperty.all(AppColors.orange),
@@ -228,11 +206,10 @@ class NewPurchaseItemView extends StatelessWidget {
                         );
                       }
 
-                      return Container(
+                      return SizedBox(
                         width: double.infinity,
                         child: Wrap(
                           spacing: 10,
-                          alignment: WrapAlignment.start,
                           children: store.tags
                               .map<Widget>(
                                 (tag) => ProductTag(
@@ -266,5 +243,16 @@ class NewPurchaseItemView extends StatelessWidget {
         );
       }),
     );
+  }
+
+  Future<void> _onNewCategoryPressed(BuildContext context) async {
+    final tag = await showDialog<String?>(
+      context: context,
+      builder: (context) => InputNewTagDialog(excludeList: store.tags.toList()),
+    );
+
+    if (tag != null) {
+      store.addTag(tag);
+    }
   }
 }

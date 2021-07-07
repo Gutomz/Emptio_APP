@@ -6,8 +6,8 @@ class UpdateBasePurchaseItemViewModel {
   });
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['quantity'] = this.quantity;
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['quantity'] = quantity;
     return data;
   }
 }

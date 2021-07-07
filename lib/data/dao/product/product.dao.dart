@@ -18,9 +18,7 @@ class ProductDao {
   static Box<Product>? _mBox;
 
   static Future<void> _openBox() async {
-    if (_mBox == null) {
-      _mBox = await Hive.openBox<Product>(Database.productBoxName);
-    }
+    _mBox ??= await Hive.openBox<Product>(Database.productBoxName);
   }
 
   static Future<Box<Product>> get instance async {
@@ -32,8 +30,8 @@ class ProductDao {
   static Future<Product> create(ProductCreateViewModel model) async {
     await _openBox();
 
-    String createAt = DateTime.now().toIso8601String();
-    int key = await _mBox!.add(Product(
+    final String createAt = DateTime.now().toIso8601String();
+    final int key = await _mBox!.add(Product(
       brand: model.brand,
       name: model.name,
       variation: model.variation,
@@ -50,23 +48,21 @@ class ProductDao {
   static Future<List<Product>> getAll(ProductFilterViewModel filter) async {
     await _openBox();
     int? marketKey;
-    List<int> excludeIds = List.empty(growable: true);
+    final List<int> excludeIds = List.empty(growable: true);
     if (filter.purchaseId.isNotEmpty) {
-      Purchase purchase = await PurchaseDao.get(int.parse(filter.purchaseId));
-      for (var itemKey in purchase.itemsKey) {
-        var productKey = (await PurchaseItemDao.get(itemKey)).productKey;
+      final Purchase purchase = await PurchaseDao.get(int.parse(filter.purchaseId));
+      for (final itemKey in purchase.itemsKey) {
+        final productKey = (await PurchaseItemDao.get(itemKey)).productKey;
         excludeIds.add(productKey);
       }
       marketKey = purchase.marketKey;
     }
 
-    print(_mBox!.values);
-
-    Iterable<Product> list = _mBox!.values;
+    final Iterable<Product> list = _mBox!.values;
 
     filter.search = filter.search.toLowerCase();
 
-    List<Product> products = (list.where((product) {
+    final List<Product> products = (list.where((product) {
       if (excludeIds.contains(product.key)) {
         return false;
       }
@@ -83,10 +79,10 @@ class ProductDao {
       ..skip(filter.skip).take(filter.limit);
 
     if (marketKey != null) {
-      for (var product in products) {
-        var productMarket = await ProductMarketDao.find(
+      for (final product in products) {
+        final productMarket = await ProductMarketDao.find(
           marketKey: marketKey,
-          productKey: product.key,
+          productKey: product.key as int,
         );
 
         if (productMarket != null) {
@@ -102,27 +98,26 @@ class ProductDao {
   static Future<Product> get(int key) async {
     await _openBox();
 
-    Product? product = _mBox!.get(key);
+    final Product? product = _mBox!.get(key);
 
     if (product != null) {
       return product;
     }
 
-    throw DatabaseError.notFoundError(AppErrors.PRODUCT_NOT_FOUND);
+    throw DatabaseError.notFoundError(AppErrors.productNotFound);
   }
 
   static Future<ProductModel> createParsed(ProductCreateViewModel model) async {
-    Product product = await create(model);
-
-    return await parseToProductModel(product);
+    final Product product = await create(model);
+    return parseToProductModel(product);
   }
 
   static Future<List<ProductModel>> getAllParsed(
       ProductFilterViewModel filter) async {
-    List<ProductModel> models = List.empty(growable: true);
-    List<Product> products = await getAll(filter);
-    for (Product product in products) {
-      ProductModel model = await parseToProductModel(product);
+    final List<ProductModel> models = List.empty(growable: true);
+    final List<Product> products = await getAll(filter);
+    for (final product in products) {
+      final ProductModel model = await parseToProductModel(product);
       models.add(model);
     }
 
@@ -130,9 +125,8 @@ class ProductDao {
   }
 
   static Future<ProductModel> getParsed(int key) async {
-    Product product = await get(key);
-
-    return await parseToProductModel(product);
+    final Product product = await get(key);
+    return parseToProductModel(product);
   }
 
   static Future<ProductModel> parseToProductModel(Product product) async {

@@ -11,6 +11,7 @@ class EntryHeaderWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ClipPath(
+      clipper: BottomWaveClipper(),
       child: Stack(
         children: [
           ColorFiltered(
@@ -26,7 +27,7 @@ class EntryHeaderWidget extends StatelessWidget {
               ),
             ),
           ),
-          Container(
+          SizedBox(
             height: height,
             child: Center(
               child: Hero(
@@ -37,7 +38,6 @@ class EntryHeaderWidget extends StatelessWidget {
           ),
         ],
       ),
-      clipper: BottomWaveClipper(),
     );
   }
 }

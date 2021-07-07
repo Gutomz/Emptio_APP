@@ -1,9 +1,10 @@
+import 'package:emptio/helpers/parsers.dart';
 import 'package:emptio/models/market.model.dart';
 import 'package:emptio/models/purchase_item.model.dart';
 
 class PurchaseStatusTypes {
-  static const String OPEN = 'open';
-  static const String CLOSED = 'closed';
+  static const String open = 'open';
+  static const String closed = 'closed';
 }
 
 class PurchaseModel {
@@ -30,42 +31,34 @@ class PurchaseModel {
   });
 
   factory PurchaseModel.fromJson(Map<String, dynamic> json) {
-    var model = PurchaseModel(
-      sId: json['_id'],
-      status: json['status'],
-      cost: json['cost'].toDouble(),
-      estimatedCost: json['estimatedCost'].toDouble(),
-      limit: json['limit'].toDouble(),
-      market: json['market'] != null && json['image'] != ""
-          ? MarketModel.fromJson(json['market'])
-          : null,
-      items: List<PurchaseItemModel>.empty(growable: true),
-      updatedAt: json['updatedAt'],
-      createdAt: json['createdAt'],
+    final model = PurchaseModel(
+      sId: JsonParser.parseToString(json['_id']),
+      status: JsonParser.parseToString(json['status']),
+      cost: JsonParser.parseToDouble(json['cost']),
+      estimatedCost: JsonParser.parseToDouble(json['estimatedCost']),
+      limit: JsonParser.parseToDouble(json['limit']),
+      market: JsonParser.parseToMarket(json['market']),
+      items: JsonParser.parseToPurchaseItemList(json['items']),
+      updatedAt: JsonParser.parseToString(json['updatedAt']),
+      createdAt: JsonParser.parseToString(json['createdAt']),
     );
-
-    if (json['items'] != null) {
-      json['items'].forEach((v) {
-        model.items.add(new PurchaseItemModel.fromJson(v));
-      });
-    }
 
     return model;
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['_id'] = this.sId;
-    data['status'] = this.status;
-    data['cost'] = this.cost;
-    data['estimatedCost'] = this.estimatedCost;
-    data['limit'] = this.limit;
-    if (this.market != null) {
-      data['market'] = this.market!.toJson();
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['_id'] = sId;
+    data['status'] = status;
+    data['cost'] = cost;
+    data['estimatedCost'] = estimatedCost;
+    data['limit'] = limit;
+    if (market != null) {
+      data['market'] = market!.toJson();
     }
-    data['items'] = this.items.map((v) => v.toJson()).toList();
-    data['updatedAt'] = this.updatedAt;
-    data['createdAt'] = this.createdAt;
+    data['items'] = items.map((v) => v.toJson()).toList();
+    data['updatedAt'] = updatedAt;
+    data['createdAt'] = createdAt;
     return data;
   }
 }

@@ -26,7 +26,7 @@ class _RegisterViewState extends State<RegisterView> {
   late ReactionDisposer loggedDisposer;
 
   @override
-  initState() {
+  void initState() {
     super.initState();
 
     errorDisposer = reaction((_) => registerStore.error, (String error) {
@@ -43,8 +43,7 @@ class _RegisterViewState extends State<RegisterView> {
     loggedDisposer = reaction((_) => registerStore.logged, (bool logged) {
       if (logged) {
         Navigator.of(context).pushAndRemoveUntil(
-            MaterialPageRoute(builder: (ctx) => HomeView()),
-            (route) => false);
+            MaterialPageRoute(builder: (ctx) => HomeView()), (route) => false);
       }
     });
   }
@@ -56,7 +55,7 @@ class _RegisterViewState extends State<RegisterView> {
     super.dispose();
   }
 
-  buildImage(File? _image) {
+  Widget buildImage(File? _image) {
     if (_image == null) {
       return Container(
         decoration: BoxDecoration(
@@ -84,8 +83,8 @@ class _RegisterViewState extends State<RegisterView> {
     }
   }
 
-  _selectImage(BuildContext context, File? _current) async {
-    File? image = await picker.showPicker(context, _current != null);
+  Future<void> _selectImage(BuildContext context, File? _current) async {
+    final image = await picker.showPicker(context, canRemove: _current != null);
     registerStore.setPhoto(image);
   }
 
@@ -110,7 +109,7 @@ class _RegisterViewState extends State<RegisterView> {
           SizedBox(width: 20),
         ],
       ),
-      body: Container(
+      body: SizedBox(
         width: double.infinity,
         child: SingleChildScrollView(
           child: Padding(
@@ -227,7 +226,7 @@ class _RegisterViewState extends State<RegisterView> {
                   );
                 }),
                 SizedBox(height: 50),
-                Container(
+                SizedBox(
                   height: 50,
                   width: double.infinity,
                   child: Observer(builder: (_) {

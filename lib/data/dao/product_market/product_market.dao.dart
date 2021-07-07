@@ -7,9 +7,7 @@ class ProductMarketDao {
   static Box<ProductMarket>? _mBox;
 
   static Future<void> _openBox() async {
-    if (_mBox == null) {
-      _mBox = await Hive.openBox<ProductMarket>(Database.productMarketBoxName);
-    }
+    _mBox ??= await Hive.openBox<ProductMarket>(Database.productMarketBoxName);
   }
 
   static Future<Box<ProductMarket>> get instance async {
@@ -25,7 +23,7 @@ class ProductMarketDao {
   }) async {
     await _openBox();
 
-    var key = _mBox!.add(ProductMarket(
+    final key = _mBox!.add(ProductMarket(
       marketKey: marketKey,
       productKey: productKey,
       price: price,
@@ -42,7 +40,7 @@ class ProductMarketDao {
   }) async {
     await _openBox();
 
-    var productMarket = await find(
+    final productMarket = await find(
       marketKey: marketKey,
       productKey: productKey,
     );
@@ -56,14 +54,14 @@ class ProductMarketDao {
         await productMarket.save();
       }
 
-      key = productMarket.key;
+      key = productMarket.key as int;
     } else {
       key = (await create(
         productKey: productKey,
         marketKey: marketKey,
         price: price,
       ))
-          .key;
+          .key as int;
     }
 
     return _mBox!.get(key)!;

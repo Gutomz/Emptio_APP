@@ -6,14 +6,14 @@ import 'package:get_it/get_it.dart';
 import 'package:http/http.dart' as http;
 
 class AppApi {
-  static final String _url = '192.168.0.194:3000';
+  static const String _url = '192.168.0.194:3000';
 
   static String getUrl(String? extension) {
-    return "http://" + _url + _getPath(extension);
+    return "http://$_url${_getPath(extension)}";
   }
 
   static String _getPath(String? pathExtension) {
-    String path = "/api";
+    const String path = "/api";
     if (pathExtension == null) {
       return path;
     }
@@ -26,9 +26,9 @@ class AppApi {
   }
 
   Map<String, String> _getHeaders() {
-    String token = GetIt.I<AuthStore>().auth?.token ?? "";
+    final String token = GetIt.I<AuthStore>().auth?.token ?? "";
 
-    Map<String, String> headers = {
+    final Map<String, String> headers = {
       HttpHeaders.contentTypeHeader: 'application/json',
       HttpHeaders.authorizationHeader: 'Bearer $token',
     };
@@ -36,18 +36,18 @@ class AppApi {
     return headers;
   }
 
-  Future _handleResponse(http.Response response) async {
-    int code = response.statusCode;
-    var body = jsonDecode(response.body);
+  Future<dynamic> _handleResponse(http.Response response) async {
+    final int code = response.statusCode;
+    final dynamic body = jsonDecode(response.body);
 
     if (code == HttpStatus.ok) {
       return Future.value(body);
     } else if (code == HttpStatus.unauthorized) {
-      AuthStore store = GetIt.I<AuthStore>();
+      final AuthStore store = GetIt.I<AuthStore>();
       await store.logout();
     }
 
-    return Future.error(body);
+    return Future.error(body as Map<String, dynamic>);
   }
 
   Future<dynamic> post(String path, {Map<String, dynamic>? body}) async {

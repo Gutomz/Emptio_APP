@@ -27,7 +27,6 @@ class MainBottomNavigationBar extends StatelessWidget {
         tabBuilder: (index, active) {
           return Column(
             mainAxisAlignment: MainAxisAlignment.center,
-            crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               Icon(
                 icons[index],

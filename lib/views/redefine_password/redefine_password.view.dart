@@ -74,7 +74,7 @@ class _RedefinePasswordViewState extends State<RedefinePasswordView> {
           SizedBox(width: 20),
         ],
       ),
-      body: Container(
+      body: SizedBox(
         width: double.infinity,
         child: SingleChildScrollView(
           child: Padding(
@@ -162,14 +162,14 @@ class _RedefinePasswordViewState extends State<RedefinePasswordView> {
                   );
                 }),
                 SizedBox(height: 50),
-                Container(
+                SizedBox(
                   height: 50,
                   width: double.infinity,
                   child: Observer(builder: (_) {
                     return ElevatedButton(
                       onPressed: redefinePasswordStore.redefinePasswordValid
                           ? () => redefinePasswordStore
-                              .redefinePassword(this.widget.email)
+                              .redefinePassword(widget.email)
                           : null,
                       child: redefinePasswordStore.loading
                           ? CircularProgressIndicator(

@@ -109,13 +109,13 @@ abstract class _NewPurchaseItemStoreBase with Store {
 
   @computed
   bool get nameValid {
-    String _name = name ?? "";
+    final _name = name ?? "";
     return _name.isNotEmpty && _name.length > 1;
   }
 
   @computed
   String? get nameError {
-    String _name = name ?? "";
+    final _name = name ?? "";
 
     if (name == null || nameValid) {
       return null;
@@ -128,13 +128,13 @@ abstract class _NewPurchaseItemStoreBase with Store {
 
   @computed
   bool get brandValid {
-    String _brand = brand ?? "";
+    final _brand = brand ?? "";
     return _brand.isNotEmpty && _brand.length > 1;
   }
 
   @computed
   String? get brandError {
-    String _brand = brand ?? "";
+    final _brand = brand ?? "";
 
     if (brand == null || brandValid) {
       return null;

@@ -22,7 +22,7 @@ class _LoginViewState extends State<LoginView> {
   late ReactionDisposer emailSentDisposer;
 
   @override
-  initState() {
+  void initState() {
     super.initState();
 
     errorDisposer = reaction((_) => loginStore.error, (String error) {
@@ -39,8 +39,7 @@ class _LoginViewState extends State<LoginView> {
     loggedDisposer = reaction((_) => loginStore.logged, (bool logged) {
       if (logged) {
         Navigator.of(context).pushAndRemoveUntil(
-            MaterialPageRoute(builder: (ctx) => HomeView()),
-            (route) => false);
+            MaterialPageRoute(builder: (ctx) => HomeView()), (route) => false);
       }
     });
 
@@ -76,13 +75,12 @@ class _LoginViewState extends State<LoginView> {
         centerTitle: true,
         elevation: 0,
       ),
-      body: Container(
+      body: SizedBox(
         width: double.infinity,
         child: SingleChildScrollView(
           child: Padding(
             padding: EdgeInsets.only(top: 50, right: 25, bottom: 15, left: 25),
             child: Column(
-              crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 Hero(
                   tag: 'emptio',
@@ -164,7 +162,7 @@ class _LoginViewState extends State<LoginView> {
                   );
                 }),
                 SizedBox(height: 50),
-                Container(
+                SizedBox(
                   height: 50,
                   width: double.infinity,
                   child: Observer(builder: (_) {

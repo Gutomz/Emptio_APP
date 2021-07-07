@@ -1,3 +1,5 @@
+import 'package:emptio/helpers/parsers.dart';
+
 class LocationModel {
   String? sId;
   double lat;
@@ -6,20 +8,20 @@ class LocationModel {
   LocationModel({this.sId, required this.lat, required this.lng});
 
   factory LocationModel.fromJson(Map<String, dynamic> json) {
-    var model = LocationModel(
-      sId: json['_id'],
-      lat: json['lat'],
-      lng: json['lng'],
+    final model = LocationModel(
+      sId: JsonParser.parseToString(json['_id']),
+      lat: JsonParser.parseToDouble(json['lat']),
+      lng: JsonParser.parseToDouble(json['lng']),
     );
 
     return model;
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['_id'] = this.sId;
-    data['lat'] = this.lat;
-    data['lng'] = this.lng;
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['_id'] = sId;
+    data['lat'] = lat;
+    data['lng'] = lng;
     return data;
   }
 }

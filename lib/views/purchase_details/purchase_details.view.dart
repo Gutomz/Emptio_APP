@@ -13,27 +13,17 @@ import 'package:emptio/views/purchase_details/widgets/purchase_items_list.widget
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 
-class PurchaseDetailsView extends StatefulWidget {
-  final PurchaseModel purchase;
+class PurchaseDetailsView extends StatelessWidget {
+  final PurchaseDetailsStore _store;
 
   PurchaseDetailsView({
-    required this.purchase,
+    required PurchaseModel purchase,
     Key? key,
-  }) : super(key: key);
+  })  : _store = PurchaseDetailsStore(purchase: purchase),
+        super(key: key);
 
-  @override
-  _PurchaseDetailsViewState createState() =>
-      _PurchaseDetailsViewState(purchase: purchase);
-}
-
-class _PurchaseDetailsViewState extends State<PurchaseDetailsView> {
-  PurchaseDetailsStore _store;
-
-  _PurchaseDetailsViewState({required PurchaseModel purchase})
-      : _store = PurchaseDetailsStore(purchase: purchase);
-
-  Future<void> searchProduct() async {
-    ProductSearchResponse? response = await showSearch<ProductSearchResponse?>(
+  Future<void> searchProduct(BuildContext context) async {
+    final response = await showSearch<ProductSearchResponse?>(
       context: context,
       delegate: ProductSearch(
         onQuickSelect: onQuickSelectProduct,
@@ -46,9 +36,9 @@ class _PurchaseDetailsViewState extends State<PurchaseDetailsView> {
 
     if (response != null) {
       if (response.addNew != null) {
-        await createNewProductItem();
+        await createNewProductItem(context);
       } else if (response.product != null) {
-        await createExitingProductItem(response.product!);
+        await createExitingProductItem(context, response.product!);
       }
     }
   }
@@ -61,8 +51,8 @@ class _PurchaseDetailsViewState extends State<PurchaseDetailsView> {
     ));
   }
 
-  Future<void> createNewProductItem() async {
-    AddPurchaseItemViewModel? item = await Navigator.of(context).push(
+  Future<void> createNewProductItem(BuildContext context) async {
+    final item = await Navigator.of(context).push<AddPurchaseItemViewModel>(
       MaterialPageRoute(
         builder: (context) => NewPurchaseItemView(
           connectedMarket: _store.purchase.market,
@@ -75,8 +65,10 @@ class _PurchaseDetailsViewState extends State<PurchaseDetailsView> {
     }
   }
 
-  Future<void> createExitingProductItem(ProductModel product) async {
-    UpdatePurchaseItemViewModel? update = await Navigator.of(context).push(
+  Future<void> createExitingProductItem(
+      BuildContext context, ProductModel product) async {
+    final update =
+        await Navigator.of(context).push<UpdatePurchaseItemViewModel>(
       MaterialPageRoute(
         builder: (context) => EditPurchaseItemView(
           connectedMarket: _store.purchase.market,
@@ -148,9 +140,9 @@ class _PurchaseDetailsViewState extends State<PurchaseDetailsView> {
         floatingActionButton: _store.isClosed
             ? null
             : FloatingActionButton(
-                onPressed: searchProduct,
-                child: Icon(Icons.add),
+                onPressed: () => searchProduct(context),
                 foregroundColor: Colors.white,
+                child: Icon(Icons.add),
               ),
       );
     });

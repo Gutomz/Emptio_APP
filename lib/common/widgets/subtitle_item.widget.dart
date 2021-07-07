@@ -22,16 +22,14 @@ class SubtitleItem extends StatelessWidget {
         ),
         SizedBox(width: 5),
         Expanded(
-          child: Container(
-            child: Text(
-              text ?? "-",
-              maxLines: 1,
-              style: TextStyle(
-                fontSize: 12,
-                color: AppColors.grey,
-              ),
-              overflow: TextOverflow.ellipsis,
+          child: Text(
+            text ?? "-",
+            maxLines: 1,
+            style: TextStyle(
+              fontSize: 12,
+              color: AppColors.grey,
             ),
+            overflow: TextOverflow.ellipsis,
           ),
         ),
       ],

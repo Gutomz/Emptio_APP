@@ -1,7 +1,7 @@
 import 'package:location/location.dart';
 
 Future requestLocation() async {
-  Location location = Location();
+  final location = Location();
 
   var serviceEnabled = await location.serviceEnabled();
 

@@ -13,12 +13,12 @@ class RegisterViewModel {
       required this.location});
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['photo'] = this.photo;
-    data['name'] = this.name;
-    data['email'] = this.email;
-    data['password'] = this.password;
-    data['location'] = this.location;
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['photo'] = photo;
+    data['name'] = name;
+    data['email'] = email;
+    data['password'] = password;
+    data['location'] = location;
     return data;
   }
 }

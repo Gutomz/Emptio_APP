@@ -6,8 +6,8 @@ class CreatePurchaseViewModel {
   });
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['basePurchase_id'] = this.basePurchaseId;
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['basePurchase_id'] = basePurchaseId;
     return data;
   }
 }

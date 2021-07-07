@@ -10,10 +10,10 @@ class RedefinePasswordViewModel {
   });
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['email'] = this.email;
-    data['code'] = this.code;
-    data['password'] = this.password;
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['email'] = email;
+    data['code'] = code;
+    data['password'] = password;
     return data;
   }
 }

@@ -33,7 +33,7 @@ class CheckedPurchaseItemTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Observer(builder: (context) {
-      if(store.purchaseStore.isClosed) {
+      if (store.purchaseStore.isClosed) {
         return buildItem();
       }
 
@@ -57,10 +57,7 @@ class CheckedPurchaseItemTile extends StatelessWidget {
       padding: EdgeInsets.symmetric(horizontal: 10, vertical: 10),
       decoration: BoxDecoration(
         border: Border(
-          bottom: BorderSide(
-            color: AppColors.lightGrey,
-            width: 1,
-          ),
+          bottom: BorderSide(color: AppColors.lightGrey),
         ),
       ),
       child: Row(
@@ -71,7 +68,7 @@ class CheckedPurchaseItemTile extends StatelessWidget {
           ),
           SizedBox(width: 10),
           Expanded(
-            child: Container(
+            child: SizedBox(
               height: 95,
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -98,60 +95,56 @@ class CheckedPurchaseItemTile extends StatelessWidget {
                       ),
                     ],
                   ),
-                  Container(
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.end,
-                      crossAxisAlignment: CrossAxisAlignment.end,
-                      children: [
-                        Expanded(
-                          child: Container(
-                            child: Column(
-                              children: [
-                                SubtitleItem(
-                                  icon: Icons.business_rounded,
-                                  text: item.product.brand,
-                                ),
-                                SubtitleItem(
-                                  icon: Icons.straighten_rounded,
-                                  text: item.product.weight.toString(),
-                                ),
-                                SubtitleItem(
-                                  icon: Icons.shopping_cart_outlined,
-                                  text: item.quantity.toString(),
-                                ),
-                                SubtitleItem(
-                                  icon: Icons.monetization_on_outlined,
-                                  text: "R\$${item.price.formatMoney()}",
-                                ),
-                              ],
-                            ),
-                          ),
-                        ),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.end,
-                          crossAxisAlignment: CrossAxisAlignment.end,
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    crossAxisAlignment: CrossAxisAlignment.end,
+                    children: [
+                      Expanded(
+                        child: Column(
                           children: [
-                            Text(
-                              "R\$",
-                              style: TextStyle(
-                                fontSize: 10,
-                                color: AppColors.lightGrey,
-                              ),
+                            SubtitleItem(
+                              icon: Icons.business_rounded,
+                              text: item.product.brand,
                             ),
-                            Observer(builder: (_) {
-                              return Text(
-                                store.totalPrice.formatMoney(),
-                                style: TextStyle(
-                                  fontSize: 18,
-                                  fontWeight: FontWeight.bold,
-                                  color: AppColors.orange,
-                                ),
-                              );
-                            }),
+                            SubtitleItem(
+                              icon: Icons.straighten_rounded,
+                              text: item.product.weight.toString(),
+                            ),
+                            SubtitleItem(
+                              icon: Icons.shopping_cart_outlined,
+                              text: item.quantity.toString(),
+                            ),
+                            SubtitleItem(
+                              icon: Icons.monetization_on_outlined,
+                              text: "R\$${item.price.formatMoney()}",
+                            ),
                           ],
                         ),
-                      ],
-                    ),
+                      ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.end,
+                        crossAxisAlignment: CrossAxisAlignment.end,
+                        children: [
+                          Text(
+                            "R\$",
+                            style: TextStyle(
+                              fontSize: 10,
+                              color: AppColors.lightGrey,
+                            ),
+                          ),
+                          Observer(builder: (_) {
+                            return Text(
+                              store.totalPrice.formatMoney(),
+                              style: TextStyle(
+                                fontSize: 18,
+                                fontWeight: FontWeight.bold,
+                                color: AppColors.orange,
+                              ),
+                            );
+                          }),
+                        ],
+                      ),
+                    ],
                   ),
                 ],
               ),

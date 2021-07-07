@@ -21,7 +21,7 @@ abstract class _PurchaseDetailsStoreBase with Store {
           ..addAll(purchase.items.where((v) => !v.checked)),
         checkedItems = ObservableList<PurchaseItemModel>()
           ..addAll(purchase.items.where((v) => v.checked)),
-        showChecked = PurchaseStatusTypes.CLOSED.contains(purchase.status);
+        showChecked = PurchaseStatusTypes.closed.contains(purchase.status);
 
   @observable
   PurchaseModel purchase;
@@ -39,6 +39,7 @@ abstract class _PurchaseDetailsStoreBase with Store {
   bool showChecked = false;
 
   @action
+  // ignore: avoid_positional_boolean_parameters
   void setFilter(bool _value) => showChecked = _value;
 
   @action
@@ -52,8 +53,7 @@ abstract class _PurchaseDetailsStoreBase with Store {
     error = "";
 
     try {
-      PurchaseModel _purchase =
-          await PurchaseRepository().addItem(purchase.sId, model);
+      final _purchase = await PurchaseRepository().addItem(purchase.sId, model);
 
       updatePurchase(_purchase);
     } on String catch (_error) {
@@ -70,7 +70,7 @@ abstract class _PurchaseDetailsStoreBase with Store {
     error = "";
 
     try {
-      PurchaseModel _purchase =
+      final _purchase =
           await PurchaseRepository().updateItem(purchase.sId, itemId, model);
 
       updatePurchase(_purchase);
@@ -87,7 +87,7 @@ abstract class _PurchaseDetailsStoreBase with Store {
     error = "";
 
     try {
-      PurchaseModel _purchase =
+      final _purchase =
           await PurchaseRepository().removeItem(purchase.sId, itemId);
 
       updatePurchase(_purchase);
@@ -103,7 +103,7 @@ abstract class _PurchaseDetailsStoreBase with Store {
     items.clear();
     checkedItems.clear();
     items.addAll(models.where((v) => !v.checked));
-    checkedItems..addAll(models.where((v) => v.checked));
+    checkedItems.addAll(models.where((v) => v.checked));
   }
 
   @action
@@ -128,5 +128,5 @@ abstract class _PurchaseDetailsStoreBase with Store {
       checkedItems.length + (showChecked ? 0 : items.length);
 
   @computed
-  bool get isClosed => PurchaseStatusTypes.CLOSED.contains(purchase.status);
+  bool get isClosed => PurchaseStatusTypes.closed.contains(purchase.status);
 }

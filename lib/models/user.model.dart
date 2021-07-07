@@ -1,6 +1,6 @@
 import 'dart:convert';
 
-import 'package:emptio/core/app_api.dart';
+import 'package:emptio/helpers/parsers.dart';
 import 'package:emptio/models/location.model.dart';
 import 'package:emptio/models/user_configurations.model.dart';
 
@@ -30,36 +30,35 @@ class UserModel {
   });
 
   factory UserModel.fromJson(Map<String, dynamic> json) {
-    var model = UserModel(
-      sId: json['_id'],
-      name: json['name'],
-      email: json['email'],
-      photo: json['photo'] != null && json['photo'] != ""
-          ? AppApi.getUrl(json['photo'])
-          : null,
-      description: json['description'],
-      location: LocationModel.fromJson(json['location']),
-      configurations: UserConfigurationsModel.fromJson(json['configurations']),
-      notificationCount: json['notificationCount'],
-      createdAt: json['createdAt'],
-      updatedAt: json['updatedAt'],
+    final model = UserModel(
+      sId: JsonParser.parseToString(json['_id']),
+      name: JsonParser.parseToString(json['name']),
+      email: JsonParser.parseToString(json['email']),
+      photo: JsonParser.parseToImageUrl(json['photo']),
+      description: JsonParser.parseToString(json['description']),
+      location: JsonParser.parseToLocation(json['location'])!,
+      configurations:
+          JsonParser.parseToUserConfiguration(json['configurations'])!,
+      notificationCount: JsonParser.parseToInt(json['notificationCount']),
+      createdAt: JsonParser.parseToString(json['createdAt']),
+      updatedAt: JsonParser.parseToString(json['updatedAt']),
     );
 
     return model;
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['_id'] = this.sId;
-    data['name'] = this.name;
-    data['email'] = this.email;
-    data['photo'] = this.photo;
-    data['description'] = this.description;
-    data['location'] = this.location.toJson();
-    data['configurations'] = this.configurations.toJson();
-    data['createdAt'] = this.createdAt;
-    data['updatedAt'] = this.updatedAt;
-    data['notificationCount'] = this.notificationCount;
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['_id'] = sId;
+    data['name'] = name;
+    data['email'] = email;
+    data['photo'] = photo;
+    data['description'] = description;
+    data['location'] = location.toJson();
+    data['configurations'] = configurations.toJson();
+    data['createdAt'] = createdAt;
+    data['updatedAt'] = updatedAt;
+    data['notificationCount'] = notificationCount;
     return data;
   }
 

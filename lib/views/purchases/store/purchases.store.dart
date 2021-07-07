@@ -15,17 +15,17 @@ abstract class _PurchasesStoreBase with Store {
   final int limit;
 
   _PurchasesStoreBase({
-    this.status = PurchaseStatusTypes.OPEN,
+    this.status = PurchaseStatusTypes.open,
     this.limit = 10,
   }) {
     autorun((_) async {
       setLoading(true);
-      PurchasesFilterViewModel filter = PurchasesFilterViewModel(
+      final filter = PurchasesFilterViewModel(
         status: status,
         limit: limit,
         skip: skip,
         orderBy:
-            status.contains(PurchaseStatusTypes.CLOSED) ? "updatedAt" : null,
+            status.contains(PurchaseStatusTypes.closed) ? "updatedAt" : null,
       );
 
       await loadPurchases(filter);
@@ -61,6 +61,7 @@ abstract class _PurchasesStoreBase with Store {
   }
 
   @action
+  // ignore: avoid_positional_boolean_parameters
   void setLoading(bool _value) => loading = _value;
 
   @action
@@ -69,7 +70,7 @@ abstract class _PurchasesStoreBase with Store {
   @action
   Future loadPurchases(PurchasesFilterViewModel filter) async {
     try {
-      List<PurchaseModel> list = await PurchaseRepository().get(filter);
+      final list = await PurchaseRepository().get(filter);
 
       if (list.length < filter.limit) limitReached = true;
 
@@ -91,7 +92,7 @@ abstract class _PurchasesStoreBase with Store {
     error = "";
 
     try {
-      PurchaseModel model = await PurchaseRepository().create(createModel);
+      final model = await PurchaseRepository().create(createModel);
       purchaseList.insert(0, model);
       return model;
     } on String catch (_error) {
@@ -103,7 +104,8 @@ abstract class _PurchasesStoreBase with Store {
 
   @action
   void updatePurchase(PurchaseModel model) {
-    int index = purchaseList.indexWhere((element) => element.sId == model.sId);
+    final index =
+        purchaseList.indexWhere((element) => element.sId == model.sId);
     purchaseList[index] = model;
   }
 
@@ -112,7 +114,7 @@ abstract class _PurchasesStoreBase with Store {
     loading = true;
     error = "";
 
-    PurchaseModel model = purchaseList[index];
+    final model = purchaseList[index];
     removeIndex(index);
     try {
       await PurchaseRepository().delete(model.sId);

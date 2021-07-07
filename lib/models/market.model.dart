@@ -1,4 +1,4 @@
-import 'package:emptio/core/app_api.dart';
+import 'package:emptio/helpers/parsers.dart';
 import 'package:emptio/models/location.model.dart';
 
 class MarketModel {
@@ -29,38 +29,36 @@ class MarketModel {
   });
 
   factory MarketModel.fromJson(Map<String, dynamic> json) {
-    var model = MarketModel(
-      sId: json['_id'],
-      placeId: json['place_id'],
-      name: json['name'],
-      location: LocationModel.fromJson(json['location']),
-      address: json['address'],
-      image: json['image'] != null && json['image'].isNotEmpty
-          ? AppApi.getUrl(json['image'])
-          : null,
-      website: json['website'],
-      phone: json['phone'],
-      openingHours: json['openingHours'].cast<String>(),
-      updatedAt: json['updatedAt'],
-      createdAt: json['createdAt'],
+    final model = MarketModel(
+      sId: JsonParser.parseToString(json['_id']),
+      placeId: JsonParser.parseToString(json['place_id']),
+      name: JsonParser.parseToString(json['name']),
+      location: JsonParser.parseToLocation(json['location']),
+      address: JsonParser.parseToNullableString(json['address']),
+      image: JsonParser.parseToImageUrl(json['image']),
+      website: JsonParser.parseToNullableString(json['website']),
+      phone: JsonParser.parseToNullableString(json['phone']),
+      openingHours: JsonParser.parseToStringList(json['openingHours']),
+      updatedAt: JsonParser.parseToString(json['updatedAt']),
+      createdAt: JsonParser.parseToString(json['createdAt']),
     );
 
     return model;
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['_id'] = this.sId;
-    data['place_id'] = this.placeId;
-    data['name'] = this.name;
-    data['location'] = this.location?.toJson();
-    data['address'] = this.address;
-    data['image'] = this.image;
-    data['website'] = this.website;
-    data['phone'] = this.phone;
-    data['openingHours'] = this.openingHours;
-    data['updatedAt'] = this.updatedAt;
-    data['createdAt'] = this.createdAt;
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['_id'] = sId;
+    data['place_id'] = placeId;
+    data['name'] = name;
+    data['location'] = location?.toJson();
+    data['address'] = address;
+    data['image'] = image;
+    data['website'] = website;
+    data['phone'] = phone;
+    data['openingHours'] = openingHours;
+    data['updatedAt'] = updatedAt;
+    data['createdAt'] = createdAt;
     return data;
   }
 }

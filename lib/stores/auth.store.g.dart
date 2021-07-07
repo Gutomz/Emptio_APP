@@ -124,9 +124,8 @@ mixin _$AuthStore on _AuthStoreBase, Store {
       AsyncAction('_AuthStoreBase.setKeepLoggedOut');
 
   @override
-  Future<void> setKeepLoggedOut(bool _value) {
-    return _$setKeepLoggedOutAsyncAction
-        .run(() => super.setKeepLoggedOut(_value));
+  Future<void> setKeepLoggedOut() {
+    return _$setKeepLoggedOutAsyncAction.run(() => super.setKeepLoggedOut());
   }
 
   @override

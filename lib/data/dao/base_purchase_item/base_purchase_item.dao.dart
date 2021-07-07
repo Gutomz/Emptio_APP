@@ -13,10 +13,8 @@ class BasePurchaseItemDao {
   static Box<BasePurchaseItem>? _mBox;
 
   static Future<void> _openBox() async {
-    if (_mBox == null) {
-      _mBox = await Hive.openBox<BasePurchaseItem>(
+    _mBox ??= await Hive.openBox<BasePurchaseItem>(
           Database.basePurchaseItemsBoxName);
-    }
   }
 
   static Future<Box<BasePurchaseItem>> get instance async {
@@ -28,21 +26,22 @@ class BasePurchaseItemDao {
   static Future<BasePurchaseItem> create(
       AddBasePurchaseItemViewModel model) async {
     await _openBox();
-    Box<Product> productBox = await ProductDao.instance;
+    final Box<Product> productBox = await ProductDao.instance;
 
     Product? product;
     if (model.productId != null) {
       product = productBox.get(int.parse(model.productId!));
     } else {
-      var productKey = (await ProductDao.create(model.productModel!)).key;
+      final productKey = (await ProductDao.create(model.productModel!)).key;
       product = productBox.get(productKey);
     }
 
-    if (product == null)
-      throw DatabaseError.notFoundError(AppErrors.PRODUCT_NOT_FOUND);
+    if (product == null) {
+      throw DatabaseError.notFoundError(AppErrors.productNotFound);
+    }
 
-    var itemKey = await _mBox!.add(BasePurchaseItem(
-      productKey: product.key,
+    final itemKey = await _mBox!.add(BasePurchaseItem(
+      productKey: product.key as int,
       quantity: model.quantity,
     ));
 
@@ -56,22 +55,23 @@ class BasePurchaseItemDao {
 
   static Future<BasePurchaseItem> get(int key) async {
     await _openBox();
-    BasePurchaseItem? item = _mBox!.get(key);
+    final BasePurchaseItem? item = _mBox!.get(key);
 
-    if (item == null)
-      throw DatabaseError.notFoundError(AppErrors.PURCHASE_ITEM_NOT_FOUND);
+    if (item == null) {
+      throw DatabaseError.notFoundError(AppErrors.purchaseItemNotFound);
+    }
 
     return item;
   }
 
   static Future<BasePurchaseItemModel> getParsed(int key) async {
-    var item = await get(key);
-    return await parseToBasePurchaseItemModel(item);
+    final item = await get(key);
+    return parseToBasePurchaseItemModel(item);
   }
 
   static Future<BasePurchaseItemModel> parseToBasePurchaseItemModel(
       BasePurchaseItem item) async {
-    ProductModel product = await ProductDao.getParsed(item.productKey);
+    final ProductModel product = await ProductDao.getParsed(item.productKey);
 
     return BasePurchaseItemModel(
       sId: item.key.toString(),

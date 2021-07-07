@@ -28,7 +28,6 @@ class AddItemBottomAppBar extends StatelessWidget {
         padding: EdgeInsets.symmetric(vertical: 10, horizontal: 15),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             Container(
               height: 50,
@@ -38,7 +37,6 @@ class AddItemBottomAppBar extends StatelessWidget {
                 borderRadius: BorderRadius.circular(5),
               ),
               child: Row(
-                crossAxisAlignment: CrossAxisAlignment.center,
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   IconButton(
@@ -67,7 +65,7 @@ class AddItemBottomAppBar extends StatelessWidget {
                 ],
               ),
             ),
-            Container(
+            SizedBox(
               height: 50,
               width: MediaQuery.of(context).size.width * 0.55,
               child: ElevatedButton(

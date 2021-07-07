@@ -21,7 +21,7 @@ abstract class _BasePurchasesStoreBase with Store {
   }) {
     autorun((_) async {
       setLoading(true);
-      BasePurchasesFilterViewModel filter = BasePurchasesFilterViewModel(
+      final filter = BasePurchasesFilterViewModel(
         search: search,
         limit: limit,
         skip: skip,
@@ -64,6 +64,7 @@ abstract class _BasePurchasesStoreBase with Store {
   }
 
   @action
+  // ignore: avoid_positional_boolean_parameters
   void setLoading(bool _value) => loading = _value;
 
   @action
@@ -72,7 +73,7 @@ abstract class _BasePurchasesStoreBase with Store {
   @action
   Future loadPurchases(BasePurchasesFilterViewModel filter) async {
     try {
-      List<BasePurchaseModel> list = await BasePurchaseRepository().get(filter);
+      final list = await BasePurchaseRepository().get(filter);
 
       if (list.length < filter.limit) limitReached = true;
 
@@ -93,7 +94,7 @@ abstract class _BasePurchasesStoreBase with Store {
     error = "";
 
     try {
-      BasePurchaseModel model = await BasePurchaseRepository().create();
+      final model = await BasePurchaseRepository().create();
       purchaseList.insert(0, model);
       return model;
     } on String catch (_error) {
@@ -108,7 +109,7 @@ abstract class _BasePurchasesStoreBase with Store {
     loading = true;
     error = "";
 
-    BasePurchaseModel model = purchaseList[index];
+    final model = purchaseList[index];
     removeIndex(index);
     try {
       await BasePurchaseRepository().delete(model.sId);
@@ -124,12 +125,12 @@ abstract class _BasePurchasesStoreBase with Store {
       BasePurchaseModel baseModel) async {
     loadingTile = baseModel.sId;
     error = "";
-    var purchasesStore = GetIt.I<AppStore>().openPurchasesStore;
+    final purchasesStore = GetIt.I<AppStore>().openPurchasesStore;
 
     try {
-      CreatePurchaseViewModel createModel =
+      final createModel =
           CreatePurchaseViewModel(basePurchaseId: baseModel.sId);
-      PurchaseModel? model = await purchasesStore.createPurchase(createModel);
+      final model = await purchasesStore.createPurchase(createModel);
       return model;
     } on String catch (_error) {
       error = _error;
@@ -140,7 +141,8 @@ abstract class _BasePurchasesStoreBase with Store {
 
   @action
   void updatePurchase(BasePurchaseModel model) {
-    int index = purchaseList.indexWhere((element) => element.sId == model.sId);
+    final index =
+        purchaseList.indexWhere((element) => element.sId == model.sId);
     purchaseList[index] = model;
   }
 

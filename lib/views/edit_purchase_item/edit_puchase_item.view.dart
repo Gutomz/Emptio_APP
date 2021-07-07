@@ -19,25 +19,23 @@ class EditPurchaseItemView extends StatelessWidget {
   final MoneyMaskedTextController controller;
 
   EditPurchaseItemView({
+    Key? key,
     required this.product,
     this.connectedMarket,
     double? initialPrice,
     int? initialQuantity,
     bool? initialChecked,
     this.isBaseItem = false,
-    Key? key,
   })  : store = EditPurchaseItemStore(
           price: initialPrice ?? 0,
           quantity: initialQuantity ?? 1,
           checked: initialChecked ?? false,
         ),
         controller = MoneyMaskedTextController(
-          decimalSeparator: ',',
-          thousandSeparator: '.',
           leftSymbol: 'R\$ ',
           initialValue: initialPrice ?? 0,
-          precision: 2,
-        );
+        ),
+        super(key: key);
 
   void onAddPressed(BuildContext context) {
     if (isBaseItem) {
@@ -79,7 +77,6 @@ class EditPurchaseItemView extends StatelessWidget {
               if (!isBaseItem)
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
-                  mainAxisAlignment: MainAxisAlignment.start,
                   children: [
                     Text(
                       "Preço",
@@ -92,10 +89,7 @@ class EditPurchaseItemView extends StatelessWidget {
                     SizedBox(height: 5),
                     TextField(
                       controller: controller,
-                      keyboardType: TextInputType.numberWithOptions(
-                        signed: false,
-                        decimal: false,
-                      ),
+                      keyboardType: TextInputType.numberWithOptions(),
                       textAlign: TextAlign.center,
                       style: TextStyle(
                         fontWeight: FontWeight.w600,

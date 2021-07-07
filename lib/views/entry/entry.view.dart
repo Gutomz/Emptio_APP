@@ -22,7 +22,7 @@ class EntryView extends StatelessWidget {
           ),
           Expanded(
             child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 30),
+              padding: EdgeInsets.symmetric(horizontal: 15, vertical: 30),
               child: Column(
                 children: [
                   Column(
@@ -54,16 +54,17 @@ class EntryView extends StatelessWidget {
                       Row(
                         children: [
                           Expanded(
-                            child: Container(
+                            child: SizedBox(
                               height: 50,
                               child: OutlinedButton(
-                                onPressed: () {
-                                  Navigator.of(context).push(
-                                    MaterialPageRoute(
-                                      builder: (_ctx) => RegisterView(),
-                                    ),
-                                  );
-                                },
+                                onPressed: () => _onRegisterPressed(context),
+                                style: OutlinedButton.styleFrom(
+                                  primary: AppColors.orange,
+                                  side: BorderSide(color: AppColors.orange),
+                                  shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.all(
+                                          Radius.circular(25))),
+                                ),
                                 child: Text(
                                   'Cadastrar',
                                   style: TextStyle(
@@ -71,38 +72,15 @@ class EntryView extends StatelessWidget {
                                     fontWeight: FontWeight.w600,
                                   ),
                                 ),
-                                style: OutlinedButton.styleFrom(
-                                  primary: AppColors.orange,
-                                  side: BorderSide(
-                                    color: AppColors.orange,
-                                    width: 1,
-                                  ),
-                                  shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.all(
-                                          Radius.circular(25))),
-                                ),
                               ),
                             ),
                           ),
                           SizedBox(width: 15),
                           Expanded(
-                            child: Container(
+                            child: SizedBox(
                               height: 50,
                               child: OutlinedButton(
-                                onPressed: () {
-                                  Navigator.of(context).push(
-                                    MaterialPageRoute(
-                                      builder: (_ctx) => LoginView(),
-                                    ),
-                                  );
-                                },
-                                child: Text(
-                                  'Entrar',
-                                  style: TextStyle(
-                                    fontSize: 16,
-                                    fontWeight: FontWeight.w600,
-                                  ),
-                                ),
+                                onPressed: () => _onLoginPressed(context),
                                 style: OutlinedButton.styleFrom(
                                   primary: Colors.white,
                                   backgroundColor: AppColors.orange,
@@ -114,6 +92,13 @@ class EntryView extends StatelessWidget {
                                       borderRadius: BorderRadius.all(
                                           Radius.circular(25))),
                                 ),
+                                child: Text(
+                                  'Entrar',
+                                  style: TextStyle(
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.w600,
+                                  ),
+                                ),
                               ),
                             ),
                           ),
@@ -121,15 +106,7 @@ class EntryView extends StatelessWidget {
                       ),
                       SizedBox(height: 50),
                       TextButton(
-                        onPressed: () {
-                          _authStore.setKeepLoggedOut(true);
-                          Navigator.of(context).pushAndRemoveUntil(
-                            MaterialPageRoute(
-                              builder: (_ctx) => HomeView(),
-                            ),
-                            (route) => false,
-                          );
-                        },
+                        onPressed: () => _onKeepLoggedOutPressed(context),
                         style: TextButton.styleFrom(
                           primary: AppColors.lightGrey,
                           textStyle: TextStyle(
@@ -139,7 +116,6 @@ class EntryView extends StatelessWidget {
                         ),
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.center,
-                          crossAxisAlignment: CrossAxisAlignment.center,
                           children: [
                             Text('Continuar sem cadastro'),
                             Icon(Icons.chevron_right_rounded),
@@ -154,6 +130,32 @@ class EntryView extends StatelessWidget {
           ),
         ],
       ),
+    );
+  }
+
+  void _onRegisterPressed(BuildContext context) {
+    Navigator.of(context).push(
+      MaterialPageRoute(
+        builder: (_ctx) => RegisterView(),
+      ),
+    );
+  }
+
+  void _onLoginPressed(BuildContext context) {
+    Navigator.of(context).push(
+      MaterialPageRoute(
+        builder: (_ctx) => LoginView(),
+      ),
+    );
+  }
+
+  void _onKeepLoggedOutPressed(BuildContext context) {
+    _authStore.setKeepLoggedOut();
+    Navigator.of(context).pushAndRemoveUntil(
+      MaterialPageRoute(
+        builder: (_ctx) => HomeView(),
+      ),
+      (route) => false,
     );
   }
 }

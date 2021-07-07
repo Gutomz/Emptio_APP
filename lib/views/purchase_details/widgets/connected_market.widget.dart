@@ -68,13 +68,13 @@ class ConnectedMarketIndicator extends StatelessWidget {
         padding: EdgeInsets.only(right: 15),
         child: OutlinedButton(
           onPressed: () {},
-          child: Text("Conectar Mercado"),
           style: ButtonStyle(
             foregroundColor: MaterialStateProperty.all(AppColors.orange),
             side: MaterialStateProperty.all(
               BorderSide(color: AppColors.orange),
             ),
           ),
+          child: Text("Conectar Mercado"),
         ),
       );
     });

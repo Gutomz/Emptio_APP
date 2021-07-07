@@ -20,10 +20,9 @@ class PurchaseDetailsBottomAppBar extends StatelessWidget {
       notchMargin: 8,
       color: AppColors.blue,
       clipBehavior: Clip.antiAlias,
-      child: Container(
+      child: SizedBox(
         height: 55,
         child: Row(
-          crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             Container(
               alignment: Alignment.center,

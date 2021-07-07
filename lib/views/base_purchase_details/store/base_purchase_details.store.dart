@@ -19,8 +19,8 @@ abstract class _BasePurchaseDetailsStoreBase with Store {
 
   _BasePurchaseDetailsStoreBase({
     required this.purchase,
-    required this.items,
-  }) : name = purchase.name;
+  })  : name = purchase.name,
+        items = ObservableList<BasePurchaseItemModel>()..addAll(purchase.items);
 
   BasePurchaseModel purchase;
 
@@ -41,10 +41,10 @@ abstract class _BasePurchaseDetailsStoreBase with Store {
     error = "";
     name = _value;
 
-    var model = UpdateBasePurchaseViewModel(name: _value);
+    final model = UpdateBasePurchaseViewModel(name: _value);
 
     try {
-      BasePurchaseModel _purchase =
+      final _purchase =
           await BasePurchaseRepository().updatePurchase(purchase.sId, model);
 
       updatePurchase(_purchase);
@@ -61,7 +61,7 @@ abstract class _BasePurchaseDetailsStoreBase with Store {
     error = "";
 
     try {
-      BasePurchaseModel _purchase =
+      final _purchase =
           await BasePurchaseRepository().addItem(purchase.sId, model);
 
       updatePurchase(_purchase);
@@ -79,7 +79,7 @@ abstract class _BasePurchaseDetailsStoreBase with Store {
     error = "";
 
     try {
-      BasePurchaseModel _purchase = await BasePurchaseRepository()
+      final _purchase = await BasePurchaseRepository()
           .updateItem(purchase.sId, itemId, model);
 
       updatePurchase(_purchase);
@@ -96,7 +96,7 @@ abstract class _BasePurchaseDetailsStoreBase with Store {
     error = "";
 
     try {
-      BasePurchaseModel _purchase =
+      final _purchase =
           await BasePurchaseRepository().removeItem(purchase.sId, itemId);
 
       updatePurchase(_purchase);

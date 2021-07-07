@@ -17,18 +17,18 @@ class DismissibleBackground extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      color: this.color,
+      color: color,
       child: Align(
         alignment: Alignment(secondary ? 0.85 : -0.85, 0),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Icon(
-              this.icon,
+              icon,
               color: Colors.white,
             ),
             Text(
-              this.title,
+              title,
               style: TextStyle(
                 color: Colors.white,
                 fontWeight: FontWeight.w600,

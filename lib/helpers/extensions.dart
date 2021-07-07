@@ -12,18 +12,18 @@ extension StringExtension on String {
 
   String formatDate() {
     final DateFormat dateFormat = DateFormat("dd/MM/yy HH:mm");
-    DateTime date = DateTime.parse(this.replaceFirst("-03:00", ""));
+    final DateTime date = DateTime.parse(replaceFirst("-03:00", ""));
     return dateFormat.format(date);
   }
 
   String formatTag() {
-    return this.trim().toLowerCase().replaceAll(" ", "-");
+    return trim().toLowerCase().replaceAll(" ", "-");
   }
 }
 
 extension IterableExtension<T> on Iterable<T> {
-  bool containElement(bool Function(dynamic) checkFunction) {
-    for (var element in this) {
+  bool containElement(bool Function(T) checkFunction) {
+    for (final element in this) {
       if (checkFunction(element)) {
         return true;
       }
@@ -48,11 +48,11 @@ extension NumberExtension on num {
 
 extension FileExension on File {
   String parseToBase64() {
-    final bytes = this.readAsBytesSync();
+    final bytes = readAsBytesSync();
 
-    String filename = this.path.split('/').last;
-    String mimeType = mime(filename) ?? "image/png";
+    final filename = path.split('/').last;
+    final mimeType = mime(filename) ?? "image/png";
 
-    return "data:" + mimeType + ";base64," + base64Encode(bytes);
+    return "data:$mimeType;base64,${base64Encode(bytes)}";
   }
 }

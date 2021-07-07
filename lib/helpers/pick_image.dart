@@ -7,7 +7,7 @@ class PickImage {
   final _picker = ImagePicker();
 
   Future<File?> pickFromCamera() async {
-    PickedFile? pickedFile = await _picker.getImage(
+    final PickedFile? pickedFile = await _picker.getImage(
       source: ImageSource.camera,
       imageQuality: 50,
     );
@@ -17,7 +17,7 @@ class PickImage {
   }
 
   Future<File?> pickFromGallery() async {
-    PickedFile? pickedFile = await _picker.getImage(
+    final PickedFile? pickedFile = await _picker.getImage(
       source: ImageSource.gallery,
       imageQuality: 50,
     );
@@ -26,47 +26,50 @@ class PickImage {
     return file;
   }
 
-  Future<File?> showPicker(context, bool canRemove) async {
-    File? _file;
-
-    _file = await showModalBottomSheet(
+  Future<File?> showPicker(BuildContext context,
+      {bool canRemove = false}) async {
+    final File? _file = await showModalBottomSheet<File?>(
       context: context,
       builder: (BuildContext bc) {
         return SafeArea(
-          child: Container(
-            child: Wrap(
-              children: [
+          child: Wrap(
+            children: [
+              ListTile(
+                leading: Icon(Icons.photo_library),
+                title: Text('Galeria'),
+                onTap: () => _onGalleryTap(context),
+              ),
+              ListTile(
+                leading: Icon(Icons.photo_camera),
+                title: Text('Camera'),
+                onTap: () => _onCameraTap(context),
+              ),
+              if (canRemove)
                 ListTile(
-                  leading: Icon(Icons.photo_library),
-                  title: Text('Galeria'),
-                  onTap: () async {
-                    File? file = await pickFromGallery();
-                    Navigator.of(context).pop(file);
-                  },
+                  leading: Icon(Icons.delete),
+                  title: Text('Remover'),
+                  onTap: () => _onRemoveTap(context),
                 ),
-                ListTile(
-                  leading: Icon(Icons.photo_camera),
-                  title: Text('Camera'),
-                  onTap: () async {
-                    File? file = await pickFromCamera();
-                    Navigator.of(context).pop(file);
-                  },
-                ),
-                if (canRemove)
-                  ListTile(
-                    leading: Icon(Icons.delete),
-                    title: Text('Remover'),
-                    onTap: () async {
-                      Navigator.of(context).pop(null);
-                    },
-                  ),
-              ],
-            ),
+            ],
           ),
         );
       },
     );
 
     return _file;
+  }
+
+  Future<void> _onGalleryTap(BuildContext context) async {
+    final File? file = await pickFromGallery();
+    Navigator.of(context).pop(file);
+  }
+
+  Future<void> _onCameraTap(BuildContext context) async {
+    final File? file = await pickFromCamera();
+    Navigator.of(context).pop(file);
+  }
+
+  Future<void> _onRemoveTap(BuildContext context) async {
+    Navigator.of(context).pop(null);
   }
 }

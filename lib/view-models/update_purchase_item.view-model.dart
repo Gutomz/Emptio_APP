@@ -10,10 +10,10 @@ class UpdatePurchaseItemViewModel {
   });
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['price'] = this.price;
-    data['quantity'] = this.quantity;
-    data['checked'] = this.checked;
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['price'] = price;
+    data['quantity'] = quantity;
+    data['checked'] = checked;
     return data;
   }
 }

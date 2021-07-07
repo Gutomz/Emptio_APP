@@ -1,3 +1,5 @@
+import 'package:emptio/helpers/parsers.dart';
+
 class AuthModel {
   String token;
   String refreshToken;
@@ -5,18 +7,18 @@ class AuthModel {
   AuthModel({required this.token, required this.refreshToken});
 
   factory AuthModel.fromJson(Map<String, dynamic> json) {
-    var model = AuthModel(
-      token: json['token'],
-      refreshToken: json['refreshToken'],
+    final model = AuthModel(
+      token: JsonParser.parseToString(json['token']),
+      refreshToken: JsonParser.parseToString(json['refreshToken']),
     );
 
     return model;
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['token'] = this.token;
-    data['refreshToken'] = this.refreshToken;
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['token'] = token;
+    data['refreshToken'] = refreshToken;
     return data;
   }
 }

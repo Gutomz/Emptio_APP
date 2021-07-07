@@ -17,7 +17,7 @@ abstract class _ProductSearchStoreBase with Store {
     autorun((_) async {
       if (query.isNotEmpty) {
         setLoading(true);
-        ProductFilterViewModel filter = ProductFilterViewModel(
+        final filter = ProductFilterViewModel(
           search: query,
           limit: limit,
           skip: skip,
@@ -49,6 +49,7 @@ abstract class _ProductSearchStoreBase with Store {
   ObservableList<ProductModel> productsList = ObservableList<ProductModel>();
 
   @action
+  // ignore: avoid_positional_boolean_parameters
   void setLoading(bool _value) => loading = _value;
 
   @action
@@ -60,7 +61,7 @@ abstract class _ProductSearchStoreBase with Store {
   @action
   Future<void> loadProducts(ProductFilterViewModel filter) async {
     try {
-      List<ProductModel> list = await ProductRepository().get(filter);
+      final list = await ProductRepository().get(filter);
 
       if (list.length < filter.limit) limitReached = true;
 

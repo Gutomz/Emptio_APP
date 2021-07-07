@@ -1,12 +1,13 @@
+import 'package:emptio/helpers/parsers.dart';
 import 'package:intl/intl.dart';
 
 class MeasurementTypes {
-  static const String Kg = 'Kg';
+  static const String kg = 'Kg';
   static const String g = 'g';
   static const String L = 'L';
   static const String mL = 'ml';
 
-  static List<String> list = [Kg, g, L, mL];
+  static List<String> list = [kg, g, L, mL];
 }
 
 class MeasurementModel {
@@ -19,21 +20,22 @@ class MeasurementModel {
   });
 
   factory MeasurementModel.fromJson(Map<String, dynamic> json) {
-    var model = MeasurementModel(
-      value: json['value'].toDouble(),
-      unit: json['unit'],
+    final model = MeasurementModel(
+      value: JsonParser.parseToDouble(json['value']),
+      unit: JsonParser.parseToString(json['unit']),
     );
 
     return model;
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['value'] = this.value;
-    data['unit'] = this.unit;
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['value'] = value;
+    data['unit'] = unit;
     return data;
   }
 
+  @override
   String toString() {
     return "${NumberFormat.decimalPattern('pt-Br').format(value)}$unit";
   }

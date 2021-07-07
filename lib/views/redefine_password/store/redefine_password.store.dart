@@ -1,4 +1,3 @@
-import 'package:emptio/models/auth.model.dart';
 import 'package:emptio/repositories/user.repository.dart';
 import 'package:emptio/stores/auth.store.dart';
 import 'package:emptio/view-models/redefine_password.view-model.dart';
@@ -55,14 +54,14 @@ abstract class _RedefinePasswordStoreBase with Store {
     loading = true;
     error = "";
 
-    RedefinePasswordViewModel model = RedefinePasswordViewModel(
+    final model = RedefinePasswordViewModel(
       code: code!,
       email: email,
       password: password!,
     );
 
     try {
-      AuthModel auth = await UserRepository().redefinePassword(model);
+      final auth = await UserRepository().redefinePassword(model);
       await GetIt.I<AuthStore>().login(auth);
       logged = true;
     } catch (_error) {
@@ -76,12 +75,12 @@ abstract class _RedefinePasswordStoreBase with Store {
 
   @computed
   bool get codeValid {
-    String _code = code ?? "";
+    final _code = code ?? "";
     return _code.isNotEmpty && _code.length == 6;
   }
 
   String? get codeError {
-    String _code = code ?? "";
+    final _code = code ?? "";
 
     if (code == null || codeValid) {
       return null;
@@ -94,14 +93,14 @@ abstract class _RedefinePasswordStoreBase with Store {
 
   @computed
   bool get passwordValid {
-    String _password = password ?? "";
+    final _password = password ?? "";
 
     return _password.isNotEmpty && _password.length >= 6;
   }
 
   @computed
   String? get passwordError {
-    String _password = password ?? "";
+    final _password = password ?? "";
     if (password == null || passwordValid) {
       return null;
     } else if (_password.isEmpty) {
@@ -113,7 +112,7 @@ abstract class _RedefinePasswordStoreBase with Store {
 
   @computed
   bool get confirmPasswordValid {
-    String _confirmPassword = confirmPassword ?? "";
+    final _confirmPassword = confirmPassword ?? "";
 
     return _confirmPassword.isNotEmpty &&
         passwordValid &&
@@ -122,8 +121,7 @@ abstract class _RedefinePasswordStoreBase with Store {
 
   @computed
   String? get confirmPasswordError {
-    //confirmPassword.isEmpty || confirmPasswordValid ? null : 'Campo Obrigatório';
-    String _confirmPassword = confirmPassword ?? "";
+    final _confirmPassword = confirmPassword ?? "";
 
     if (confirmPassword == null || confirmPasswordValid) {
       return null;

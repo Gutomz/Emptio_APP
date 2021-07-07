@@ -1,6 +1,5 @@
 import 'dart:io';
 import 'package:emptio/helpers/extensions.dart';
-import 'package:emptio/models/auth.model.dart';
 import 'package:emptio/repositories/user.repository.dart';
 import 'package:emptio/stores/auth.store.dart';
 import 'package:emptio/view-models/register.view-model.dart';
@@ -69,12 +68,12 @@ abstract class _RegisterStoreBase with Store {
     loading = true;
     error = "";
 
-    File? _photo = photo;
+    final _photo = photo;
 
-    Location location = Location();
-    LocationData userLocation = await location.getLocation();
+    final location = Location();
+    final userLocation = await location.getLocation();
 
-    RegisterViewModel userModel = RegisterViewModel(
+    final userModel = RegisterViewModel(
       name: name!,
       email: email!,
       password: password!,
@@ -83,7 +82,7 @@ abstract class _RegisterStoreBase with Store {
     );
 
     try {
-      AuthModel auth = await UserRepository().register(userModel);
+      final auth = await UserRepository().register(userModel);
       await GetIt.I<AuthStore>().login(auth);
       logged = true;
     } catch (_error) {
@@ -97,14 +96,14 @@ abstract class _RegisterStoreBase with Store {
 
   @computed
   bool get nameValid {
-    String _name = name ?? "";
+    final _name = name ?? "";
 
     return _name.isNotEmpty && _name.length >= 3;
   }
 
   @computed
   String? get nameError {
-    String _name = name ?? "";
+    final _name = name ?? "";
 
     if (name == null || nameValid) {
       return null;
@@ -117,14 +116,14 @@ abstract class _RegisterStoreBase with Store {
 
   @computed
   bool get emailValid {
-    String _email = email ?? "";
+    final _email = email ?? "";
 
     return _email.isNotEmpty && _email.isEmailValid();
   }
 
   @computed
   String? get emailError {
-    String _email = email ?? "";
+    final _email = email ?? "";
 
     if (email == null || emailValid) {
       return null;
@@ -137,14 +136,14 @@ abstract class _RegisterStoreBase with Store {
 
   @computed
   bool get passwordValid {
-    String _password = password ?? "";
+    final _password = password ?? "";
 
     return _password.isNotEmpty && _password.length >= 6;
   }
 
   @computed
   String? get passwordError {
-    String _password = password ?? "";
+    final _password = password ?? "";
     if (password == null || passwordValid) {
       return null;
     } else if (_password.isEmpty) {
@@ -156,7 +155,7 @@ abstract class _RegisterStoreBase with Store {
 
   @computed
   bool get confirmPasswordValid {
-    String _confirmPassword = confirmPassword ?? "";
+    final _confirmPassword = confirmPassword ?? "";
 
     return _confirmPassword.isNotEmpty &&
         passwordValid &&
@@ -165,7 +164,7 @@ abstract class _RegisterStoreBase with Store {
 
   @computed
   String? get confirmPasswordError {
-    String _confirmPassword = confirmPassword ?? "";
+    final _confirmPassword = confirmPassword ?? "";
 
     if (confirmPassword == null || confirmPasswordValid) {
       return null;
