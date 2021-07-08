@@ -44,12 +44,12 @@ mixin _$LoginStore on _LoginStoreBase, Store {
       (_$loginValidComputed ??= Computed<bool>(() => super.loginValid,
               name: '_LoginStoreBase.loginValid'))
           .value;
-  Computed<bool>? _$forgotPaswordValidComputed;
+  Computed<bool>? _$forgotPasswordValidComputed;
 
   @override
-  bool get forgotPaswordValid => (_$forgotPaswordValidComputed ??=
-          Computed<bool>(() => super.forgotPaswordValid,
-              name: '_LoginStoreBase.forgotPaswordValid'))
+  bool get forgotPasswordValid => (_$forgotPasswordValidComputed ??=
+          Computed<bool>(() => super.forgotPasswordValid,
+              name: '_LoginStoreBase.forgotPasswordValid'))
       .value;
   Computed<bool>? _$loadingComputed;
 
@@ -247,7 +247,7 @@ emailError: ${emailError},
 passwordValid: ${passwordValid},
 passwordError: ${passwordError},
 loginValid: ${loginValid},
-forgotPaswordValid: ${forgotPaswordValid},
+forgotPasswordValid: ${forgotPasswordValid},
 loading: ${loading}
     ''';
   }

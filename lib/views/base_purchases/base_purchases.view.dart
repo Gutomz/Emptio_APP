@@ -1,5 +1,5 @@
 import 'package:emptio/common/widgets/main_app_bar.widget.dart';
-import 'package:emptio/common/widgets/notificationActionButton.widget.dart';
+import 'package:emptio/common/widgets/notification_action_button.widget.dart';
 import 'package:emptio/common/widgets/search_dialog.widget.dart';
 import 'package:emptio/stores/app.store.dart';
 import 'package:emptio/views/base_purchases/store/base_purchases.store.dart';

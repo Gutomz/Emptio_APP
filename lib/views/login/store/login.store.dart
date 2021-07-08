@@ -120,7 +120,7 @@ abstract class _LoginStoreBase with Store {
   bool get loginValid => !loading && emailValid && passwordValid;
 
   @computed
-  bool get forgotPaswordValid => !loading && emailValid;
+  bool get forgotPasswordValid => !loading && emailValid;
 
   @computed
   bool get loading => loginLoading || forgotPasswordLoading;

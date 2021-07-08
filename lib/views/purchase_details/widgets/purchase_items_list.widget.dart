@@ -17,7 +17,7 @@ class PurchaseItemsList extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Observer(builder: (context) {
-      if (store.filtredItems.isEmpty) {
+      if (store.filteredItems.isEmpty) {
         return EmptyPlaceholder(
           title: "Nenhum produto adicionado",
           subTitleBefore: "Clique em",
@@ -35,7 +35,7 @@ class PurchaseItemsList extends StatelessWidget {
   }
 
   Widget _buildItem(BuildContext context, int index) {
-    final item = store.filtredItems[index];
+    final item = store.filteredItems[index];
 
     if (store.showChecked) {
       return CheckedPurchaseItemTile(

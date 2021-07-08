@@ -18,6 +18,7 @@ class PurchaseDetailsBottomAppBar extends StatelessWidget {
     return BottomAppBar(
       elevation: 8,
       notchMargin: 8,
+      shape: CircularNotchedRectangle(),
       color: AppColors.blue,
       clipBehavior: Clip.antiAlias,
       child: SizedBox(

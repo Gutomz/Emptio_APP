@@ -1,4 +1,4 @@
-import 'package:emptio/common/widgets/add_item_bottom_appbar.widget.dart';
+import 'package:emptio/common/widgets/add_item_bottom_app_bar.widget.dart';
 import 'package:emptio/core/app_colors.dart';
 import 'package:emptio/models/market.model.dart';
 import 'package:emptio/models/product.model.dart';

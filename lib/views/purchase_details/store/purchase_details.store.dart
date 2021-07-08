@@ -117,11 +117,11 @@ abstract class _PurchaseDetailsStoreBase with Store {
   bool get isMarketConnected => purchase.market != null;
 
   @computed
-  List<PurchaseItemModel> get filtredItems =>
+  List<PurchaseItemModel> get filteredItems =>
       showChecked ? checkedItems : items;
 
   @computed
-  int get itemsCount => filtredItems.length;
+  int get itemsCount => filteredItems.length;
 
   @computed
   int get productsCount =>

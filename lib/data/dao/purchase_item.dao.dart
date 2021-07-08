@@ -1,5 +1,5 @@
 import 'package:emptio/core/app_errors.dart';
-import 'package:emptio/data/dao/product/product.dao.dart';
+import 'package:emptio/data/dao/product.dao.dart';
 import 'package:emptio/data/database.dart';
 import 'package:emptio/data/database_errors.dart';
 import 'package:emptio/data/models/product/product.dart';

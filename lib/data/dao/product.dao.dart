@@ -1,7 +1,7 @@
 import 'package:emptio/core/app_errors.dart';
-import 'package:emptio/data/dao/product_market/product_market.dao.dart';
-import 'package:emptio/data/dao/purchase/purchase.dao.dart';
-import 'package:emptio/data/dao/purchase_item/purchase_item.dao.dart';
+import 'package:emptio/data/dao/product_market.dao.dart';
+import 'package:emptio/data/dao/purchase.dao.dart';
+import 'package:emptio/data/dao/purchase_item.dao.dart';
 import 'package:emptio/data/database.dart';
 import 'package:emptio/data/database_errors.dart';
 import 'package:emptio/data/models/measurement/measurement.dart';

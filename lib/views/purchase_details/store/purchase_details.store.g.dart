@@ -16,12 +16,12 @@ mixin _$PurchaseDetailsStore on _PurchaseDetailsStoreBase, Store {
           () => super.isMarketConnected,
           name: '_PurchaseDetailsStoreBase.isMarketConnected'))
       .value;
-  Computed<List<PurchaseItemModel>>? _$filtredItemsComputed;
+  Computed<List<PurchaseItemModel>>? _$filteredItemsComputed;
 
   @override
-  List<PurchaseItemModel> get filtredItems => (_$filtredItemsComputed ??=
-          Computed<List<PurchaseItemModel>>(() => super.filtredItems,
-              name: '_PurchaseDetailsStoreBase.filtredItems'))
+  List<PurchaseItemModel> get filteredItems => (_$filteredItemsComputed ??=
+          Computed<List<PurchaseItemModel>>(() => super.filteredItems,
+              name: '_PurchaseDetailsStoreBase.filteredItems'))
       .value;
   Computed<int>? _$itemsCountComputed;
 
@@ -183,7 +183,7 @@ loading: ${loading},
 error: ${error},
 showChecked: ${showChecked},
 isMarketConnected: ${isMarketConnected},
-filtredItems: ${filtredItems},
+filteredItems: ${filteredItems},
 itemsCount: ${itemsCount},
 productsCount: ${productsCount},
 isClosed: ${isClosed}

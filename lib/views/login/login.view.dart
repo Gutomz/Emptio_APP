@@ -134,7 +134,7 @@ class _LoginViewState extends State<LoginView> {
                     mainAxisAlignment: MainAxisAlignment.end,
                     children: [
                       TextButton(
-                        onPressed: loginStore.forgotPaswordValid
+                        onPressed: loginStore.forgotPasswordValid
                             ? loginStore.forgotPassword
                             : loginStore.loading
                                 ? null

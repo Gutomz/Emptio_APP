@@ -7,7 +7,7 @@ import 'package:emptio/models/base_purchase_item.model.dart';
 import 'package:emptio/view-models/update_base_purchase_item.view-model.dart';
 import 'package:emptio/views/base_purchase_details/store/base_purchase_details.store.dart';
 import 'package:emptio/views/base_purchase_details/store/base_purchase_item.store.dart';
-import 'package:emptio/views/edit_purchase_item/edit_puchase_item.view.dart';
+import 'package:emptio/views/edit_purchase_item/edit_purchase_item.view.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 

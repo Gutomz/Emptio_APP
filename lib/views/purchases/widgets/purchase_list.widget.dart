@@ -75,7 +75,7 @@ class _PurchaseListState extends State<PurchaseList> {
       }
 
       return RefreshIndicator(
-        backgroundColor: AppColors.lighBlue,
+        backgroundColor: AppColors.lightBlue,
         color: Colors.white,
         onRefresh: purchasesStore.resetPage,
         child: ListView.separated(

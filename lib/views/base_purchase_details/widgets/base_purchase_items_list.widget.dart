@@ -16,7 +16,7 @@ class BasePurchaseItemsList extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Observer(builder: (context) {
-      if (store.filtredItems.isEmpty) {
+      if (store.filteredItems.isEmpty) {
         return EmptyPlaceholder(
           title: "Nenhum produto adicionado",
           subTitleBefore: "Clique em",
@@ -29,7 +29,7 @@ class BasePurchaseItemsList extends StatelessWidget {
         key: PageStorageKey<String>('base_purchase_details_items_list'),
         itemCount: store.itemsCount,
         itemBuilder: (context, index) {
-          final item = store.filtredItems[index];
+          final item = store.filteredItems[index];
 
           return BasePurchaseItemTile(
             item: item,

@@ -1,6 +1,6 @@
 import 'package:emptio/core/app_api_errors.dart';
 import 'package:emptio/core/app_api.dart';
-import 'package:emptio/data/dao/purchase/purchase.dao.dart';
+import 'package:emptio/data/dao/purchase.dao.dart';
 import 'package:emptio/helpers/logger.dart';
 import 'package:emptio/models/purchase.model.dart';
 import 'package:emptio/stores/auth.store.dart';

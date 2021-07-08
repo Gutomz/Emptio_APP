@@ -1,6 +1,6 @@
 import 'dart:io';
 
-import 'package:emptio/common/widgets/add_item_bottom_appbar.widget.dart';
+import 'package:emptio/common/widgets/add_item_bottom_app_bar.widget.dart';
 import 'package:emptio/common/widgets/image_builder.widget.dart';
 import 'package:emptio/common/widgets/input_new_tag_confirm_dialog.widget.dart';
 import 'package:emptio/common/widgets/market_indicator.widget.dart';

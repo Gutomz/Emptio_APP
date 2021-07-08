@@ -1,5 +1,5 @@
 import 'package:emptio/common/widgets/main_app_bar.widget.dart';
-import 'package:emptio/common/widgets/notificationActionButton.widget.dart';
+import 'package:emptio/common/widgets/notification_action_button.widget.dart';
 import 'package:flutter/material.dart';
 
 class FavoritesView extends StatelessWidget {

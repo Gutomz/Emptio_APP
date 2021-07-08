@@ -121,8 +121,8 @@ abstract class _BasePurchaseDetailsStoreBase with Store {
   }
 
   @computed
-  List<BasePurchaseItemModel> get filtredItems => items;
+  List<BasePurchaseItemModel> get filteredItems => items;
 
   @computed
-  int get itemsCount => filtredItems.length;
+  int get itemsCount => filteredItems.length;
 }

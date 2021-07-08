@@ -9,12 +9,12 @@ part of 'base_purchase_details.store.dart';
 // ignore_for_file: non_constant_identifier_names, unnecessary_brace_in_string_interps, unnecessary_lambdas, prefer_expression_function_bodies, lines_longer_than_80_chars, avoid_as, avoid_annotating_with_dynamic
 
 mixin _$BasePurchaseDetailsStore on _BasePurchaseDetailsStoreBase, Store {
-  Computed<List<BasePurchaseItemModel>>? _$filtredItemsComputed;
+  Computed<List<BasePurchaseItemModel>>? _$filteredItemsComputed;
 
   @override
-  List<BasePurchaseItemModel> get filtredItems => (_$filtredItemsComputed ??=
-          Computed<List<BasePurchaseItemModel>>(() => super.filtredItems,
-              name: '_BasePurchaseDetailsStoreBase.filtredItems'))
+  List<BasePurchaseItemModel> get filteredItems => (_$filteredItemsComputed ??=
+          Computed<List<BasePurchaseItemModel>>(() => super.filteredItems,
+              name: '_BasePurchaseDetailsStoreBase.filteredItems'))
       .value;
   Computed<int>? _$itemsCountComputed;
 
@@ -133,7 +133,7 @@ mixin _$BasePurchaseDetailsStore on _BasePurchaseDetailsStoreBase, Store {
 name: ${name},
 loading: ${loading},
 error: ${error},
-filtredItems: ${filtredItems},
+filteredItems: ${filteredItems},
 itemsCount: ${itemsCount}
     ''';
   }
