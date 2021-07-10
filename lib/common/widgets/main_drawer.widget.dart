@@ -3,6 +3,7 @@ import 'package:emptio/core/app_colors.dart';
 import 'package:emptio/stores/auth.store.dart';
 import 'package:emptio/stores/connectivity.store.dart';
 import 'package:emptio/views/login/login.view.dart';
+import 'package:emptio/views/profile/profile.view.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:get_it/get_it.dart';
@@ -145,62 +146,78 @@ class MainDrawerHeader extends StatelessWidget {
       child: SafeArea(
         child: Padding(
           padding: EdgeInsets.symmetric(horizontal: 15, vertical: 20),
-          child: Column(
-            children: [
-              UserAvatar(
-                radius: 40,
-                borderGap: 5,
-                iconSize: 50,
-                backgroundColor: AppColors.white,
-                iconColor: AppColors.black,
-              ),
-              SizedBox(height: 10),
-              Observer(builder: (_) {
-                if (!_connectivityStore.isConnected) {
-                  return Text(
-                    "Sem conexão com a internet!",
-                    textAlign: TextAlign.center,
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontWeight: FontWeight.w500,
-                      fontSize: 16,
-                    ),
-                  );
-                }
-
-                if (!_authStore.isLogged) {
-                  return TextButton(
-                    onPressed: () {
-                      Navigator.of(context).push(
-                        MaterialPageRoute(
-                          builder: (_ctx) => LoginView(),
+          child: Observer(builder: (context) {
+            return InkWell(
+              onTap:
+                  _authStore.isLogged ? () => _onTapGoToProfile(context) : null,
+              child: Column(
+                children: [
+                  UserAvatar(
+                    radius: 40,
+                    borderGap: 5,
+                    iconSize: 50,
+                    backgroundColor: AppColors.white,
+                    iconColor: AppColors.black,
+                  ),
+                  SizedBox(height: 10),
+                  Observer(builder: (_) {
+                    if (!_connectivityStore.isConnected) {
+                      return Text(
+                        "Sem conexão com a internet!",
+                        textAlign: TextAlign.center,
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontWeight: FontWeight.w500,
+                          fontSize: 16,
                         ),
                       );
-                    },
-                    child: Text(
-                      "Clique aqui para fazer o login",
+                    }
+
+                    if (!_authStore.isLogged) {
+                      return TextButton(
+                        onPressed: () {
+                          Navigator.of(context).push(
+                            MaterialPageRoute(
+                              builder: (_ctx) => LoginView(),
+                            ),
+                          );
+                        },
+                        child: Text(
+                          "Clique aqui para fazer o login",
+                          textAlign: TextAlign.center,
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontWeight: FontWeight.w500,
+                            fontSize: 16,
+                          ),
+                        ),
+                      );
+                    }
+
+                    return Text(
+                      _authStore.user!.name,
                       textAlign: TextAlign.center,
                       style: TextStyle(
                         color: Colors.white,
-                        fontWeight: FontWeight.w500,
+                        fontWeight: FontWeight.bold,
                         fontSize: 16,
                       ),
-                    ),
-                  );
-                }
+                    );
+                  }),
+                ],
+              ),
+            );
+          }),
+        ),
+      ),
+    );
+  }
 
-                return Text(
-                  _authStore.user!.name,
-                  textAlign: TextAlign.center,
-                  style: TextStyle(
-                    color: Colors.white,
-                    fontWeight: FontWeight.bold,
-                    fontSize: 16,
-                  ),
-                );
-              }),
-            ],
-          ),
+  void _onTapGoToProfile(BuildContext context) {
+    Navigator.of(context).push(
+      MaterialPageRoute(
+        builder: (context) => ProfileView(
+          userId: _authStore.user!.sId,
         ),
       ),
     );

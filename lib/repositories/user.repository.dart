@@ -3,6 +3,7 @@ import 'package:emptio/core/app_api.dart';
 import 'package:emptio/core/app_errors.dart';
 import 'package:emptio/helpers/logger.dart';
 import 'package:emptio/models/auth.model.dart';
+import 'package:emptio/models/profile.model.dart';
 import 'package:emptio/models/user.model.dart';
 import 'package:emptio/view-models/login.view-model.dart';
 import 'package:emptio/view-models/redefine_password.view-model.dart';
@@ -114,6 +115,18 @@ class UserRepository {
       return UserModel.fromJson(data);
     } catch (error, stack) {
       Logger.error(tag, "Exception at 'getMe' function", error, stack);
+
+      return Future.error(AppApiErrors.handleError(error));
+    }
+  }
+
+  Future<ProfileModel> getProfile(String userId) async {
+    try {
+      final data =
+          await _api.get('/users/profile/$userId') as Map<String, dynamic>;
+      return ProfileModel.fromJson(data);
+    } catch (error, stack) {
+      Logger.error(tag, "Exception at 'getProfile' function", error, stack);
 
       return Future.error(AppApiErrors.handleError(error));
     }

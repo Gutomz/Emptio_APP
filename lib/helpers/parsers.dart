@@ -5,6 +5,7 @@ import 'package:emptio/models/market.model.dart';
 import 'package:emptio/models/measurement.model.dart';
 import 'package:emptio/models/product.model.dart';
 import 'package:emptio/models/product_market.model.dart';
+import 'package:emptio/models/profile_user.model.dart';
 import 'package:emptio/models/purchase_item.model.dart';
 import 'package:emptio/models/user_configurations.model.dart';
 
@@ -90,6 +91,14 @@ class JsonParser {
   static MeasurementModel? parseToMeasurement(dynamic value) {
     try {
       return MeasurementModel.fromJson(value as Map<String, dynamic>);
+    } catch (_) {
+      return null;
+    }
+  }
+
+  static ProfileUserModel? parseToProfileUser(dynamic value) {
+    try {
+      return ProfileUserModel.fromJson(value as Map<String, dynamic>);
     } catch (_) {
       return null;
     }

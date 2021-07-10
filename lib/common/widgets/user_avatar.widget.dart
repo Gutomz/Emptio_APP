@@ -1,4 +1,4 @@
-import 'package:emptio/core/app_colors.dart';
+import 'package:emptio/common/widgets/profile_avatar.widget.dart';
 import 'package:emptio/stores/auth.store.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
@@ -26,35 +26,19 @@ class UserAvatar extends StatelessWidget {
     this.icon,
   }) : super(key: key);
 
-  Widget _buildImage(String? _image) {
-    if (_image == null || _image.isEmpty) {
-      return Icon(
-        icon ?? Icons.person,
-        size: iconSize,
-        color: iconColor ?? Colors.white,
-      );
-    } else {
-      return ClipRRect(
-        borderRadius: BorderRadius.circular(radius),
-        child: Image.network(
-          _image,
-          width: (radius * 2) - borderGap,
-          height: (radius * 2) - borderGap,
-          fit: BoxFit.cover,
-        ),
-      );
-    }
-  }
-
   @override
   Widget build(BuildContext context) {
-    return CircleAvatar(
-      backgroundColor: backgroundColor ?? AppColors.darkOrange,
-      foregroundColor: foregroundColor ?? AppColors.white,
-      radius: radius,
-      child: Observer(builder: (context) {
-        return _buildImage(_authStore.isLogged ? _authStore.user?.photo : null);
-      }),
-    );
+    return Observer(builder: (context) {
+      return ProfileAvatar(
+        image: _authStore.isLogged ? _authStore.user?.photo : null,
+        backgroundColor: backgroundColor,
+        foregroundColor: foregroundColor,
+        borderGap: borderGap,
+        icon: icon,
+        iconColor: iconColor,
+        iconSize: iconSize,
+        radius: radius,
+      );
+    });
   }
 }
