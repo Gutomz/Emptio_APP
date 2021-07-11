@@ -12,6 +12,11 @@ class AppApi {
     return "http://$_url${_getPath(extension)}";
   }
 
+  static String removeUrl(String? path) {
+    if (path == null) return "";
+    return path.replaceAll(getUrl(null), "");
+  }
+
   static String _getPath(String? pathExtension) {
     const String path = "/api";
     if (pathExtension == null) {

@@ -1,5 +1,5 @@
 import 'package:emptio/common/widgets/dismissible_background.widget.dart';
-import 'package:emptio/common/widgets/dismissible_confirm_dialog.widget.dart';
+import 'package:emptio/common/widgets/simple_confirm_dialog.widget.dart';
 import 'package:emptio/common/widgets/image_builder.widget.dart';
 import 'package:emptio/common/widgets/subtitle_item.widget.dart';
 import 'package:emptio/core/app_colors.dart';
@@ -49,7 +49,7 @@ class BasePurchaseItemTile extends StatelessWidget {
       final response = await showDialog<bool>(
           context: context,
           builder: (context) {
-            return ConfirmDismissDialog(
+            return SimpleConfirmDialog(
               title: "Remover produto?",
               content:
                   "Tem certeza que deseja remover este produto da sua compra?",

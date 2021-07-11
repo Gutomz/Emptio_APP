@@ -1,13 +1,13 @@
 import 'package:emptio/core/app_colors.dart';
 import 'package:flutter/material.dart';
 
-class ConfirmDismissDialog extends StatelessWidget {
+class SimpleConfirmDialog extends StatelessWidget {
   final String title;
   final String content;
   final String rejectText;
   final String acceptText;
 
-  const ConfirmDismissDialog({
+  const SimpleConfirmDialog({
     Key? key,
     required this.title,
     required this.content,

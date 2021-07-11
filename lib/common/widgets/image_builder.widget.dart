@@ -15,14 +15,20 @@ class ImageBuilder {
     double elevation = 5,
     double borderRadius = 8,
     Color? backgroundColor,
+    Color? foregroundColor,
+    IconData icon = Icons.image_not_supported_outlined,
+    bool hideBorder = false,
   }) {
     return buildImage(
       image != null ? FileImage(image) : null,
       size: size,
       iconSize: iconSize,
+      icon: icon,
       elevation: elevation,
       borderRadius: borderRadius,
       backgroundColor: backgroundColor,
+      foregroundColor: foregroundColor,
+      hideBorder: hideBorder,
     );
   }
 
@@ -33,6 +39,9 @@ class ImageBuilder {
     double elevation = 0,
     double borderRadius = 8,
     Color? backgroundColor,
+    Color? foregroundColor,
+    IconData icon = Icons.image_not_supported_outlined,
+    bool hideBorder = false,
   }) {
     ImageProvider<Object>? provider;
 
@@ -44,9 +53,12 @@ class ImageBuilder {
       provider,
       size: size,
       iconSize: iconSize,
+      icon: icon,
       elevation: elevation,
       borderRadius: borderRadius,
       backgroundColor: backgroundColor,
+      foregroundColor: foregroundColor,
+      hideBorder: hideBorder,
     );
   }
 
@@ -56,7 +68,10 @@ class ImageBuilder {
     required double iconSize,
     required double elevation,
     required double borderRadius,
+    required IconData icon,
+    required bool hideBorder,
     Color? backgroundColor,
+    Color? foregroundColor,
   }) {
     return Material(
       elevation: elevation,
@@ -72,13 +87,13 @@ class ImageBuilder {
                 )
               : null,
           borderRadius: BorderRadius.all(Radius.circular(borderRadius)),
-          border: Border.all(color: AppColors.grey),
+          border: hideBorder == true ? null : Border.all(color: AppColors.grey),
           color: backgroundColor ?? AppColors.lightGrey.withOpacity(0.2),
         ),
         child: image == null
             ? Icon(
-                Icons.image_not_supported_outlined,
-                color: AppColors.black,
+                icon,
+                color: foregroundColor ?? AppColors.black,
                 size: iconSize,
               )
             : null,

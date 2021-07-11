@@ -1,6 +1,8 @@
 import 'package:emptio/common/widgets/profile_avatar.widget.dart';
 import 'package:emptio/core/app_colors.dart';
 import 'package:emptio/models/profile.model.dart';
+import 'package:emptio/models/profile_user.model.dart';
+import 'package:emptio/views/edit_profile/edit_profile.view.dart';
 import 'package:emptio/views/profile/store/profile.store.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
@@ -98,7 +100,7 @@ class _ProfileViewState extends State<ProfileView> {
               ),
               if (profile.isMe)
                 OutlinedButton(
-                  onPressed: () => _onPressEditProfile(context),
+                  onPressed: () => _onPressEditProfile(context, profile.user),
                   style: ButtonStyle(
                     foregroundColor:
                         MaterialStateProperty.all<Color>(AppColors.orange),
@@ -163,14 +165,19 @@ class _ProfileViewState extends State<ProfileView> {
   Row _buildHeader(BuildContext context, ProfileModel profile) {
     return Row(
       children: [
-        Material(
-          elevation: 5,
-          borderRadius:
-              BorderRadius.circular(MediaQuery.of(context).size.width * 0.12),
-          child: ProfileAvatar(
-            image: profile.user.photo,
-            radius: MediaQuery.of(context).size.width * 0.12,
-            borderGap: 5,
+        Hero(
+          tag: profile.user.sId,
+          child: Material(
+            elevation: 5,
+            borderRadius:
+                BorderRadius.circular(MediaQuery.of(context).size.width * 0.12),
+            child: ProfileAvatar(
+              image: profile.user.photo,
+              radius: MediaQuery.of(context).size.width * 0.12,
+              borderGap: 5,
+              iconSize: 52,
+              backgroundColor: AppColors.orange,
+            ),
           ),
         ),
         SizedBox(width: 15),
@@ -232,9 +239,24 @@ class _ProfileViewState extends State<ProfileView> {
     );
   }
 
-  void _onPressEditProfile(BuildContext context) {}
+  Future<void> _onPressEditProfile(
+      BuildContext context, ProfileUserModel profileUser) async {
+    await Navigator.of(context).push(
+      MaterialPageRoute(
+        builder: (context) => EditProfileView(
+          profileUser: profileUser,
+        ),
+      ),
+    );
+
+    _store.loadProfile(widget.userId);
+  }
+
   void _onPressFollow(BuildContext context) {}
+
   void _onPressUnfollow(BuildContext context) {}
+
   void _onTapFollowers(BuildContext context) {}
+
   void _onTapFollowing(BuildContext context) {}
 }

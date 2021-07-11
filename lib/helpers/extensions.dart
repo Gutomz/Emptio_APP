@@ -46,7 +46,7 @@ extension NumberExtension on num {
   }
 }
 
-extension FileExension on File {
+extension FileExtension on File {
   String parseToBase64() {
     final bytes = readAsBytesSync();
 

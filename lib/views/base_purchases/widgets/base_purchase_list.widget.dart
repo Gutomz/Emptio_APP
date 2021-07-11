@@ -1,5 +1,5 @@
 import 'package:emptio/common/widgets/dismissible_background.widget.dart';
-import 'package:emptio/common/widgets/dismissible_confirm_dialog.widget.dart';
+import 'package:emptio/common/widgets/simple_confirm_dialog.widget.dart';
 import 'package:emptio/common/widgets/empty_placeholder.widget.dart';
 import 'package:emptio/core/app_assets.dart';
 import 'package:emptio/core/app_colors.dart';
@@ -27,7 +27,7 @@ class _BasePurchaseListState extends State<BasePurchaseList> {
     final response = await showDialog<bool>(
         context: context,
         builder: (context) {
-          return ConfirmDismissDialog(
+          return SimpleConfirmDialog(
             title: "Excluir Lista?",
             content: "Tem certeza que deseja excluir essa lista?",
             acceptText: "sim",
