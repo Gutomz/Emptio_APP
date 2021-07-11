@@ -4,6 +4,7 @@ import 'package:emptio/common/widgets/underlined_text_field.widget.dart';
 import 'package:emptio/core/app_colors.dart';
 import 'package:emptio/helpers/pick_image.dart';
 import 'package:emptio/models/profile_user.model.dart';
+import 'package:emptio/views/change_password/change_password.view.dart';
 import 'package:emptio/views/edit_profile/store/edit_profile.store.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
@@ -185,7 +186,9 @@ class EditProfileView extends StatelessWidget {
   }
 
   void _onPressChangePassword(BuildContext context) {
-    // TODO - Navigate to edit password view
+    Navigator.of(context).push(
+      MaterialPageRoute(builder: (context) => ChangePasswordView()),
+    );
   }
 
   Future<void> _onPressClose(BuildContext context) async {

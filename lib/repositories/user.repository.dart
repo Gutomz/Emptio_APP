@@ -7,6 +7,7 @@ import 'package:emptio/models/profile.model.dart';
 import 'package:emptio/models/profile_user.model.dart';
 import 'package:emptio/models/user.model.dart';
 import 'package:emptio/stores/auth.store.dart';
+import 'package:emptio/view-models/change_password.view-model.dart';
 import 'package:emptio/view-models/edit_profile.view-model.dart';
 import 'package:emptio/view-models/login.view-model.dart';
 import 'package:emptio/view-models/redefine_password.view-model.dart';
@@ -154,6 +155,20 @@ class UserRepository {
       return profile;
     } catch (error, stack) {
       Logger.error(tag, "Exception at 'editProfile' function", error, stack);
+
+      return Future.error(AppApiErrors.handleError(error));
+    }
+  }
+
+  Future<void> changePassword(ChangePasswordViewModel model) async {
+    try {
+      await _api.patch('/users/me', body: model.toJson());
+    } catch (error, stack) {
+      Logger.error(tag, "Exception at 'changePassword' function", error, stack);
+
+      if (AppApiErrors.isError(error)) {
+        return Future.error("Senha atual inválida!");
+      }
 
       return Future.error(AppApiErrors.handleError(error));
     }

@@ -90,13 +90,13 @@ class AppApi {
     return _handleResponse(response);
   }
 
-  Future<dynamic> patch(String path, Map<String, dynamic> body) async {
+  Future<dynamic> patch(String path, {Map<String, dynamic>? body}) async {
     final response = await http.patch(
       _getURI(
         pathExtension: path,
       ),
       headers: _getHeaders(),
-      body: jsonEncode(body),
+      body: body != null ? jsonEncode(body) : null,
     );
 
     return _handleResponse(response);
