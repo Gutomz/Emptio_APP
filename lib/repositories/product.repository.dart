@@ -26,7 +26,7 @@ class ProductRepository {
 
       return await ProductDao.getAllParsed(filter);
     } catch (error, stack) {
-      Logger.error(tag, "Exception at 'get' function", error, stack);
+      Logger.error(tag, 'get', error, stack);
 
       return Future.error(AppApiErrors.handleError(error));
     }

@@ -27,7 +27,7 @@ class PurchaseRepository {
 
       return await PurchaseDao.createParsed(model);
     } catch (error, stack) {
-      Logger.error(tag, "Exception at 'create' function", error, stack);
+      Logger.error(tag, 'create', error, stack);
 
       return Future.error(AppApiErrors.handleError(error));
     }
@@ -49,7 +49,7 @@ class PurchaseRepository {
 
       return PurchaseDao.getAllParsed(filter);
     } catch (error, stack) {
-      Logger.error(tag, "Exception at 'get' function", error, stack);
+      Logger.error(tag, 'get', error, stack);
 
       return Future.error(AppApiErrors.handleError(error));
     }
@@ -63,7 +63,7 @@ class PurchaseRepository {
 
       return PurchaseDao.delete(int.parse(purchaseId));
     } catch (error, stack) {
-      Logger.error(tag, "Exception at 'delete' function", error, stack);
+      Logger.error(tag, 'delete', error, stack);
 
       return Future.error(AppApiErrors.handleError(error));
     }
@@ -83,7 +83,7 @@ class PurchaseRepository {
 
       return await PurchaseDao.addItemParsed(int.parse(purchaseId), model);
     } catch (error, stack) {
-      Logger.error(tag, "Exception at 'addItem' function", error, stack);
+      Logger.error(tag, 'addItem', error, stack);
 
       return Future.error(AppApiErrors.handleError(error));
     }
@@ -104,7 +104,7 @@ class PurchaseRepository {
       return await PurchaseDao.updateItemParsed(
           int.parse(purchaseId), int.parse(itemId), model);
     } catch (error, stack) {
-      Logger.error(tag, "Exception at 'updateItem' function", error, stack);
+      Logger.error(tag, 'updateItem', error, stack);
 
       return Future.error(AppApiErrors.handleError(error));
     }
@@ -121,7 +121,7 @@ class PurchaseRepository {
       return PurchaseDao.removeItemParsed(
           int.parse(purchaseId), int.parse(itemId));
     } catch (error, stack) {
-      Logger.error(tag, "Exception at 'removeItem' function", error, stack);
+      Logger.error(tag, 'removeItem', error, stack);
 
       return Future.error(AppApiErrors.handleError(error));
     }
@@ -137,7 +137,7 @@ class PurchaseRepository {
 
       return PurchaseDao.completeParsed(int.parse(purchaseId));
     } catch (error, stack) {
-      Logger.error(tag, "Exception at 'complete' function", error, stack);
+      Logger.error(tag, 'complete', error, stack);
 
       return Future.error(AppApiErrors.handleError(error));
     }

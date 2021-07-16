@@ -25,7 +25,7 @@ class UserRepository {
           as Map<String, dynamic>;
       return AuthModel.fromJson(data);
     } catch (error, stack) {
-      Logger.error(tag, "Exception at 'register' function", error, stack);
+      Logger.error(tag, 'register', error, stack);
 
       if (AppApiErrors.isError(error)) {
         final String code = AppApiErrors.getCode(error);
@@ -47,7 +47,7 @@ class UserRepository {
           as Map<String, dynamic>;
       return AuthModel.fromJson(data);
     } catch (error, stack) {
-      Logger.error(tag, "Exception at 'login' function", error, stack);
+      Logger.error(tag, 'login', error, stack);
 
       if (AppApiErrors.isError(error)) {
         final String code = AppApiErrors.getCode(error);
@@ -66,7 +66,7 @@ class UserRepository {
     try {
       await _api.delete('/auth');
     } catch (error, stack) {
-      Logger.error(tag, "Exception at 'logout' function", error, stack);
+      Logger.error(tag, 'logout', error, stack);
 
       return Future.error(AppApiErrors.handleError(error));
     }
@@ -76,7 +76,7 @@ class UserRepository {
     try {
       await _api.post('/users/forgot-password', body: {"email": email});
     } catch (error, stack) {
-      Logger.error(tag, "Exception at 'forgotPassword' function", error, stack);
+      Logger.error(tag, 'forgotPassword', error, stack);
 
       if (AppApiErrors.isError(error)) {
         final String code = AppApiErrors.getCode(error);
@@ -99,8 +99,7 @@ class UserRepository {
       ) as Map<String, dynamic>;
       return AuthModel.fromJson(data);
     } catch (error, stack) {
-      Logger.error(
-          tag, "Exception at 'redefinePassword' function", error, stack);
+      Logger.error(tag, 'redefinePassword', error, stack);
 
       if (AppApiErrors.isError(error)) {
         final String code = AppApiErrors.getCode(error);
@@ -120,7 +119,7 @@ class UserRepository {
       final data = await _api.get("/users/me") as Map<String, dynamic>;
       return UserModel.fromJson(data);
     } catch (error, stack) {
-      Logger.error(tag, "Exception at 'getMe' function", error, stack);
+      Logger.error(tag, 'getMe', error, stack);
 
       return Future.error(AppApiErrors.handleError(error));
     }
@@ -138,7 +137,7 @@ class UserRepository {
 
       return profileModel;
     } catch (error, stack) {
-      Logger.error(tag, "Exception at 'getProfile' function", error, stack);
+      Logger.error(tag, 'getProfile', error, stack);
 
       return Future.error(AppApiErrors.handleError(error));
     }
@@ -154,7 +153,7 @@ class UserRepository {
       _authStore.user = await getMe();
       return profile;
     } catch (error, stack) {
-      Logger.error(tag, "Exception at 'editProfile' function", error, stack);
+      Logger.error(tag, 'editProfile', error, stack);
 
       return Future.error(AppApiErrors.handleError(error));
     }
@@ -164,7 +163,7 @@ class UserRepository {
     try {
       await _api.patch('/users/me', body: model.toJson());
     } catch (error, stack) {
-      Logger.error(tag, "Exception at 'changePassword' function", error, stack);
+      Logger.error(tag, 'changePassword', error, stack);
 
       if (AppApiErrors.isError(error)) {
         return Future.error("Senha atual inválida!");
