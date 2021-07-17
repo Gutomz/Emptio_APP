@@ -190,12 +190,12 @@ class _ProfileViewState extends State<ProfileView> {
                 title: "Publicações",
               ),
               _buildUserInfosColumn(
-                onTap: () => _onTapFollowers(context),
+                onTap: () => _onTapFollowers(context, profile.user.name),
                 value: profile.followersCount.toString(),
                 title: "Seguidores",
               ),
               _buildUserInfosColumn(
-                onTap: () => _onTapFollowing(context),
+                onTap: () => _onTapFollowing(context, profile.user.name),
                 value: profile.followingCount.toString(),
                 title: "Seguindo",
               ),
@@ -256,19 +256,21 @@ class _ProfileViewState extends State<ProfileView> {
 
   void _onPressUnfollow(BuildContext context) {}
 
-  void _onTapFollowers(BuildContext context) {
-    _navigateToFollowersScreen();
+  void _onTapFollowers(BuildContext context, String userName) {
+    _navigateToFollowersScreen(title: userName);
   }
 
-  void _onTapFollowing(BuildContext context) {
-    _navigateToFollowersScreen(initialIndex: 1);
+  void _onTapFollowing(BuildContext context, String userName) {
+    _navigateToFollowersScreen(initialIndex: 1, title: userName);
   }
 
-  Future<T?> _navigateToFollowersScreen<T>({int initialIndex = 0}) async {
+  Future<T?> _navigateToFollowersScreen<T>(
+      {required String title, int initialIndex = 0}) async {
     return Navigator.of(context).push<T>(
       MaterialPageRoute(
         builder: (context) => FollowersView(
           userId: widget.userId,
+          title: title,
           initialIndex: initialIndex,
         ),
       ),
