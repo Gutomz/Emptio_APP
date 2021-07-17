@@ -22,6 +22,13 @@ mixin _$AuthStore on _AuthStoreBase, Store {
       (_$offlineLoggedComputed ??= Computed<bool>(() => super.offlineLogged,
               name: '_AuthStoreBase.offlineLogged'))
           .value;
+  Computed<String>? _$loggedIdComputed;
+
+  @override
+  String get loggedId =>
+      (_$loggedIdComputed ??= Computed<String>(() => super.loggedId,
+              name: '_AuthStoreBase.loggedId'))
+          .value;
 
   final _$authAtom = Atom(name: '_AuthStoreBase.auth');
 
@@ -137,7 +144,8 @@ loading: ${loading},
 isActive: ${isActive},
 keepLoggedOut: ${keepLoggedOut},
 isLogged: ${isLogged},
-offlineLogged: ${offlineLogged}
+offlineLogged: ${offlineLogged},
+loggedId: ${loggedId}
     ''';
   }
 }

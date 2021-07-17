@@ -8,6 +8,7 @@ class ProfileModel {
   int postsCount;
   bool isMe;
   bool isFollowing;
+  String friendshipStatus;
 
   ProfileModel({
     required this.user,
@@ -16,6 +17,7 @@ class ProfileModel {
     required this.postsCount,
     required this.isMe,
     required this.isFollowing,
+    required this.friendshipStatus,
   });
 
   factory ProfileModel.fromJson(Map<String, dynamic> json) {
@@ -26,6 +28,7 @@ class ProfileModel {
       postsCount: JsonParser.parseToInt(json['postsCount']),
       isMe: JsonParser.parseToBool(json['isMe']),
       isFollowing: JsonParser.parseToBool(json['isFollowing']),
+      friendshipStatus: JsonParser.parseToString(json['friendshipStatus']),
     );
 
     return model;

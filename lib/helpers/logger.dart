@@ -2,12 +2,12 @@ import 'dart:developer';
 
 class Logger {
   static void error(
-      String name, String message, Object? error, StackTrace stackTrace) {
+      String tag, String methodName, Object? error, StackTrace stackTrace) {
     final time = DateTime.now().toString();
-    log("################### ERROR ###################", name: name);
-    log("$time - $message", name: name);
-    log("$time - Error: $error", name: name);
-    log("$time - Stack: $stackTrace", name: name);
-    log("#############################################", name: name);
+    log("################### ERROR ###################", name: tag);
+    log("$time - Exception occurred at '$methodName'", name: tag);
+    log("$time - Error: $error", name: tag);
+    log("$time - Stack: $stackTrace", name: tag);
+    log("#############################################", name: tag);
   }
 }

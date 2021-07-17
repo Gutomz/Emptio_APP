@@ -116,4 +116,7 @@ abstract class _AuthStoreBase with Store {
 
   @computed
   bool get offlineLogged => auth != null && user != null;
+
+  @computed
+  String get loggedId => user?.sId ?? "";
 }

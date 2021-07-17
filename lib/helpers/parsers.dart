@@ -1,5 +1,6 @@
 import 'package:emptio/core/app_api.dart';
 import 'package:emptio/models/base_purchase_item.model.dart';
+import 'package:emptio/models/follower.model.dart';
 import 'package:emptio/models/location.model.dart';
 import 'package:emptio/models/market.model.dart';
 import 'package:emptio/models/measurement.model.dart';
@@ -162,5 +163,13 @@ class JsonParser {
       }
     } catch (_) {}
     return list;
+  }
+
+  static FollowerUserModel? parseToFollowerUser(dynamic value) {
+    try {
+      return FollowerUserModel.fromJson(value as Map<String, dynamic>);
+    } catch (_) {
+      return null;
+    }
   }
 }

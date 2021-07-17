@@ -25,7 +25,7 @@ class PurchaseTile extends StatelessWidget {
 
   String getItemsCountText() {
     if (purchase.items.isEmpty) {
-      return "Nenhum prduto";
+      return "Nenhum produto";
     }
 
     if (purchase.items.length == 1) {

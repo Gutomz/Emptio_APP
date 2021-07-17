@@ -3,6 +3,7 @@ import 'package:emptio/core/app_colors.dart';
 import 'package:emptio/models/profile.model.dart';
 import 'package:emptio/models/profile_user.model.dart';
 import 'package:emptio/views/edit_profile/edit_profile.view.dart';
+import 'package:emptio/views/followers/followers.view.dart';
 import 'package:emptio/views/profile/store/profile.store.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
@@ -38,10 +39,11 @@ class _ProfileViewState extends State<ProfileView> {
           Observer(
             builder: (context) {
               if (_store.profile != null && !_store.profile!.isMe) {
+                final profile = _store.profile!;
                 Padding(
                   padding: const EdgeInsets.all(10.0),
                   child: OutlinedButton(
-                    onPressed: () => _store.profile!.isFollowing
+                    onPressed: () => profile.isFollowing
                         ? _onPressUnfollow(context)
                         : _onPressFollow(context),
                     style: ButtonStyle(
@@ -52,9 +54,7 @@ class _ProfileViewState extends State<ProfileView> {
                       overlayColor: MaterialStateProperty.all<Color>(
                           AppColors.orange.withOpacity(0.1)),
                     ),
-                    child: Text(
-                      _store.profile!.isFollowing ? 'seguindo' : 'seguir',
-                    ),
+                    child: Text(profile.friendshipStatus),
                   ),
                 );
               }
@@ -183,7 +183,7 @@ class _ProfileViewState extends State<ProfileView> {
         SizedBox(width: 15),
         Expanded(
           child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceAround,
+            mainAxisAlignment: MainAxisAlignment.center,
             children: [
               _buildUserInfosColumn(
                 value: profile.postsCount.toString(),
@@ -256,7 +256,22 @@ class _ProfileViewState extends State<ProfileView> {
 
   void _onPressUnfollow(BuildContext context) {}
 
-  void _onTapFollowers(BuildContext context) {}
+  void _onTapFollowers(BuildContext context) {
+    _navigateToFollowersScreen();
+  }
 
-  void _onTapFollowing(BuildContext context) {}
+  void _onTapFollowing(BuildContext context) {
+    _navigateToFollowersScreen(initialIndex: 1);
+  }
+
+  Future<T?> _navigateToFollowersScreen<T>({int initialIndex = 0}) async {
+    return Navigator.of(context).push<T>(
+      MaterialPageRoute(
+        builder: (context) => FollowersView(
+          userId: widget.userId,
+          initialIndex: initialIndex,
+        ),
+      ),
+    );
+  }
 }
