@@ -10,23 +10,21 @@ import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:get_it/get_it.dart';
 
 class FollowersList extends StatelessWidget {
-  final FollowersListStore _store;
+  final FollowersListStore store;
   final AuthStore _authStore = GetIt.I<AuthStore>();
 
   FollowersList({
     Key? key,
-    String? userId,
-    bool followers = false,
-  })  : _store = FollowersListStore(userId: userId, followers: followers),
-        super(key: key);
+    required this.store,
+  }) : super(key: key);
 
   bool get isLoggedUser =>
-      _store.userId == null || _authStore.loggedId.contains(_store.userId!);
+      store.userId == null || _authStore.loggedId.contains(store.userId!);
 
   @override
   Widget build(BuildContext context) {
     return Observer(builder: (context) {
-      if (_store.loading) {
+      if (store.loading) {
         return Center(
           child: CircularProgressIndicator(
             strokeWidth: 2,
@@ -35,28 +33,28 @@ class FollowersList extends StatelessWidget {
         );
       }
 
-      if (_store.hasError) {
+      if (store.hasError) {
         return Center(
           child: Text(
-            _store.error,
+            store.error,
             textAlign: TextAlign.center,
           ),
         );
       }
 
       return RefreshIndicator(
-        onRefresh: _store.load,
+        onRefresh: store.load,
         child: ListView.separated(
-          itemCount: _store.list.length,
+          itemCount: store.list.length,
           itemBuilder: (context, index) {
             return Observer(builder: (context) {
-              final follower = _store.list[index];
+              final follower = store.list[index];
 
               if (isLoggedUser) {
                 return Dismissible(
                   key: Key(follower.sId),
                   direction: DismissDirection.endToStart,
-                  onDismissed: (direction) => _store.remove(follower.sId),
+                  onDismissed: (direction) => store.remove(follower.sId),
                   background: DismissibleBackground(
                     icon: Icons.delete,
                     title: 'Remover',
@@ -101,7 +99,7 @@ class FollowersList extends StatelessWidget {
               onPressed:
                   model.followingStatus.contains(FriendshipStatusTypes.pending)
                       ? null
-                      : () => _store.request(model.user.sId),
+                      : () => store.request(model.user.sId),
               style: ButtonStyle(
                 foregroundColor:
                     MaterialStateProperty.all<Color>(AppColors.orange),
