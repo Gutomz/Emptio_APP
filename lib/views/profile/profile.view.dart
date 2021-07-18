@@ -1,5 +1,6 @@
 import 'package:emptio/common/widgets/profile_avatar.widget.dart';
 import 'package:emptio/core/app_colors.dart';
+import 'package:emptio/models/friendship_request.model.dart';
 import 'package:emptio/models/profile.model.dart';
 import 'package:emptio/models/profile_user.model.dart';
 import 'package:emptio/views/edit_profile/edit_profile.view.dart';
@@ -40,10 +41,13 @@ class _ProfileViewState extends State<ProfileView> {
             builder: (context) {
               if (_store.profile != null && !_store.profile!.isMe) {
                 final profile = _store.profile!;
-                Padding(
+
+                return Padding(
                   padding: const EdgeInsets.all(10.0),
                   child: OutlinedButton(
-                    onPressed: () => profile.isFollowing
+                    onPressed: () => profile.isFollowing ||
+                            profile.friendshipStatus ==
+                                FriendshipStatusTypes.pending
                         ? _onPressUnfollow(context)
                         : _onPressFollow(context),
                     style: ButtonStyle(
@@ -54,7 +58,8 @@ class _ProfileViewState extends State<ProfileView> {
                       overlayColor: MaterialStateProperty.all<Color>(
                           AppColors.orange.withOpacity(0.1)),
                     ),
-                    child: Text(profile.friendshipStatus),
+                    child: Text(FriendshipStatusTypes.formatString(
+                        profile.friendshipStatus)),
                   ),
                 );
               }
@@ -252,9 +257,23 @@ class _ProfileViewState extends State<ProfileView> {
     _store.loadProfile(widget.userId);
   }
 
-  void _onPressFollow(BuildContext context) {}
+  Future<void> _onPressFollow(BuildContext context) async {
+    final error = await _store.request(widget.userId);
 
-  void _onPressUnfollow(BuildContext context) {}
+    if (error != null) {
+      ScaffoldMessenger.of(context)
+          .showSnackBar(SnackBar(content: Text(error)));
+    }
+  }
+
+  Future<void> _onPressUnfollow(BuildContext context) async {
+       final error = await _store.deleteRequest();
+
+    if (error != null) {
+      ScaffoldMessenger.of(context)
+          .showSnackBar(SnackBar(content: Text(error)));
+    }
+  }
 
   void _onTapFollowers(BuildContext context, String userName) {
     _navigateToFollowersScreen(title: userName);

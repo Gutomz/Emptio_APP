@@ -62,6 +62,21 @@ mixin _$ProfileStore on _ProfileStoreBase, Store {
     });
   }
 
+  final _$requestAsyncAction = AsyncAction('_ProfileStoreBase.request');
+
+  @override
+  Future<String?> request(String friendId) {
+    return _$requestAsyncAction.run(() => super.request(friendId));
+  }
+
+  final _$deleteRequestAsyncAction =
+      AsyncAction('_ProfileStoreBase.deleteRequest');
+
+  @override
+  Future<String?> deleteRequest() {
+    return _$deleteRequestAsyncAction.run(() => super.deleteRequest());
+  }
+
   final _$loadProfileAsyncAction = AsyncAction('_ProfileStoreBase.loadProfile');
 
   @override

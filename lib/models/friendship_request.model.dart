@@ -7,6 +7,19 @@ class FriendshipStatusTypes {
   static const String pending = 'pending';
 
   static List<String> list = [none, accepted, declined, pending];
+
+  static String formatString(String type) {
+    switch (type) {
+      case accepted:
+        return 'seguindo';
+      case pending:
+        return 'pendente';
+      case declined:
+      case none:
+      default:
+        return 'seguir';
+    }
+  }
 }
 
 class FriendshipUserModel {

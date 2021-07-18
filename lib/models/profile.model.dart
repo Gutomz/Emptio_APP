@@ -9,6 +9,7 @@ class ProfileModel {
   bool isMe;
   bool isFollowing;
   String friendshipStatus;
+  String? friendshipId;
 
   ProfileModel({
     required this.user,
@@ -18,6 +19,7 @@ class ProfileModel {
     required this.isMe,
     required this.isFollowing,
     required this.friendshipStatus,
+    this.friendshipId,
   });
 
   factory ProfileModel.fromJson(Map<String, dynamic> json) {
@@ -29,6 +31,22 @@ class ProfileModel {
       isMe: JsonParser.parseToBool(json['isMe']),
       isFollowing: JsonParser.parseToBool(json['isFollowing']),
       friendshipStatus: JsonParser.parseToString(json['friendshipStatus']),
+      friendshipId: JsonParser.parseToNullableString(json['friendshipId']),
+    );
+
+    return model;
+  }
+
+  factory ProfileModel.copy(ProfileModel copyFrom) {
+    final model = ProfileModel(
+      user: copyFrom.user,
+      followersCount: copyFrom.followersCount,
+      followingCount: copyFrom.followingCount,
+      postsCount: copyFrom.postsCount,
+      isMe: copyFrom.isMe,
+      isFollowing: copyFrom.isFollowing,
+      friendshipStatus: copyFrom.friendshipStatus,
+      friendshipId: copyFrom.friendshipId,
     );
 
     return model;

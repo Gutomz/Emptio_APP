@@ -122,9 +122,12 @@ class FollowersList extends StatelessWidget {
     );
   }
 
-  void _navigateToProfileView(BuildContext context, String userId) {
-    Navigator.of(context).push(MaterialPageRoute(
+  Future<void> _navigateToProfileView(
+      BuildContext context, String userId) async {
+    await Navigator.of(context).push(MaterialPageRoute(
       builder: (context) => ProfileView(userId: userId),
     ));
+
+    store.load();
   }
 }
