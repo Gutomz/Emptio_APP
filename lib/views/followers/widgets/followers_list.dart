@@ -2,6 +2,7 @@ import 'package:emptio/common/widgets/dismissible_background.widget.dart';
 import 'package:emptio/common/widgets/profile_avatar.widget.dart';
 import 'package:emptio/core/app_colors.dart';
 import 'package:emptio/models/follower.model.dart';
+import 'package:emptio/models/friendship_request.model.dart';
 import 'package:emptio/stores/auth.store.dart';
 import 'package:emptio/views/followers/store/followers_list.store.dart';
 import 'package:emptio/views/profile/profile.view.dart';
@@ -80,6 +81,7 @@ class FollowersList extends StatelessWidget {
   Widget _buildItem(BuildContext context, FollowerModel model) {
     return ListTile(
       onTap: () => _navigateToProfileView(context, model.user.sId),
+      contentPadding: EdgeInsets.symmetric(horizontal: 16, vertical: 10),
       leading: ProfileAvatar(
         image: model.user.photo,
         radius: 18,
@@ -98,7 +100,10 @@ class FollowersList extends StatelessWidget {
           : OutlinedButton(
               onPressed:
                   model.followingStatus.contains(FriendshipStatusTypes.pending)
-                      ? null
+                      ? model.followingRequestId != null
+                          ? () => store.removeRequest(
+                              model.sId, model.followingRequestId!)
+                          : null
                       : () => store.request(model.user.sId),
               style: ButtonStyle(
                 foregroundColor:

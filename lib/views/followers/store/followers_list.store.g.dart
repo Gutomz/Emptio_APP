@@ -84,6 +84,15 @@ mixin _$FollowersListStore on _FollowersListStoreBase, Store {
     return _$requestAsyncAction.run(() => super.request(friendId));
   }
 
+  final _$removeRequestAsyncAction =
+      AsyncAction('_FollowersListStoreBase.removeRequest');
+
+  @override
+  Future<void> removeRequest(String sId, String requestId) {
+    return _$removeRequestAsyncAction
+        .run(() => super.removeRequest(sId, requestId));
+  }
+
   final _$loadAsyncAction = AsyncAction('_FollowersListStoreBase.load');
 
   @override

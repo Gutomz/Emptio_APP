@@ -261,12 +261,12 @@ class _ProfileViewState extends State<ProfileView> {
   }
 
   void _onTapFollowing(BuildContext context, String userName) {
-    _navigateToFollowersScreen(initialIndex: 1, title: userName);
+    _navigateToFollowersScreen(title: userName, initialIndex: 1);
   }
 
   Future<T?> _navigateToFollowersScreen<T>(
       {required String title, int initialIndex = 0}) async {
-    return Navigator.of(context).push<T>(
+    final data = await Navigator.of(context).push<T>(
       MaterialPageRoute(
         builder: (context) => FollowersView(
           userId: widget.userId,
@@ -275,5 +275,9 @@ class _ProfileViewState extends State<ProfileView> {
         ),
       ),
     );
+
+    _store.loadProfile(widget.userId);
+
+    return data;
   }
 }

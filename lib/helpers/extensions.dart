@@ -16,6 +16,12 @@ extension StringExtension on String {
     return dateFormat.format(date);
   }
 
+  String customFormatDate(String format) {
+    final DateFormat dateFormat = DateFormat(format);
+    final DateTime date = DateTime.parse(replaceFirst("-03:00", ""));
+    return dateFormat.format(date);
+  }
+
   String formatTag() {
     return trim().toLowerCase().replaceAll(" ", "-");
   }

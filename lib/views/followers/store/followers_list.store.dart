@@ -1,4 +1,5 @@
 import 'package:emptio/models/follower.model.dart';
+import 'package:emptio/models/friendship_request.model.dart';
 import 'package:emptio/repositories/followers.repository.dart';
 import 'package:emptio/view-models/followers_list_filter.view-model.dart';
 import 'package:emptio/view-models/friendship_request.vew-model.dart';
@@ -49,8 +50,36 @@ abstract class _FollowersListStoreBase with Store {
         isFollowing: list[index].isFollowing,
         followingStatus: FriendshipStatusTypes.pending,
       );
-      
-      await FollowersRepository().request(model);
+
+      final requestId = await FollowersRepository().request(model);
+      list[index] = FollowerModel(
+        sId: list[index].sId,
+        user: list[index].user,
+        isFollowing: list[index].isFollowing,
+        followingStatus: FriendshipStatusTypes.pending,
+        followingRequestId: requestId,
+      );
+    } on String catch (_error) {
+      error = _error;
+    } finally {
+      loading = false;
+    }
+  }
+
+  @action
+  Future<void> removeRequest(String sId, String requestId) async {
+    loading = true;
+    error = "";
+
+    try {
+      final index = list.indexWhere((element) => element.sId.contains(sId));
+      list[index] = FollowerModel(
+        sId: list[index].sId,
+        user: list[index].user,
+        isFollowing: list[index].isFollowing,
+        followingStatus: FriendshipStatusTypes.none,
+      );
+      await FollowersRepository().delete(requestId);
     } on String catch (_error) {
       error = _error;
     } finally {

@@ -3,6 +3,7 @@ import 'package:emptio/core/app_colors.dart';
 import 'package:emptio/stores/auth.store.dart';
 import 'package:emptio/stores/connectivity.store.dart';
 import 'package:emptio/views/login/login.view.dart';
+import 'package:emptio/views/notifications/notifications.view.dart';
 import 'package:emptio/views/profile/profile.view.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
@@ -90,7 +91,7 @@ class MainDrawerActionList extends StatelessWidget {
             Observer(builder: (_) {
               return ListTile(
                 enabled: _authStore.isLogged,
-                onTap: () {},
+                onTap: () => _navigateToNotificationsView(context),
                 title: Text("Notificações"),
                 leading: Icon(
                   Icons.notifications_none_outlined,
@@ -127,6 +128,12 @@ class MainDrawerActionList extends StatelessWidget {
         ),
       ),
     );
+  }
+
+  void _navigateToNotificationsView(BuildContext context) {
+    Navigator.of(context).push(MaterialPageRoute(
+      builder: (context) => NotificationsView(),
+    ));
   }
 }
 
