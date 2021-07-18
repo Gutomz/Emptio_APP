@@ -21,6 +21,8 @@ class NotificationsView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final user = _authStore.user;
+
     return WillPopScope(
       onWillPop: _onWillPop,
       child: DefaultTabController(
@@ -32,8 +34,14 @@ class NotificationsView extends StatelessWidget {
             bottom: TabBar(
               onTap: (index) => index == 1 ? _requestsStore.load() : null,
               tabs: [
-                Tab(text: "Notificações"),
-                Tab(text: "Solicitações"),
+                Tab(
+                  text:
+                      "Notificações${user != null && user.notificationCount != 0 ? " (${user.notificationCount})" : ""}",
+                ),
+                Tab(
+                  text:
+                      "Solicitações${user != null && user.requestsCount != 0 ? " (${user.requestsCount})" : ""}",
+                ),
               ],
             ),
           ),

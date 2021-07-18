@@ -16,7 +16,7 @@ class NotificationActionButton extends StatelessWidget {
       if (_authStore.isLogged) {
         return Badge(
           badgeContent: Text(
-            "${_authStore.user!.notificationCount}",
+            "${_authStore.user!.alertsCount}",
             style: TextStyle(
               fontSize: 10,
               color: Colors.white,

@@ -13,8 +13,11 @@ class UserModel {
   LocationModel location;
   UserConfigurationsModel configurations;
   int notificationCount;
+  int requestsCount;
   String createdAt;
   String updatedAt;
+
+  int get alertsCount => notificationCount + requestsCount;
 
   UserModel({
     required this.description,
@@ -27,6 +30,7 @@ class UserModel {
     required this.createdAt,
     required this.updatedAt,
     required this.notificationCount,
+    required this.requestsCount,
   });
 
   factory UserModel.fromJson(Map<String, dynamic> json) {
@@ -40,6 +44,7 @@ class UserModel {
       configurations:
           JsonParser.parseToUserConfiguration(json['configurations'])!,
       notificationCount: JsonParser.parseToInt(json['notificationCount']),
+      requestsCount: JsonParser.parseToInt(json['requestsCount']),
       createdAt: JsonParser.parseToString(json['createdAt']),
       updatedAt: JsonParser.parseToString(json['updatedAt']),
     );
@@ -59,6 +64,7 @@ class UserModel {
     data['createdAt'] = createdAt;
     data['updatedAt'] = updatedAt;
     data['notificationCount'] = notificationCount;
+    data['requestsCount'] = notificationCount;
     return data;
   }
 
