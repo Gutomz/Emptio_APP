@@ -1,6 +1,8 @@
 import 'package:emptio/common/widgets/dismissible_background.widget.dart';
+import 'package:emptio/common/widgets/empty_placeholder.widget.dart';
 import 'package:emptio/common/widgets/profile_avatar.widget.dart';
 import 'package:emptio/common/widgets/simple_confirm_dialog.widget.dart';
+import 'package:emptio/core/app_assets.dart';
 import 'package:emptio/core/app_colors.dart';
 import 'package:emptio/models/friendship_request.model.dart';
 import 'package:emptio/views/notifications/store/friendship_requests_store.dart';
@@ -40,42 +42,57 @@ class FriendshipRequestList extends StatelessWidget {
 
       return RefreshIndicator(
         onRefresh: store.load,
-        child: ListView.separated(
-          itemCount: store.list.length,
-          itemBuilder: (context, index) {
-            return Observer(builder: (context) {
-              final request = store.list[index];
-
-              return Tooltip(
-                message:
-                    "Deslize para os lados, para aceitar ou recusar o pedido.",
-                child: Dismissible(
-                  key: Key(request.sId),
-                  onDismissed: (direction) =>
-                      _onDismissItem(direction, request),
-                  confirmDismiss: (direction) =>
-                      _confirmDismiss(context, direction, request),
-                  background: DismissibleBackground(
-                    icon: Icons.check_outlined,
-                    title: 'Aceitar',
-                    color: AppColors.green,
+        backgroundColor: AppColors.lightBlue,
+        color: Colors.white,
+        child: store.list.isEmpty
+            ? Center(
+                child: SingleChildScrollView(
+                  physics: AlwaysScrollableScrollPhysics(),
+                  child: Center(
+                    child: EmptyPlaceholder(
+                      title: 'Nenhuma requisição encontrada!',
+                      subTitle: 'Arraste para baixo para recarregar.',
+                      asset: AppAssets.svgIcNotificationsEmpty,
+                    ),
                   ),
-                  secondaryBackground: DismissibleBackground(
-                    icon: Icons.cancel_outlined,
-                    title: 'Ignorar',
-                    color: AppColors.red,
-                    secondary: true,
-                  ),
-                  child: _buildItem(context, request),
                 ),
-              );
-            });
-          },
-          separatorBuilder: (context, index) => Divider(
-            height: 1,
-            color: AppColors.lightGrey,
-          ),
-        ),
+              )
+            : ListView.separated(
+                itemCount: store.list.length,
+                itemBuilder: (context, index) {
+                  return Observer(builder: (context) {
+                    final request = store.list[index];
+
+                    return Tooltip(
+                      message:
+                          "Deslize para os lados, para aceitar ou recusar o pedido.",
+                      child: Dismissible(
+                        key: Key(request.sId),
+                        onDismissed: (direction) =>
+                            _onDismissItem(direction, request),
+                        confirmDismiss: (direction) =>
+                            _confirmDismiss(context, direction, request),
+                        background: DismissibleBackground(
+                          icon: Icons.check_outlined,
+                          title: 'Aceitar',
+                          color: AppColors.green,
+                        ),
+                        secondaryBackground: DismissibleBackground(
+                          icon: Icons.cancel_outlined,
+                          title: 'Ignorar',
+                          color: AppColors.red,
+                          secondary: true,
+                        ),
+                        child: _buildItem(context, request),
+                      ),
+                    );
+                  });
+                },
+                separatorBuilder: (context, index) => Divider(
+                  height: 1,
+                  color: AppColors.lightGrey,
+                ),
+              ),
       );
     });
   }

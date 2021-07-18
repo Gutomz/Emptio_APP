@@ -1,3 +1,5 @@
+import 'package:emptio/common/widgets/empty_placeholder.widget.dart';
+import 'package:emptio/core/app_assets.dart';
 import 'package:emptio/core/app_colors.dart';
 import 'package:emptio/models/notification.model.dart';
 import 'package:emptio/views/notifications/store/notifications_store.dart';
@@ -30,52 +32,61 @@ class NotificationsList extends StatelessWidget {
         );
       }
 
-      if (store.list.isEmpty) {
-        return Container();
-      }
-
       return RefreshIndicator(
         backgroundColor: AppColors.lightBlue,
         color: Colors.white,
         onRefresh: store.resetPage,
-        child: ListView.separated(
-          padding: EdgeInsets.only(bottom: 50),
-          separatorBuilder: (context, index) => Divider(
-            height: 1,
-            color: AppColors.grey,
-          ),
-          itemCount: store.itemCount,
-          itemBuilder: (context, index) {
-            if (index < store.list.length) {
-              final notification = store.list[index];
-
-              return Opacity(
-                opacity: notification.viewed ? 0.6 : 1,
-                child: ListTile(
-                  tileColor: notification.viewed ? null : Colors.white,
-                  contentPadding:
-                      EdgeInsets.symmetric(horizontal: 16, vertical: 10),
-                  leading: Icon(
-                    Icons.info_outline_rounded,
-                    size: 36,
-                    color: AppColors.darkOrange,
+        child: store.list.isEmpty
+            ? Center(
+                child: SingleChildScrollView(
+                  physics: AlwaysScrollableScrollPhysics(),
+                  child: Center(
+                    child: EmptyPlaceholder(
+                      title: 'Nenhuma notificação encontrada!',
+                      subTitle: 'Arraste para baixo para recarregar.',
+                      asset: AppAssets.svgIcNotificationsEmpty,
+                    ),
                   ),
-                  title: Text(notification.title),
-                  subtitle: Text(notification.body),
-                  trailing: _buildTrailing(context, notification),
                 ),
-              );
-            }
+              )
+            : ListView.separated(
+                padding: EdgeInsets.only(bottom: 50),
+                separatorBuilder: (context, index) => Divider(
+                  height: 1,
+                  color: AppColors.grey,
+                ),
+                itemCount: store.itemCount,
+                itemBuilder: (context, index) {
+                  if (index < store.list.length) {
+                    final notification = store.list[index];
 
-            store.loadNextPage();
-            return SizedBox(
-              height: 5,
-              child: LinearProgressIndicator(
-                valueColor: AlwaysStoppedAnimation(AppColors.darkOrange),
+                    return Opacity(
+                      opacity: notification.viewed ? 0.6 : 1,
+                      child: ListTile(
+                        tileColor: notification.viewed ? null : Colors.white,
+                        contentPadding:
+                            EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+                        leading: Icon(
+                          Icons.info_outline_rounded,
+                          size: 36,
+                          color: AppColors.darkOrange,
+                        ),
+                        title: Text(notification.title),
+                        subtitle: Text(notification.body),
+                        trailing: _buildTrailing(context, notification),
+                      ),
+                    );
+                  }
+
+                  store.loadNextPage();
+                  return SizedBox(
+                    height: 5,
+                    child: LinearProgressIndicator(
+                      valueColor: AlwaysStoppedAnimation(AppColors.darkOrange),
+                    ),
+                  );
+                },
               ),
-            );
-          },
-        ),
       );
     });
   }

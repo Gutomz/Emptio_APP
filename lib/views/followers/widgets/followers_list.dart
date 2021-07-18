@@ -1,4 +1,5 @@
 import 'package:emptio/common/widgets/dismissible_background.widget.dart';
+import 'package:emptio/common/widgets/empty_placeholder.widget.dart';
 import 'package:emptio/common/widgets/profile_avatar.widget.dart';
 import 'package:emptio/core/app_colors.dart';
 import 'package:emptio/models/follower.model.dart';
@@ -13,10 +14,12 @@ import 'package:get_it/get_it.dart';
 class FollowersList extends StatelessWidget {
   final FollowersListStore store;
   final AuthStore _authStore = GetIt.I<AuthStore>();
+  final EmptyPlaceholder emptyPlaceholder;
 
   FollowersList({
     Key? key,
     required this.store,
+    required this.emptyPlaceholder,
   }) : super(key: key);
 
   bool get isLoggedUser =>
@@ -44,36 +47,47 @@ class FollowersList extends StatelessWidget {
       }
 
       return RefreshIndicator(
+        backgroundColor: AppColors.lightBlue,
+        color: Colors.white,
         onRefresh: store.load,
-        child: ListView.separated(
-          itemCount: store.list.length,
-          itemBuilder: (context, index) {
-            return Observer(builder: (context) {
-              final follower = store.list[index];
-
-              if (isLoggedUser) {
-                return Dismissible(
-                  key: Key(follower.sId),
-                  direction: DismissDirection.endToStart,
-                  onDismissed: (direction) => store.remove(follower.sId),
-                  background: DismissibleBackground(
-                    icon: Icons.delete,
-                    title: 'Remover',
-                    color: AppColors.red,
-                    secondary: true,
+        child: store.list.isEmpty
+            ? Center(
+                child: SingleChildScrollView(
+                  physics: AlwaysScrollableScrollPhysics(),
+                  child: Center(
+                    child: emptyPlaceholder,
                   ),
-                  child: _buildItem(context, follower),
-                );
-              }
+                ),
+              )
+            : ListView.separated(
+                itemCount: store.list.length,
+                itemBuilder: (context, index) {
+                  return Observer(builder: (context) {
+                    final follower = store.list[index];
 
-              return _buildItem(context, follower);
-            });
-          },
-          separatorBuilder: (context, index) => Divider(
-            height: 1,
-            color: AppColors.lightGrey,
-          ),
-        ),
+                    if (isLoggedUser) {
+                      return Dismissible(
+                        key: Key(follower.sId),
+                        direction: DismissDirection.endToStart,
+                        onDismissed: (direction) => store.remove(follower.sId),
+                        background: DismissibleBackground(
+                          icon: Icons.delete,
+                          title: 'Remover',
+                          color: AppColors.red,
+                          secondary: true,
+                        ),
+                        child: _buildItem(context, follower),
+                      );
+                    }
+
+                    return _buildItem(context, follower);
+                  });
+                },
+                separatorBuilder: (context, index) => Divider(
+                  height: 1,
+                  color: AppColors.lightGrey,
+                ),
+              ),
       );
     });
   }

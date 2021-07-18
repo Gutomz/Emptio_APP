@@ -1,3 +1,5 @@
+import 'package:emptio/common/widgets/empty_placeholder.widget.dart';
+import 'package:emptio/core/app_assets.dart';
 import 'package:emptio/views/followers/store/followers_list.store.dart';
 import 'package:emptio/views/followers/widgets/followers_list.dart';
 import 'package:flutter/material.dart';
@@ -35,8 +37,22 @@ class FollowersView extends StatelessWidget {
         ),
         body: TabBarView(
           children: [
-            FollowersList(store: _followersStore),
-            FollowersList(store: _followingStore),
+            FollowersList(
+              store: _followersStore,
+              emptyPlaceholder: EmptyPlaceholder(
+                title: "Ninguém está seguindo este perfil!",
+                subTitle: "Arraste para recarregar.",
+                asset: AppAssets.svgIcFollowersEmpty,
+              ),
+            ),
+            FollowersList(
+              store: _followingStore,
+              emptyPlaceholder: EmptyPlaceholder(
+                title: "Este perfil não está seguindo ninguém!",
+                subTitle: "Arraste para recarregar.",
+                asset: AppAssets.svgIcFollowersEmpty,
+              ),
+            ),
           ],
         ),
       ),

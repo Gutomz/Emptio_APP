@@ -1,7 +1,10 @@
+import 'dart:math';
+
+import 'package:emptio/core/app_colors.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
-class EmptyPlaceholder extends StatelessWidget {
+class EmptyPlaceholderCreation extends StatelessWidget {
   final TextStyle _spanStyle = TextStyle(
     fontSize: 12,
     fontWeight: FontWeight.w600,
@@ -12,7 +15,7 @@ class EmptyPlaceholder extends StatelessWidget {
   final String subTitleAfter;
   final String asset;
 
-  EmptyPlaceholder({
+  EmptyPlaceholderCreation({
     Key? key,
     required this.title,
     required this.subTitleBefore,
@@ -49,6 +52,45 @@ class EmptyPlaceholder extends StatelessWidget {
             SizedBox(width: 5),
             Text(subTitleAfter, style: _spanStyle),
           ],
+        ),
+      ],
+    );
+  }
+}
+
+class EmptyPlaceholder extends StatelessWidget {
+  final TextStyle _spanStyle = TextStyle(
+    fontSize: 12,
+    fontWeight: FontWeight.w600,
+  );
+
+  final String title;
+  final String subTitle;
+  final String asset;
+
+  EmptyPlaceholder({
+    Key? key,
+    required this.title,
+    required this.subTitle,
+    required this.asset,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        SvgPicture.asset(asset),
+        SizedBox(height: 15),
+        Text(title, style: _spanStyle),
+        Text(subTitle, style: _spanStyle),
+        SizedBox(height: 15),
+        Transform.rotate(
+          angle: 90 * (pi / 180),
+          child: Icon(
+            Icons.double_arrow_rounded,
+            color: AppColors.grey,
+          ),
         ),
       ],
     );

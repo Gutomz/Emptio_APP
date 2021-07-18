@@ -66,7 +66,7 @@ class _PurchaseListState extends State<PurchaseList> {
       }
 
       if (purchasesStore.purchaseList.isEmpty) {
-        return EmptyPlaceholder(
+        return EmptyPlaceholderCreation(
           asset: AppAssets.svgIcPurchasesEmpty,
           title: "Nenhuma compra foi encontrada!",
           subTitleBefore: "Clique em",

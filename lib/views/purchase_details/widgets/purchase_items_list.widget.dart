@@ -18,7 +18,7 @@ class PurchaseItemsList extends StatelessWidget {
   Widget build(BuildContext context) {
     return Observer(builder: (context) {
       if (store.filteredItems.isEmpty) {
-        return EmptyPlaceholder(
+        return EmptyPlaceholderCreation(
           title: "Nenhum produto adicionado",
           subTitleBefore: "Clique em",
           subTitleAfter: "para adicionar um novo!",
