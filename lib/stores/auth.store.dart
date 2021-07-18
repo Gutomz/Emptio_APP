@@ -102,6 +102,19 @@ abstract class _AuthStoreBase with Store {
   }
 
   @action
+  Future<void> updateLoggedUser() async {
+    loading = true;
+
+    if (_connectivityStore.isConnected) {
+      try {
+        user = await UserRepository().getMe();
+      } catch (_) {/* do nothing */}
+    }
+
+    loading = false;
+  }
+
+  @action
   Future<void> setKeepLoggedOut() async {
     final SharedPreferences sharedPreferences =
         await SharedPreferences.getInstance();

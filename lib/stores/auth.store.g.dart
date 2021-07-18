@@ -127,6 +127,14 @@ mixin _$AuthStore on _AuthStoreBase, Store {
     return _$initAuthenticatedAsyncAction.run(() => super.initAuthenticated());
   }
 
+  final _$updateLoggedUserAsyncAction =
+      AsyncAction('_AuthStoreBase.updateLoggedUser');
+
+  @override
+  Future<void> updateLoggedUser() {
+    return _$updateLoggedUserAsyncAction.run(() => super.updateLoggedUser());
+  }
+
   final _$setKeepLoggedOutAsyncAction =
       AsyncAction('_AuthStoreBase.setKeepLoggedOut');
 
