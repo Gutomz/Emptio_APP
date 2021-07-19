@@ -47,6 +47,8 @@ abstract class _NotificationsStoreBase with Store {
 
   @action
   Future load(NotificationsFilterViewModel filter) async {
+    error = "";
+
     try {
       final notifications = await NotificationsRepository().get(filter);
 
@@ -57,7 +59,6 @@ abstract class _NotificationsStoreBase with Store {
       }
 
       list.addAll(notifications);
-      setError("");
     } on String catch (_error) {
       error = _error;
     }
@@ -77,8 +78,7 @@ abstract class _NotificationsStoreBase with Store {
   }
 
   @computed
-  int get itemCount =>
-      limitReached ? list.length : list.length + 1;
+  int get itemCount => limitReached ? list.length : list.length + 1;
 
   @computed
   bool get firstLoading => loading && list.isEmpty;

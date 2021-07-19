@@ -1,5 +1,6 @@
 import 'package:emptio/common/widgets/dismissible_background.widget.dart';
 import 'package:emptio/common/widgets/empty_placeholder.widget.dart';
+import 'package:emptio/common/widgets/error_placeholder.widget.dart';
 import 'package:emptio/common/widgets/profile_avatar.widget.dart';
 import 'package:emptio/common/widgets/simple_confirm_dialog.widget.dart';
 import 'package:emptio/core/app_assets.dart';
@@ -33,9 +34,9 @@ class FriendshipRequestList extends StatelessWidget {
 
       if (store.hasError) {
         return Center(
-          child: Text(
-            store.error,
-            textAlign: TextAlign.center,
+          child: ErrorPlaceholder(
+            error: store.error,
+            retry: store.load,
           ),
         );
       }

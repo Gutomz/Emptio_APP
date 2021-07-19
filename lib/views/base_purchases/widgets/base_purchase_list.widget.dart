@@ -1,4 +1,5 @@
 import 'package:emptio/common/widgets/dismissible_background.widget.dart';
+import 'package:emptio/common/widgets/error_placeholder.widget.dart';
 import 'package:emptio/common/widgets/simple_confirm_dialog.widget.dart';
 import 'package:emptio/common/widgets/empty_placeholder.widget.dart';
 import 'package:emptio/core/app_assets.dart';
@@ -66,15 +67,6 @@ class _BasePurchaseListState extends State<BasePurchaseList> {
   @override
   Widget build(BuildContext context) {
     return Observer(builder: (context) {
-      if (purchasesStore.error.isNotEmpty) {
-        return Center(
-          child: Text(
-            purchasesStore.error,
-            textAlign: TextAlign.center,
-          ),
-        );
-      }
-
       if (purchasesStore.firstLoading) {
         return Center(
           child: CircularProgressIndicator(
@@ -83,12 +75,12 @@ class _BasePurchaseListState extends State<BasePurchaseList> {
         );
       }
 
-      if (purchasesStore.purchaseList.isEmpty) {
-        return EmptyPlaceholderCreation(
-          asset: AppAssets.svgIcBasePurchasesEmpty,
-          title: "Nenhuma lista foi encontrada!",
-          subTitleBefore: "Clique em",
-          subTitleAfter: "para adicionar uma nova!",
+      if (purchasesStore.error.isNotEmpty) {
+        return Center(
+          child: ErrorPlaceholder(
+            error: purchasesStore.error,
+            retry: purchasesStore.resetPage,
+          ),
         );
       }
 
@@ -96,98 +88,113 @@ class _BasePurchaseListState extends State<BasePurchaseList> {
         backgroundColor: AppColors.lightBlue,
         color: Colors.white,
         onRefresh: purchasesStore.resetPage,
-        child: ListView.separated(
-          key: PageStorageKey<String>('base_purchases_list'),
-          padding: EdgeInsets.only(bottom: 50),
-          separatorBuilder: (context, index) => Divider(
-            height: 1,
-            color: AppColors.grey,
-          ),
-          itemCount: purchasesStore.itemCount,
-          itemBuilder: (context, index) {
-            if (index < purchasesStore.purchaseList.length) {
-              final purchase = purchasesStore.purchaseList[index];
-
-              return Dismissible(
-                key: Key(purchase.sId),
-                direction: DismissDirection.endToStart,
-                background: DismissibleBackground(
-                  icon: Icons.delete,
-                  title: "Excluir",
-                  color: AppColors.red,
-                  secondary: true,
+        child: purchasesStore.purchaseList.isEmpty
+            ? Center(
+                child: SingleChildScrollView(
+                  physics: AlwaysScrollableScrollPhysics(),
+                  child: Center(
+                    child: EmptyPlaceholderCreation(
+                      asset: AppAssets.svgIcPurchasesEmpty,
+                      title: "Nenhuma compra foi encontrada!",
+                      subTitleBefore: "Clique em",
+                      subTitleAfter: "para adicionar uma nova!",
+                    ),
+                  ),
                 ),
-                onDismissed: (_) => purchasesStore.deletePurchase(index),
-                confirmDismiss: confirmDismiss,
-                child: Observer(builder: (_) {
-                  return ListTile(
-                      onTap: purchasesStore.isLoadingTile
-                          ? null
-                          : () => onPurchaseTap(context, purchase),
-                      title: Text(
-                        purchase.name,
-                        style: TextStyle(
-                          color: AppColors.darkBlue,
-                          fontWeight: FontWeight.w600,
-                          fontSize: 14,
-                        ),
+              )
+            : ListView.separated(
+                key: PageStorageKey<String>('base_purchases_list'),
+                padding: EdgeInsets.only(bottom: 50),
+                separatorBuilder: (context, index) => Divider(
+                  height: 1,
+                  color: AppColors.grey,
+                ),
+                itemCount: purchasesStore.itemCount,
+                itemBuilder: (context, index) {
+                  if (index < purchasesStore.purchaseList.length) {
+                    final purchase = purchasesStore.purchaseList[index];
+
+                    return Dismissible(
+                      key: Key(purchase.sId),
+                      direction: DismissDirection.endToStart,
+                      background: DismissibleBackground(
+                        icon: Icons.delete,
+                        title: "Excluir",
+                        color: AppColors.red,
+                        secondary: true,
                       ),
-                      subtitle: Row(
-                        children: [
-                          Icon(
-                            Icons.shopping_cart_outlined,
-                            color: AppColors.grey,
-                            size: 16,
-                          ),
-                          SizedBox(width: 5),
-                          Text(
-                            "${purchase.items.length}",
-                            style: TextStyle(
-                              color: AppColors.orange,
-                              fontWeight: FontWeight.w600,
-                              fontSize: 16,
-                            ),
-                          )
-                        ],
-                      ),
-                      trailing: Observer(builder: (context) {
-                        if (purchasesStore.loadingTile == purchase.sId) {
-                          return Padding(
-                            padding: const EdgeInsets.only(right: 12),
-                            child: SizedBox(
-                              width: 20,
-                              height: 20,
-                              child: CircularProgressIndicator(
-                                color: AppColors.darkOrange,
-                                strokeWidth: 2,
+                      onDismissed: (_) => purchasesStore.deletePurchase(index),
+                      confirmDismiss: confirmDismiss,
+                      child: Observer(builder: (_) {
+                        return ListTile(
+                            onTap: purchasesStore.isLoadingTile
+                                ? null
+                                : () => onPurchaseTap(context, purchase),
+                            title: Text(
+                              purchase.name,
+                              style: TextStyle(
+                                color: AppColors.darkBlue,
+                                fontWeight: FontWeight.w600,
+                                fontSize: 14,
                               ),
                             ),
-                          );
-                        }
+                            subtitle: Row(
+                              children: [
+                                Icon(
+                                  Icons.shopping_cart_outlined,
+                                  color: AppColors.grey,
+                                  size: 16,
+                                ),
+                                SizedBox(width: 5),
+                                Text(
+                                  "${purchase.items.length}",
+                                  style: TextStyle(
+                                    color: AppColors.orange,
+                                    fontWeight: FontWeight.w600,
+                                    fontSize: 16,
+                                  ),
+                                )
+                              ],
+                            ),
+                            trailing: Observer(builder: (context) {
+                              if (purchasesStore.loadingTile == purchase.sId) {
+                                return Padding(
+                                  padding: const EdgeInsets.only(right: 12),
+                                  child: SizedBox(
+                                    width: 20,
+                                    height: 20,
+                                    child: CircularProgressIndicator(
+                                      color: AppColors.darkOrange,
+                                      strokeWidth: 2,
+                                    ),
+                                  ),
+                                );
+                              }
 
-                        return IconButton(
-                          onPressed: purchasesStore.isLoadingTile
-                              ? null
-                              : () => onCreatePurchaseTap(context, purchase),
-                          icon: Icon(Icons.shopping_basket_outlined),
-                          color: AppColors.darkGrey,
-                          iconSize: 26,
-                          tooltip: "Iniciar Compra",
-                        );
-                      }));
-                }),
-              );
-            }
+                              return IconButton(
+                                onPressed: purchasesStore.isLoadingTile
+                                    ? null
+                                    : () =>
+                                        onCreatePurchaseTap(context, purchase),
+                                icon: Icon(Icons.shopping_basket_outlined),
+                                color: AppColors.darkGrey,
+                                iconSize: 26,
+                                tooltip: "Iniciar Compra",
+                              );
+                            }));
+                      }),
+                    );
+                  }
 
-            purchasesStore.loadNextPage();
-            return SizedBox(
-              height: 5,
-              child: LinearProgressIndicator(
-                valueColor: AlwaysStoppedAnimation(AppColors.darkOrange),
+                  purchasesStore.loadNextPage();
+                  return SizedBox(
+                    height: 5,
+                    child: LinearProgressIndicator(
+                      valueColor: AlwaysStoppedAnimation(AppColors.darkOrange),
+                    ),
+                  );
+                },
               ),
-            );
-          },
-        ),
       );
     });
   }

@@ -1,3 +1,4 @@
+import 'package:emptio/common/widgets/error_placeholder.widget.dart';
 import 'package:emptio/common/widgets/profile_avatar.widget.dart';
 import 'package:emptio/core/app_colors.dart';
 import 'package:emptio/models/friendship_request.model.dart';
@@ -9,27 +10,13 @@ import 'package:emptio/views/profile/store/profile.store.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 
-class ProfileView extends StatefulWidget {
+class ProfileView extends StatelessWidget {
   final String userId;
+  final ProfileStore _store;
 
-  ProfileView({Key? key, required this.userId}) : super(key: key);
-
-  @override
-  _ProfileViewState createState() => _ProfileViewState();
-}
-
-class _ProfileViewState extends State<ProfileView> {
-  final ProfileStore _store = ProfileStore();
-
-  @override
-  void initState() {
-    _loadProfile();
-    super.initState();
-  }
-
-  void _loadProfile() {
-    _store.loadProfile(widget.userId);
-  }
+  ProfileView({Key? key, required this.userId})
+      : _store = ProfileStore(userId: userId),
+        super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -72,19 +59,27 @@ class _ProfileViewState extends State<ProfileView> {
       body: Observer(builder: (context) {
         if (_store.loading) {
           return Center(
-            child: CircularProgressIndicator(),
+            child: CircularProgressIndicator(
+              color: AppColors.darkOrange,
+            ),
           );
         }
 
         if (_store.hasError) {
           return Center(
-            child: Text(_store.error),
+            child: ErrorPlaceholder(
+              error: _store.error,
+              retry: () => _store.loadProfile(),
+            ),
           );
         }
 
         if (_store.profile == null) {
           return Center(
-            child: Text("Ocorreu um erro!"),
+            child: ErrorPlaceholder(
+              error: "Erro ao carregar o perfil! Tente novamente mais tarde.",
+              retry: () => _store.loadProfile(),
+            ),
           );
         }
 
@@ -254,11 +249,11 @@ class _ProfileViewState extends State<ProfileView> {
       ),
     );
 
-    _store.loadProfile(widget.userId);
+    _store.loadProfile();
   }
 
   Future<void> _onPressFollow(BuildContext context) async {
-    final error = await _store.request(widget.userId);
+    final error = await _store.request(userId);
 
     if (error != null) {
       ScaffoldMessenger.of(context)
@@ -267,7 +262,7 @@ class _ProfileViewState extends State<ProfileView> {
   }
 
   Future<void> _onPressUnfollow(BuildContext context) async {
-       final error = await _store.deleteRequest();
+    final error = await _store.deleteRequest();
 
     if (error != null) {
       ScaffoldMessenger.of(context)
@@ -276,26 +271,26 @@ class _ProfileViewState extends State<ProfileView> {
   }
 
   void _onTapFollowers(BuildContext context, String userName) {
-    _navigateToFollowersScreen(title: userName);
+    _navigateToFollowersScreen(context, title: userName);
   }
 
   void _onTapFollowing(BuildContext context, String userName) {
-    _navigateToFollowersScreen(title: userName, initialIndex: 1);
+    _navigateToFollowersScreen(context, title: userName, initialIndex: 1);
   }
 
-  Future<T?> _navigateToFollowersScreen<T>(
+  Future<T?> _navigateToFollowersScreen<T>(BuildContext context,
       {required String title, int initialIndex = 0}) async {
     final data = await Navigator.of(context).push<T>(
       MaterialPageRoute(
         builder: (context) => FollowersView(
-          userId: widget.userId,
+          userId: userId,
           title: title,
           initialIndex: initialIndex,
         ),
       ),
     );
 
-    _store.loadProfile(widget.userId);
+    _store.loadProfile();
 
     return data;
   }

@@ -80,8 +80,8 @@ mixin _$ProfileStore on _ProfileStoreBase, Store {
   final _$loadProfileAsyncAction = AsyncAction('_ProfileStoreBase.loadProfile');
 
   @override
-  Future<void> loadProfile(String id) {
-    return _$loadProfileAsyncAction.run(() => super.loadProfile(id));
+  Future<void> loadProfile() {
+    return _$loadProfileAsyncAction.run(() => super.loadProfile());
   }
 
   @override

@@ -1,4 +1,5 @@
 import 'package:emptio/common/widgets/dismissible_background.widget.dart';
+import 'package:emptio/common/widgets/error_placeholder.widget.dart';
 import 'package:emptio/common/widgets/simple_confirm_dialog.widget.dart';
 import 'package:emptio/common/widgets/empty_placeholder.widget.dart';
 import 'package:emptio/core/app_assets.dart';
@@ -51,12 +52,6 @@ class _PurchaseListState extends State<PurchaseList> {
   @override
   Widget build(BuildContext context) {
     return Observer(builder: (context) {
-      if (purchasesStore.error.isNotEmpty) {
-        return Center(
-          child: Text(purchasesStore.error),
-        );
-      }
-
       if (purchasesStore.firstLoading) {
         return Center(
           child: CircularProgressIndicator(
@@ -65,12 +60,12 @@ class _PurchaseListState extends State<PurchaseList> {
         );
       }
 
-      if (purchasesStore.purchaseList.isEmpty) {
-        return EmptyPlaceholderCreation(
-          asset: AppAssets.svgIcPurchasesEmpty,
-          title: "Nenhuma compra foi encontrada!",
-          subTitleBefore: "Clique em",
-          subTitleAfter: "para adicionar uma nova!",
+      if (purchasesStore.error.isNotEmpty) {
+        return Center(
+          child: ErrorPlaceholder(
+            error: purchasesStore.error,
+            retry: purchasesStore.resetPage,
+          ),
         );
       }
 
@@ -78,53 +73,68 @@ class _PurchaseListState extends State<PurchaseList> {
         backgroundColor: AppColors.lightBlue,
         color: Colors.white,
         onRefresh: purchasesStore.resetPage,
-        child: ListView.separated(
-          key:
-              PageStorageKey<String>('purchases_list-${purchasesStore.status}'),
-          padding: EdgeInsets.only(bottom: 50),
-          separatorBuilder: (context, index) => Divider(
-            height: 1,
-            color: AppColors.grey,
-          ),
-          itemCount: purchasesStore.itemCount,
-          itemBuilder: (context, index) {
-            if (index < purchasesStore.purchaseList.length) {
-              final purchase = purchasesStore.purchaseList[index];
-
-              if (widget.canDelete) {
-                return Dismissible(
-                  key: Key(purchase.sId),
-                  direction: DismissDirection.endToStart,
-                  background: DismissibleBackground(
-                    icon: Icons.delete,
-                    title: "Excluir",
-                    color: AppColors.red,
-                    secondary: true,
+        child: purchasesStore.purchaseList.isEmpty
+            ? Center(
+                child: SingleChildScrollView(
+                  physics: AlwaysScrollableScrollPhysics(),
+                  child: Center(
+                    child: EmptyPlaceholderCreation(
+                      asset: AppAssets.svgIcPurchasesEmpty,
+                      title: "Nenhuma compra foi encontrada!",
+                      subTitleBefore: "Clique em",
+                      subTitleAfter: "para adicionar uma nova!",
+                    ),
                   ),
-                  onDismissed: (_) => purchasesStore.deletePurchase(index),
-                  confirmDismiss: confirmDismiss,
-                  child: PurchaseTile(
-                    purchase,
-                    onTap: () => onPurchaseTap(context, purchase),
-                  ),
-                );
-              }
+                ),
+              )
+            : ListView.separated(
+                key: PageStorageKey<String>(
+                    'purchases_list-${purchasesStore.status}'),
+                padding: EdgeInsets.only(bottom: 50),
+                separatorBuilder: (context, index) => Divider(
+                  height: 1,
+                  color: AppColors.grey,
+                ),
+                itemCount: purchasesStore.itemCount,
+                itemBuilder: (context, index) {
+                  if (index < purchasesStore.purchaseList.length) {
+                    final purchase = purchasesStore.purchaseList[index];
 
-              return PurchaseTile(
-                purchase,
-                onTap: () => onPurchaseTap(context, purchase),
-              );
-            }
+                    if (widget.canDelete) {
+                      return Dismissible(
+                        key: Key(purchase.sId),
+                        direction: DismissDirection.endToStart,
+                        background: DismissibleBackground(
+                          icon: Icons.delete,
+                          title: "Excluir",
+                          color: AppColors.red,
+                          secondary: true,
+                        ),
+                        onDismissed: (_) =>
+                            purchasesStore.deletePurchase(index),
+                        confirmDismiss: confirmDismiss,
+                        child: PurchaseTile(
+                          purchase,
+                          onTap: () => onPurchaseTap(context, purchase),
+                        ),
+                      );
+                    }
 
-            purchasesStore.loadNextPage();
-            return SizedBox(
-              height: 5,
-              child: LinearProgressIndicator(
-                valueColor: AlwaysStoppedAnimation(AppColors.darkOrange),
+                    return PurchaseTile(
+                      purchase,
+                      onTap: () => onPurchaseTap(context, purchase),
+                    );
+                  }
+
+                  purchasesStore.loadNextPage();
+                  return SizedBox(
+                    height: 5,
+                    child: LinearProgressIndicator(
+                      valueColor: AlwaysStoppedAnimation(AppColors.darkOrange),
+                    ),
+                  );
+                },
               ),
-            );
-          },
-        ),
       );
     });
   }

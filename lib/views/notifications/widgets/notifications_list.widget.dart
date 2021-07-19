@@ -1,4 +1,5 @@
 import 'package:emptio/common/widgets/empty_placeholder.widget.dart';
+import 'package:emptio/common/widgets/error_placeholder.widget.dart';
 import 'package:emptio/core/app_assets.dart';
 import 'package:emptio/core/app_colors.dart';
 import 'package:emptio/models/notification.model.dart';
@@ -15,19 +16,19 @@ class NotificationsList extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Observer(builder: (context) {
-      if (store.hasError) {
-        return Center(
-          child: Text(
-            store.error,
-            textAlign: TextAlign.center,
-          ),
-        );
-      }
-
       if (store.firstLoading) {
         return Center(
           child: CircularProgressIndicator(
             color: AppColors.darkOrange,
+          ),
+        );
+      }
+
+      if (store.hasError) {
+        return Center(
+          child: ErrorPlaceholder(
+            error: store.error,
+            retry: store.resetPage,
           ),
         );
       }

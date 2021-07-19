@@ -9,6 +9,14 @@ part 'profile.store.g.dart';
 class ProfileStore = _ProfileStoreBase with _$ProfileStore;
 
 abstract class _ProfileStoreBase with Store {
+  final String userId;
+
+  _ProfileStoreBase({required this.userId}) {
+    autorun((_) {
+      loadProfile();
+    });
+  }
+
   @observable
   ProfileModel? profile;
 
@@ -55,10 +63,10 @@ abstract class _ProfileStoreBase with Store {
   }
 
   @action
-  Future<void> loadProfile(String id) async {
+  Future<void> loadProfile() async {
     loading = true;
     try {
-      final profileData = await UserRepository().getProfile(id);
+      final profileData = await UserRepository().getProfile(userId);
 
       profile = profileData;
       error = "";
