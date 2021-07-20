@@ -94,7 +94,7 @@ abstract class _PurchasesStoreBase with Store {
 
     try {
       final model = await PurchaseRepository().create(createModel);
-      purchaseList.insert(0, model);
+      insertPurchase(model);
       return model;
     } on String catch (_error) {
       error = _error;
@@ -129,6 +129,16 @@ abstract class _PurchasesStoreBase with Store {
   @action
   void removeIndex(int index) {
     purchaseList.removeAt(index);
+  }
+
+  @action
+  void removeById(String sId) {
+    purchaseList.removeWhere((element) => element.sId == sId);
+  }
+
+  @action
+  void insertPurchase(PurchaseModel model) {
+    purchaseList.insert(0, model);
   }
 
   @action

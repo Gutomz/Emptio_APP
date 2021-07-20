@@ -142,4 +142,22 @@ class PurchaseRepository {
       return Future.error(AppApiErrors.handleError(error));
     }
   }
+
+  Future<PurchaseModel> updateLimit(String purchaseId, double limit) async {
+    try {
+      if (_authStore.isLogged) {
+        final data = await _api.patch(
+          "/purchases/$purchaseId/limit",
+          body: {"limit": limit},
+        ) as Map<String, dynamic>;
+        return PurchaseModel.fromJson(data);
+      }
+
+      return PurchaseDao.updateLimitParsed(int.parse(purchaseId), limit);
+    } catch (error, stack) {
+      Logger.error(tag, 'updateLimit', error, stack);
+
+      return Future.error(AppApiErrors.handleError(error));
+    }
+  }
 }

@@ -11,9 +11,9 @@ extension StringExtension on String {
   }
 
   String formatDate() {
-    final DateFormat dateFormat = DateFormat("dd/MM/yy HH:mm");
-    final DateTime date = DateTime.parse(replaceFirst("-03:00", ""));
-    return dateFormat.format(date);
+    final date = customFormatDate("dd/MM/yy");
+    final time = customFormatDate("HH:mm");
+    return "$date às $time";
   }
 
   String customFormatDate(String format) {
@@ -45,9 +45,9 @@ extension IterableExtension<T> on Iterable<T> {
 }
 
 extension NumberExtension on num {
-  String formatMoney() {
+  String formatMoney({String symbol = ""}) {
     final NumberFormat numberFormat =
-        NumberFormat.simpleCurrency(locale: 'pt_BR', name: "");
+        NumberFormat.simpleCurrency(locale: 'pt_BR', name: symbol);
     return numberFormat.format(this);
   }
 }

@@ -197,6 +197,19 @@ class PurchaseDao {
     return _mBox!.get(key)!;
   }
 
+  static Future<Purchase> updateLimit(int key, double limit) async {
+    await _openBox();
+
+    final Purchase purchase = await get(key);
+
+    purchase.limit = limit;
+    purchase.updatedAt = DateTime.now().toIso8601String();
+
+    await purchase.save();
+
+    return _mBox!.get(key)!;
+  }
+
   static Future<PurchaseModel> createParsed(
       CreatePurchaseViewModel model) async {
     final purchase = await create(model);
@@ -240,6 +253,11 @@ class PurchaseDao {
 
   static Future<PurchaseModel> completeParsed(int key) async {
     final purchase = await complete(key);
+    return parseToPurchaseModel(purchase);
+  }
+
+  static Future<PurchaseModel> updateLimitParsed(int key, double limit) async {
+    final purchase = await updateLimit(key, limit);
     return parseToPurchaseModel(purchase);
   }
 

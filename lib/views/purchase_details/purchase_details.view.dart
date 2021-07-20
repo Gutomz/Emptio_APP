@@ -1,4 +1,5 @@
 import 'package:emptio/common/delegates/purchase_item_search/purchase_item_search.dart';
+import 'package:emptio/core/app_colors.dart';
 import 'package:emptio/models/product.model.dart';
 import 'package:emptio/models/purchase.model.dart';
 import 'package:emptio/view-models/add_purchase_item.view-model.dart';
@@ -12,6 +13,7 @@ import 'package:emptio/views/purchase_details/widgets/purchase_details_end_drawe
 import 'package:emptio/views/purchase_details/widgets/purchase_items_list.widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
+import 'package:emptio/helpers/extensions.dart';
 
 class PurchaseDetailsView extends StatelessWidget {
   final PurchaseDetailsStore _store;
@@ -99,6 +101,27 @@ class PurchaseDetailsView extends StatelessWidget {
             },
           ),
           title: Observer(builder: (_) {
+            if (_store.isClosed) {
+              return Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    "Concluído em:",
+                    style: TextStyle(
+                      fontSize: 12,
+                    ),
+                  ),
+                  Text(
+                    _store.purchase.updatedAt.formatDate(),
+                    style: TextStyle(
+                      fontSize: 14,
+                      color: AppColors.orange,
+                    ),
+                  ),
+                ],
+              );
+            }
+
             return Text(_store.showChecked ? "Concluídos" : "Pendentes");
           }),
           actions: [
@@ -120,18 +143,20 @@ class PurchaseDetailsView extends StatelessWidget {
               ),
             ),
           ],
-          bottom: PreferredSize(
-            preferredSize: Size.fromHeight(70),
-            child: Padding(
-              padding: const EdgeInsets.only(
-                left: 15,
-                bottom: 10,
-              ),
-              child: ConnectedMarketIndicator(
-                detailsStore: _store,
-              ),
-            ),
-          ),
+          bottom: _store.isClosed && !_store.isMarketConnected
+              ? null
+              : PreferredSize(
+                  preferredSize: Size.fromHeight(70),
+                  child: Padding(
+                    padding: const EdgeInsets.only(
+                      left: 15,
+                      bottom: 10,
+                    ),
+                    child: ConnectedMarketIndicator(
+                      detailsStore: _store,
+                    ),
+                  ),
+                ),
         ),
         body: PurchaseItemsList(store: _store),
         endDrawer: PurchaseDetailsEndDrawer(store: _store),

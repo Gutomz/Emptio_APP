@@ -16,8 +16,10 @@ class ImageBuilder {
     double borderRadius = 8,
     Color? backgroundColor,
     Color? foregroundColor,
+    Color? borderColor,
     IconData icon = Icons.image_not_supported_outlined,
     bool hideBorder = false,
+    double borderWidth = 1,
   }) {
     return buildImage(
       image != null ? FileImage(image) : null,
@@ -29,6 +31,8 @@ class ImageBuilder {
       backgroundColor: backgroundColor,
       foregroundColor: foregroundColor,
       hideBorder: hideBorder,
+      borderWidth: borderWidth,
+      borderColor: borderColor,
     );
   }
 
@@ -40,8 +44,10 @@ class ImageBuilder {
     double borderRadius = 8,
     Color? backgroundColor,
     Color? foregroundColor,
+    Color? borderColor,
     IconData icon = Icons.image_not_supported_outlined,
     bool hideBorder = false,
+    double borderWidth = 1,
   }) {
     ImageProvider<Object>? provider;
 
@@ -59,6 +65,8 @@ class ImageBuilder {
       backgroundColor: backgroundColor,
       foregroundColor: foregroundColor,
       hideBorder: hideBorder,
+      borderWidth: borderWidth,
+      borderColor: borderColor,
     );
   }
 
@@ -70,8 +78,10 @@ class ImageBuilder {
     required double borderRadius,
     required IconData icon,
     required bool hideBorder,
+    required double borderWidth,
     Color? backgroundColor,
     Color? foregroundColor,
+    Color? borderColor,
   }) {
     return Material(
       elevation: elevation,
@@ -87,7 +97,10 @@ class ImageBuilder {
                 )
               : null,
           borderRadius: BorderRadius.all(Radius.circular(borderRadius)),
-          border: hideBorder == true ? null : Border.all(color: AppColors.grey),
+          border: hideBorder == true
+              ? null
+              : Border.all(
+                  color: borderColor ?? AppColors.grey, width: borderWidth),
           color: backgroundColor ?? AppColors.lightGrey.withOpacity(0.2),
         ),
         child: image == null

@@ -14,6 +14,8 @@ class PurchaseDetailsStore = _PurchaseDetailsStoreBase
 
 abstract class _PurchaseDetailsStoreBase with Store {
   final PurchasesStore _purchasesStore = GetIt.I<AppStore>().openPurchasesStore;
+  final PurchasesStore _closedPurchasesStore =
+      GetIt.I<AppStore>().closedPurchasesStore;
 
   _PurchaseDetailsStoreBase({
     required this.purchase,
@@ -113,6 +115,42 @@ abstract class _PurchaseDetailsStoreBase with Store {
     _purchasesStore.updatePurchase(model);
   }
 
+  @action
+  Future<void> complete() async {
+    loading = true;
+    error = "";
+
+    try {
+      final _purchase = await PurchaseRepository().complete(purchase.sId);
+
+      showChecked = true;
+      updatePurchase(_purchase);
+      _purchasesStore.removeById(purchase.sId);
+      _closedPurchasesStore.insertPurchase(_purchase);
+    } on String catch (_error) {
+      error = _error;
+    } finally {
+      loading = false;
+    }
+  }
+
+  @action
+  Future<void> updateLimit(double limit) async {
+    loading = true;
+    error = "";
+
+    try {
+      final _purchase =
+          await PurchaseRepository().updateLimit(purchase.sId, limit);
+
+      updatePurchase(_purchase);
+    } on String catch (_error) {
+      error = _error;
+    } finally {
+      loading = false;
+    }
+  }
+
   @computed
   bool get isMarketConnected => purchase.market != null;
 
@@ -128,5 +166,17 @@ abstract class _PurchaseDetailsStoreBase with Store {
       checkedItems.length + (showChecked ? 0 : items.length);
 
   @computed
+  int get totalProductsCount => checkedItems.length + items.length;
+
+  @computed
   bool get isClosed => PurchaseStatusTypes.closed.contains(purchase.status);
+
+  @computed
+  bool get conditionProductsCount => totalProductsCount > 0;
+
+  @computed
+  bool get conditionItemsEmpty => items.isEmpty;
+
+  @computed
+  bool get canClose => conditionProductsCount && conditionItemsEmpty;
 }

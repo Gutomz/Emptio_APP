@@ -37,12 +37,40 @@ mixin _$PurchaseDetailsStore on _PurchaseDetailsStoreBase, Store {
       (_$productsCountComputed ??= Computed<int>(() => super.productsCount,
               name: '_PurchaseDetailsStoreBase.productsCount'))
           .value;
+  Computed<int>? _$totalProductsCountComputed;
+
+  @override
+  int get totalProductsCount => (_$totalProductsCountComputed ??= Computed<int>(
+          () => super.totalProductsCount,
+          name: '_PurchaseDetailsStoreBase.totalProductsCount'))
+      .value;
   Computed<bool>? _$isClosedComputed;
 
   @override
   bool get isClosed =>
       (_$isClosedComputed ??= Computed<bool>(() => super.isClosed,
               name: '_PurchaseDetailsStoreBase.isClosed'))
+          .value;
+  Computed<bool>? _$conditionProductsCountComputed;
+
+  @override
+  bool get conditionProductsCount => (_$conditionProductsCountComputed ??=
+          Computed<bool>(() => super.conditionProductsCount,
+              name: '_PurchaseDetailsStoreBase.conditionProductsCount'))
+      .value;
+  Computed<bool>? _$conditionItemsEmptyComputed;
+
+  @override
+  bool get conditionItemsEmpty => (_$conditionItemsEmptyComputed ??=
+          Computed<bool>(() => super.conditionItemsEmpty,
+              name: '_PurchaseDetailsStoreBase.conditionItemsEmpty'))
+      .value;
+  Computed<bool>? _$canCloseComputed;
+
+  @override
+  bool get canClose =>
+      (_$canCloseComputed ??= Computed<bool>(() => super.canClose,
+              name: '_PurchaseDetailsStoreBase.canClose'))
           .value;
 
   final _$purchaseAtom = Atom(name: '_PurchaseDetailsStoreBase.purchase');
@@ -128,6 +156,14 @@ mixin _$PurchaseDetailsStore on _PurchaseDetailsStoreBase, Store {
     return _$deleteItemAsyncAction.run(() => super.deleteItem(itemId));
   }
 
+  final _$completeAsyncAction =
+      AsyncAction('_PurchaseDetailsStoreBase.complete');
+
+  @override
+  Future<void> complete() {
+    return _$completeAsyncAction.run(() => super.complete());
+  }
+
   final _$_PurchaseDetailsStoreBaseActionController =
       ActionController(name: '_PurchaseDetailsStoreBase');
 
@@ -186,7 +222,11 @@ isMarketConnected: ${isMarketConnected},
 filteredItems: ${filteredItems},
 itemsCount: ${itemsCount},
 productsCount: ${productsCount},
-isClosed: ${isClosed}
+totalProductsCount: ${totalProductsCount},
+isClosed: ${isClosed},
+conditionProductsCount: ${conditionProductsCount},
+conditionItemsEmpty: ${conditionItemsEmpty},
+canClose: ${canClose}
     ''';
   }
 }

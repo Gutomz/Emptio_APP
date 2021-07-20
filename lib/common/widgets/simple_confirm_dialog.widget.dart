@@ -18,8 +18,8 @@ class SimpleConfirmDialog extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
-      title: Text(title),
-      content: Text(content),
+      title: Text(title, style: TextStyle(fontWeight: FontWeight.w600)),
+      content: Text(content, style: TextStyle(fontSize: 14)),
       actions: [
         ElevatedButton(
           onPressed: () => Navigator.of(context).pop(false),
