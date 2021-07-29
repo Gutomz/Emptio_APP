@@ -1,6 +1,7 @@
+import 'package:emptio/models/location.model.dart';
 import 'package:location/location.dart';
 
-Future requestLocation() async {
+Future<LocationModel> requestLocation() async {
   final location = Location();
 
   var serviceEnabled = await location.serviceEnabled();
@@ -22,5 +23,7 @@ Future requestLocation() async {
     }
   }
 
-  return Future.value(true);
+  final locationData = await location.getLocation();
+
+  return Future.value(LocationModel.fromLocationData(locationData));
 }

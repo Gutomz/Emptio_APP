@@ -50,6 +50,10 @@ extension NumberExtension on num {
         NumberFormat.simpleCurrency(locale: 'pt_BR', name: symbol);
     return numberFormat.format(this);
   }
+
+  String formatDistance() {
+    return "$this metros";
+  }
 }
 
 extension FileExtension on File {

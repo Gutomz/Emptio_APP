@@ -1,65 +1,50 @@
+import 'package:emptio/common/delegates/market_search/market_search.dart';
 import 'package:emptio/common/widgets/image_builder.widget.dart';
+import 'package:emptio/common/widgets/simple_confirm_dialog.widget.dart';
 import 'package:emptio/core/app_colors.dart';
 import 'package:emptio/views/purchase_details/store/purchase_details.store.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 
 class ConnectedMarketIndicator extends StatelessWidget {
-  final PurchaseDetailsStore detailsStore;
+  final PurchaseDetailsStore store;
 
   ConnectedMarketIndicator({
-    required this.detailsStore,
+    required this.store,
     Key? key,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return Observer(builder: (context) {
-      if (detailsStore.isMarketConnected) {
-        return Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Row(
-              children: [
-                ImageBuilder.fromString(
-                  detailsStore.purchase.market != null
-                      ? detailsStore.purchase.market!.image
-                      : null,
-                  size: 35,
-                  iconSize: 18,
-                  borderRadius: 20,
-                  backgroundColor: Colors.white,
-                ),
-                SizedBox(width: 20),
-                Text(
-                  detailsStore.purchase.market!.name,
-                  style: TextStyle(
-                    color: AppColors.orange,
-                  ),
-                ),
-              ],
+      if (store.isMarketConnected) {
+        return ListTile(
+          contentPadding: EdgeInsets.symmetric(),
+          leading: ImageBuilder.fromString(
+            store.purchase.market != null ? store.purchase.market!.image : null,
+            size: 35,
+            iconSize: 16,
+            borderRadius: 20,
+            backgroundColor: Colors.white,
+          ),
+          title: Text(
+            store.purchase.market!.name,
+            maxLines: 2,
+            overflow: TextOverflow.ellipsis,
+            style: TextStyle(
+              color: AppColors.orange,
             ),
-            Row(
-              children: [
-                IconButton(
-                  onPressed: () {},
-                  icon: Icon(Icons.edit_location_outlined),
-                  tooltip: "Editar mercado",
-                  color: Colors.white,
-                  iconSize: 18,
-                  splashRadius: 20,
-                ),
-                IconButton(
-                  onPressed: () {},
+          ),
+          trailing: store.isClosed
+              ? null
+              : IconButton(
+                  onPressed: () => _onPressedDisconnectMarket(context),
                   icon: Icon(Icons.remove_circle_outline),
                   tooltip: "Desconectar mercado",
                   color: AppColors.red,
                   iconSize: 18,
                   splashRadius: 20,
                 ),
-              ],
-            ),
-          ],
         );
       }
 
@@ -67,7 +52,7 @@ class ConnectedMarketIndicator extends StatelessWidget {
         width: double.infinity,
         padding: EdgeInsets.only(right: 15),
         child: OutlinedButton(
-          onPressed: () {},
+          onPressed: () => _onPressedConnectMarket(context),
           style: ButtonStyle(
             foregroundColor: MaterialStateProperty.all(AppColors.orange),
             side: MaterialStateProperty.all(
@@ -78,5 +63,36 @@ class ConnectedMarketIndicator extends StatelessWidget {
         ),
       );
     });
+  }
+
+  Future<void> _onPressedConnectMarket(BuildContext context) async {
+    final response =
+        await showSearch(context: context, delegate: MarketSearch());
+
+    if (response == null) return;
+
+    if (response.isNew) {
+      // TODO - create and connect to a new market
+    } else if (response.isSuggestion) {
+      store.connectMarket(placeId: response.sId);
+    } else {
+      // TODO - connect to existing market
+    }
+  }
+
+  Future<void> _onPressedDisconnectMarket(BuildContext context) async {
+    final response = await showDialog<bool>(
+      context: context,
+      builder: (context) => SimpleConfirmDialog(
+        title: "Desconectar Mercado?",
+        content: "Tem certeza que deseja desconectar o mercado desta compra?",
+        acceptText: "sim",
+        rejectText: "cancelar",
+      ),
+    );
+
+    if (response != null && response) {
+      store.connectMarket();
+    }
   }
 }

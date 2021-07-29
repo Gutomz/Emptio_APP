@@ -48,8 +48,8 @@ class AppApiErrors {
       description = _errors[code] ?? description;
 
       if (_fieldErrors.contains(code)) {
-        final List<String> fields =
-            (error as Map<String, dynamic>)['fields'] as List<String>;
+        final List<dynamic> fields =
+            (error as Map<String, dynamic>)['fields'] as List<dynamic>;
         description += " ${_parseFields(fields)}.";
       }
     }

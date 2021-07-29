@@ -5,6 +5,7 @@ import 'package:emptio/helpers/logger.dart';
 import 'package:emptio/models/purchase.model.dart';
 import 'package:emptio/stores/auth.store.dart';
 import 'package:emptio/view-models/add_purchase_item.view-model.dart';
+import 'package:emptio/view-models/connect_market.view-model.dart';
 import 'package:emptio/view-models/create_purchase.view-model.dart';
 import 'package:emptio/view-models/purchase_filter.view-model.dart';
 import 'package:emptio/view-models/update_purchase_item.view-model.dart';
@@ -156,6 +157,30 @@ class PurchaseRepository {
       return PurchaseDao.updateLimitParsed(int.parse(purchaseId), limit);
     } catch (error, stack) {
       Logger.error(tag, 'updateLimit', error, stack);
+
+      return Future.error(AppApiErrors.handleError(error));
+    }
+  }
+
+  Future<PurchaseModel> connectMarket(
+      String purchaseId, ConnectMarketViewModel model) async {
+    try {
+      if (_authStore.isLogged) {
+        final data = await _api.patch(
+          "/purchases/$purchaseId/connect",
+          body: model.toJson(),
+        ) as Map<String, dynamic>;
+        return PurchaseModel.fromJson(data);
+      }
+
+      int? marketKey;
+      if (model.marketId != null) {
+        marketKey = int.parse(model.marketId!);
+      } else if (model.placeId != null) marketKey = int.parse(model.placeId!);
+
+      return PurchaseDao.connectMarketParsed(int.parse(purchaseId), marketKey);
+    } catch (error, stack) {
+      Logger.error(tag, 'connectMarket', error, stack);
 
       return Future.error(AppApiErrors.handleError(error));
     }

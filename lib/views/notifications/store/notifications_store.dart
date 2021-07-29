@@ -47,8 +47,6 @@ abstract class _NotificationsStoreBase with Store {
 
   @action
   Future load(NotificationsFilterViewModel filter) async {
-    error = "";
-
     try {
       final notifications = await NotificationsRepository().get(filter);
 
@@ -59,8 +57,9 @@ abstract class _NotificationsStoreBase with Store {
       }
 
       list.addAll(notifications);
+      setError("");
     } on String catch (_error) {
-      error = _error;
+      setError(_error);
     }
   }
 

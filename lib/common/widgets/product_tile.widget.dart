@@ -16,7 +16,7 @@ class ProductTile extends StatelessWidget {
 
   String getDateText() {
     if (product.marketPrice != null) {
-      return product.marketPriceUpdatedAt!;
+      return product.marketPriceUpdatedAt!.formatDate();
     }
 
     return "-";

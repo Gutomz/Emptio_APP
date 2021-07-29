@@ -69,8 +69,6 @@ abstract class _PurchasesStoreBase with Store {
 
   @action
   Future loadPurchases(PurchasesFilterViewModel filter) async {
-    error = "";
-
     try {
       final list = await PurchaseRepository().get(filter);
 
@@ -81,8 +79,9 @@ abstract class _PurchasesStoreBase with Store {
       }
 
       purchaseList.addAll(list);
+      setError("");
     } on String catch (_error) {
-      error = _error;
+      setError(_error);
     }
   }
 

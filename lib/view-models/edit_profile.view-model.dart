@@ -15,7 +15,7 @@ class EditProfileViewModel {
     final Map<String, dynamic> data = <String, dynamic>{};
     data['name'] = name;
     data['description'] = description;
-    data['photo'] = AppApi.removeUrl(photo);
+    data['photo'] = AppApi().removeUrl(photo);
     return data;
   }
 }

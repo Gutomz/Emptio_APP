@@ -1,10 +1,10 @@
+import 'package:emptio/common/delegates/purchase_item_search/store/product_search.store.dart';
 import 'package:emptio/common/widgets/dismissible_background.widget.dart';
 import 'package:emptio/common/widgets/market_indicator.widget.dart';
 import 'package:emptio/common/widgets/product_tile.widget.dart';
 import 'package:emptio/core/app_colors.dart';
 import 'package:emptio/models/market.model.dart';
 import 'package:emptio/models/product.model.dart';
-import 'package:emptio/stores/product_search.store.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 

@@ -6,10 +6,12 @@ class SubtitleItem extends StatelessWidget {
     Key? key,
     required this.icon,
     this.text,
+    this.canWrap = false,
   }) : super(key: key);
 
   final IconData icon;
   final String? text;
+  final bool canWrap;
 
   @override
   Widget build(BuildContext context) {
@@ -24,12 +26,12 @@ class SubtitleItem extends StatelessWidget {
         Expanded(
           child: Text(
             text ?? "-",
-            maxLines: 1,
+            maxLines: canWrap ? 2 : 1,
             style: TextStyle(
               fontSize: 12,
               color: AppColors.grey,
             ),
-            overflow: TextOverflow.ellipsis,
+            overflow: canWrap ? null : TextOverflow.ellipsis,
           ),
         ),
       ],

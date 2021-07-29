@@ -3,6 +3,7 @@ import 'package:emptio/models/purchase_item.model.dart';
 import 'package:emptio/repositories/purchase.repository.dart';
 import 'package:emptio/stores/app.store.dart';
 import 'package:emptio/view-models/add_purchase_item.view-model.dart';
+import 'package:emptio/view-models/connect_market.view-model.dart';
 import 'package:emptio/view-models/update_purchase_item.view-model.dart';
 import 'package:emptio/views/purchases/store/purchases.store.dart';
 import 'package:get_it/get_it.dart';
@@ -142,6 +143,25 @@ abstract class _PurchaseDetailsStoreBase with Store {
     try {
       final _purchase =
           await PurchaseRepository().updateLimit(purchase.sId, limit);
+
+      updatePurchase(_purchase);
+    } on String catch (_error) {
+      error = _error;
+    } finally {
+      loading = false;
+    }
+  }
+
+  @action
+  Future<void> connectMarket({String? marketId, String? placeId}) async {
+    loading = true;
+    error = "";
+
+    final model = ConnectMarketViewModel(marketId: marketId, placeId: placeId);
+
+    try {
+      final _purchase =
+          await PurchaseRepository().connectMarket(purchase.sId, model);
 
       updatePurchase(_purchase);
     } on String catch (_error) {

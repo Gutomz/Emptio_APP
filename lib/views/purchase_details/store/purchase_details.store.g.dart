@@ -164,6 +164,23 @@ mixin _$PurchaseDetailsStore on _PurchaseDetailsStoreBase, Store {
     return _$completeAsyncAction.run(() => super.complete());
   }
 
+  final _$updateLimitAsyncAction =
+      AsyncAction('_PurchaseDetailsStoreBase.updateLimit');
+
+  @override
+  Future<void> updateLimit(double limit) {
+    return _$updateLimitAsyncAction.run(() => super.updateLimit(limit));
+  }
+
+  final _$connectMarketAsyncAction =
+      AsyncAction('_PurchaseDetailsStoreBase.connectMarket');
+
+  @override
+  Future<void> connectMarket({String? marketId, String? placeId}) {
+    return _$connectMarketAsyncAction
+        .run(() => super.connectMarket(marketId: marketId, placeId: placeId));
+  }
+
   final _$_PurchaseDetailsStoreBaseActionController =
       ActionController(name: '_PurchaseDetailsStoreBase');
 

@@ -75,7 +75,7 @@ class JsonParser {
   static String? parseToImageUrl(dynamic value) {
     String? url;
     try {
-      if ((value as String).isNotEmpty) url = AppApi.getUrl(value);
+      if ((value as String).isNotEmpty) url = AppApi().getUrl(value);
     } catch (_) {}
 
     return url;

@@ -84,7 +84,7 @@ abstract class _BasePurchasesStoreBase with Store {
       purchaseList.addAll(list);
       setError("");
     } on String catch (_error) {
-      error = _error;
+      setError(_error);
     }
   }
 

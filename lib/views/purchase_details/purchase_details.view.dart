@@ -153,7 +153,7 @@ class PurchaseDetailsView extends StatelessWidget {
                       bottom: 10,
                     ),
                     child: ConnectedMarketIndicator(
-                      detailsStore: _store,
+                      store: _store,
                     ),
                   ),
                 ),

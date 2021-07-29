@@ -190,6 +190,28 @@ mixin _$PurchasesStore on _PurchasesStoreBase, Store {
   }
 
   @override
+  void removeById(String sId) {
+    final _$actionInfo = _$_PurchasesStoreBaseActionController.startAction(
+        name: '_PurchasesStoreBase.removeById');
+    try {
+      return super.removeById(sId);
+    } finally {
+      _$_PurchasesStoreBaseActionController.endAction(_$actionInfo);
+    }
+  }
+
+  @override
+  void insertPurchase(PurchaseModel model) {
+    final _$actionInfo = _$_PurchasesStoreBaseActionController.startAction(
+        name: '_PurchasesStoreBase.insertPurchase');
+    try {
+      return super.insertPurchase(model);
+    } finally {
+      _$_PurchasesStoreBaseActionController.endAction(_$actionInfo);
+    }
+  }
+
+  @override
   void loadNextPage() {
     final _$actionInfo = _$_PurchasesStoreBaseActionController.startAction(
         name: '_PurchasesStoreBase.loadNextPage');
