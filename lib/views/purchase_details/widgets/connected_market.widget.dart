@@ -76,7 +76,7 @@ class ConnectedMarketIndicator extends StatelessWidget {
     } else if (response.isSuggestion) {
       store.connectMarket(placeId: response.sId);
     } else {
-      // TODO - connect to existing market
+      store.connectMarket(marketId: response.sId);
     }
   }
 

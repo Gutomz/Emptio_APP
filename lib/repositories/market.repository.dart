@@ -1,15 +1,18 @@
 import 'package:emptio/core/app_api_errors.dart';
 import 'package:emptio/core/app_api.dart';
+import 'package:emptio/data/dao/market.dao.dart';
 import 'package:emptio/helpers/logger.dart';
+import 'package:emptio/models/market.model.dart';
 import 'package:emptio/models/market_suggestion.model.dart';
 import 'package:emptio/services/google_places_api.dart';
 import 'package:emptio/stores/auth.store.dart';
+import 'package:emptio/view-models/market_filter.view-model.dart';
 import 'package:emptio/view-models/market_suggestions_filter.view-model.dart';
 import 'package:get_it/get_it.dart';
 
 class MarketRepository {
   static const String tag = "MarketRepository";
-  final AppApi api = AppApi();
+  final AppApi _api = AppApi();
   final GooglePlacesApi _googlePlacesApi = GooglePlacesApi();
   final AuthStore _authStore = GetIt.I<AuthStore>();
 
@@ -39,6 +42,26 @@ class MarketRepository {
       return [];
     } catch (error, stack) {
       Logger.error(tag, 'getSuggestions', error, stack);
+
+      return Future.error(AppApiErrors.handleError(error));
+    }
+  }
+
+  Future<List<MarketModel>> get(MarketFilterViewModel filter) async {
+    try {
+      if (_authStore.isLogged) {
+        final data = await _api.get('/markets',
+            queryParameters: filter.toQuery()) as List<dynamic>;
+        final list = data
+            .map<MarketModel>((product) =>
+                MarketModel.fromJson(product as Map<String, dynamic>))
+            .toList();
+        return list;
+      }
+
+      return await MarketDao.getAllParsed(filter);
+    } catch (error, stack) {
+      Logger.error(tag, 'get', error, stack);
 
       return Future.error(AppApiErrors.handleError(error));
     }

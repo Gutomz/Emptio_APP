@@ -1,8 +1,11 @@
 import 'package:emptio/common/delegates/market_search/store/market_search.store.dart';
 import 'package:emptio/common/widgets/error_placeholder.widget.dart';
+import 'package:emptio/common/widgets/image_builder.widget.dart';
 import 'package:emptio/common/widgets/subtitle_item.widget.dart';
 import 'package:emptio/core/app_colors.dart';
+import 'package:emptio/models/market.model.dart';
 import 'package:emptio/models/market_suggestion.model.dart';
+import 'package:emptio/view-models/market_filter.view-model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:emptio/helpers/extensions.dart';
@@ -80,7 +83,7 @@ class MarketSearch extends SearchDelegate<MarketSearchResponse?> {
     }
 
     return Observer(builder: (context) {
-      if (_store.loading) {
+      if (_store.loadingSuggestions) {
         return Center(
           child: CircularProgressIndicator(
             color: AppColors.darkOrange,
@@ -147,15 +150,99 @@ class MarketSearch extends SearchDelegate<MarketSearchResponse?> {
 
   @override
   Widget buildResults(BuildContext context) {
-    return Center(
-      child: Text(
-        "Nenhuma mercado encontrado!",
-        style: TextStyle(
-          color: AppColors.grey,
+    final filter = MarketFilterViewModel(search: query);
+    _store.loadMarkets(filter);
+
+    // return Center(
+    //   child: Text(
+    //     "Nenhuma mercado encontrado!",
+    //     style: TextStyle(
+    //       color: AppColors.grey,
+    //     ),
+    //     textAlign: TextAlign.center,
+    //   ),
+    // );
+
+    return Observer(builder: (context) {
+      if (_store.loading) {
+        return Center(
+          child: CircularProgressIndicator(
+            color: AppColors.darkOrange,
+            strokeWidth: 2,
+          ),
+        );
+      }
+
+      if (_store.hasError) {
+        return Center(
+          child: ErrorPlaceholder(
+            error: _store.error,
+            retry: () => _store.loadMarkets(filter),
+          ),
+        );
+      }
+
+      if (_store.marketsList.isEmpty) {
+        return Center(
+          child: Text(
+            'Nenhum mercado encontrado.',
+            style: TextStyle(color: AppColors.black),
+            textAlign: TextAlign.center,
+          ),
+        );
+      }
+
+      return ListView.separated(
+        itemCount: _store.marketsCount,
+        separatorBuilder: (context, index) => Divider(
+          height: 1,
+          color: AppColors.lightGrey,
         ),
-        textAlign: TextAlign.center,
-      ),
-    );
+        itemBuilder: (context, index) {
+          if (index < _store.marketsList.length) {
+            final market = _store.marketsList[index];
+
+            return ListTile(
+              onTap: () => _onPressedMarket(context, market),
+              contentPadding:
+                  EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+              leading: SizedBox(
+                child: ImageBuilder.fromString(
+                  market.image,
+                  size: 60,
+                  iconSize: 22,
+                ),
+              ),
+              title: Text(
+                market.name,
+                style: TextStyle(
+                  color: AppColors.blue,
+                  fontWeight: FontWeight.w600,
+                ),
+              ),
+              subtitle: Column(
+                children: [
+                  SizedBox(height: 10),
+                  SubtitleItem(
+                    icon: Icons.location_on_outlined,
+                    text: market.address,
+                    canWrap: true,
+                  ),
+                ],
+              ),
+            );
+          }
+
+          _store.loadNextPage();
+          return SizedBox(
+            height: 5,
+            child: LinearProgressIndicator(
+              valueColor: AlwaysStoppedAnimation(AppColors.darkOrange),
+            ),
+          );
+        },
+      );
+    });
   }
 
   Future<void> _onPressedSuggestion(
@@ -164,6 +251,13 @@ class MarketSearch extends SearchDelegate<MarketSearchResponse?> {
       sId: suggestion.sId,
       isSuggestion: true,
     );
+
+    close(context, response);
+  }
+
+  Future<void> _onPressedMarket(
+      BuildContext context, MarketModel market) async {
+    final response = MarketSearchResponse(sId: market.sId);
 
     close(context, response);
   }
