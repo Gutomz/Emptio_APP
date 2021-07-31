@@ -5,6 +5,7 @@ import 'package:emptio/stores/connectivity.store.dart';
 import 'package:emptio/views/configurations/configurations.view.dart';
 import 'package:emptio/views/login/login.view.dart';
 import 'package:emptio/views/notifications/notifications.view.dart';
+import 'package:emptio/views/products_list/products_list.view.dart';
 import 'package:emptio/views/profile/profile.view.dart';
 import 'package:emptio/views/search_profile/profile_search.view.dart';
 import 'package:flutter/material.dart';
@@ -111,7 +112,7 @@ class MainDrawerActionList extends StatelessWidget {
                 ),
               if (!_authStore.isLogged)
                 _buildTile(
-                  onTap: () {/* TODO - list products */},
+                  onTap: () => _navigateToProductsListView(context),
                   title: "Produtos",
                   icon: Icons.fastfood_outlined,
                 ),
@@ -160,6 +161,12 @@ class MainDrawerActionList extends StatelessWidget {
   void _navigateToConfigurationsView(BuildContext context) {
     Navigator.of(context).push(MaterialPageRoute(
       builder: (context) => ConfigurationsView(),
+    ));
+  }
+
+  void _navigateToProductsListView(BuildContext context) {
+    Navigator.of(context).push(MaterialPageRoute(
+      builder: (context) => ProductsListView(),
     ));
   }
 }

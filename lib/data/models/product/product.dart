@@ -36,6 +36,10 @@ class Product extends HiveObject {
   @HiveField(9)
   String? marketPriceUpdatedAt;
 
+  @HiveField(10)
+  bool deleted = false;
+  
+
   Product({
     required this.brand,
     required this.name,

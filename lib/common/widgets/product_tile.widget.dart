@@ -7,7 +7,7 @@ import 'package:emptio/helpers/extensions.dart';
 
 class ProductTile extends StatelessWidget {
   final ProductModel product;
-  final Function onTap;
+  final Function()? onTap;
   final bool hidePrice;
 
   const ProductTile(this.product,
@@ -29,7 +29,7 @@ class ProductTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return InkWell(
-      onTap: () => onTap(),
+      onTap: onTap,
       child: Container(
         padding: EdgeInsets.symmetric(horizontal: 15, vertical: 10),
         child: Row(
@@ -86,10 +86,11 @@ class ProductTile extends StatelessWidget {
                                 icon: Icons.straighten_rounded,
                                 text: product.weight.toString(),
                               ),
-                              SubtitleItem(
-                                icon: Icons.event,
-                                text: getDateText(),
-                              ),
+                              if (!hidePrice)
+                                SubtitleItem(
+                                  icon: Icons.event,
+                                  text: getDateText(),
+                                ),
                             ],
                           ),
                         ),

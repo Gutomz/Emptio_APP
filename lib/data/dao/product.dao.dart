@@ -45,12 +45,26 @@ class ProductDao {
     return _mBox!.get(key)!;
   }
 
+  static Future<void> delete(int key) async {
+    await _openBox();
+
+    final product = _mBox!.get(key);
+
+    if (product == null) {
+      throw DatabaseError.notFoundError(AppErrors.productNotFound);
+    }
+
+    product.deleted = true;
+    await product.save();
+  }
+
   static Future<List<Product>> getAll(ProductFilterViewModel filter) async {
     await _openBox();
     int? marketKey;
     final List<int> excludeIds = List.empty(growable: true);
     if (filter.purchaseId.isNotEmpty) {
-      final Purchase purchase = await PurchaseDao.get(int.parse(filter.purchaseId));
+      final Purchase purchase =
+          await PurchaseDao.get(int.parse(filter.purchaseId));
       for (final itemKey in purchase.itemsKey) {
         final productKey = (await PurchaseItemDao.get(itemKey)).productKey;
         excludeIds.add(productKey);
@@ -63,6 +77,10 @@ class ProductDao {
     filter.search = filter.search.toLowerCase();
 
     final List<Product> products = (list.where((product) {
+      if (product.deleted) {
+        return false;
+      }
+
       if (excludeIds.contains(product.key)) {
         return false;
       }

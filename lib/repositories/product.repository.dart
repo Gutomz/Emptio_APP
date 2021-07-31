@@ -12,6 +12,16 @@ class ProductRepository {
   final AppApi _api = AppApi();
   final AuthStore _authStore = GetIt.I<AuthStore>();
 
+  Future<ProductModel> getById(String productId) async {
+    try {
+      return await ProductDao.getParsed(int.parse(productId));
+    } catch (error, stack) {
+      Logger.error(tag, 'getById', error, stack);
+
+      return Future.error(AppApiErrors.handleError(error));
+    }
+  }
+
   Future<List<ProductModel>> get(ProductFilterViewModel filter) async {
     try {
       if (_authStore.isLogged) {
@@ -27,6 +37,20 @@ class ProductRepository {
       return await ProductDao.getAllParsed(filter);
     } catch (error, stack) {
       Logger.error(tag, 'get', error, stack);
+
+      return Future.error(AppApiErrors.handleError(error));
+    }
+  }
+
+  Future<void> delete(String productId) async {
+    try {
+      if (_authStore.isLogged) {
+        return;
+      }
+
+      return ProductDao.delete(int.parse(productId));
+    } catch (error, stack) {
+      Logger.error(tag, 'delete', error, stack);
 
       return Future.error(AppApiErrors.handleError(error));
     }
