@@ -153,16 +153,6 @@ class MarketSearch extends SearchDelegate<MarketSearchResponse?> {
     final filter = MarketFilterViewModel(search: query);
     _store.loadMarkets(filter);
 
-    // return Center(
-    //   child: Text(
-    //     "Nenhuma mercado encontrado!",
-    //     style: TextStyle(
-    //       color: AppColors.grey,
-    //     ),
-    //     textAlign: TextAlign.center,
-    //   ),
-    // );
-
     return Observer(builder: (context) {
       if (_store.loading) {
         return Center(

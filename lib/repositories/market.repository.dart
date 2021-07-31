@@ -66,4 +66,21 @@ class MarketRepository {
       return Future.error(AppApiErrors.handleError(error));
     }
   }
+
+  Future<MarketModel> getDetails(String marketId) async {
+    try {
+      if (_authStore.isLogged) {
+        final data =
+            await _api.get('/markets/$marketId') as Map<String, dynamic>;
+
+        return MarketModel.fromJson(data);
+      }
+
+      return await MarketDao.getParsed(int.parse(marketId));
+    } catch (error, stack) {
+      Logger.error(tag, 'getDetails', error, stack);
+
+      return Future.error(AppApiErrors.handleError(error));
+    }
+  }
 }

@@ -38,6 +38,8 @@ abstract class _MarketSearchStoreBase with Store {
 
   @action
   Future loadMarkets(MarketFilterViewModel filter) async {
+    setLoading(true);
+
     try {
       final list = await MarketRepository().get(filter);
       search = filter.search;
@@ -52,6 +54,8 @@ abstract class _MarketSearchStoreBase with Store {
       setError("");
     } on String catch (_error) {
       setError(_error);
+    } finally {
+      setLoading(false);
     }
   }
 

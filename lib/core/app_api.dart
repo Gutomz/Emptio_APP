@@ -7,7 +7,7 @@ import 'package:get_it/get_it.dart';
 import 'package:http/http.dart' as http;
 
 class AppApi extends HttpRequestService {
-  AppApi() : super(url: '192.168.15.15:3000');
+  AppApi() : super(url: '192.168.0.194:3000');
 
   @override
   String getPath(String? pathExtension) {

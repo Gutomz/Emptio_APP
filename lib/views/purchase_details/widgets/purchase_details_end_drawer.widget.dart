@@ -2,6 +2,7 @@ import 'package:emptio/common/widgets/image_builder.widget.dart';
 import 'package:emptio/common/widgets/input_price_confirm_dialog.widget.dart';
 import 'package:emptio/common/widgets/simple_confirm_dialog.widget.dart';
 import 'package:emptio/core/app_colors.dart';
+import 'package:emptio/views/market_details/market_details.view.dart';
 import 'package:emptio/views/purchase_details/store/purchase_details.store.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
@@ -55,12 +56,15 @@ class PurchaseDetailsEndDrawer extends StatelessWidget {
 
                     return Column(
                       children: [
-                        ImageBuilder.fromString(
-                          market?.image,
-                          icon: Icons.remove_shopping_cart_outlined,
-                          borderWidth: 3,
-                          foregroundColor: AppColors.grey,
-                          backgroundColor: Colors.white,
+                        Hero(
+                          tag: market?.sId ?? "empty_market",
+                          child: ImageBuilder.fromString(
+                            market?.image,
+                            icon: Icons.remove_shopping_cart_outlined,
+                            borderWidth: 3,
+                            foregroundColor: AppColors.grey,
+                            backgroundColor: Colors.white,
+                          ),
                         ),
                         SizedBox(height: 10),
                         Text(
@@ -357,6 +361,10 @@ class PurchaseDetailsEndDrawer extends StatelessWidget {
   }
 
   void _navigateToMarketDetails(BuildContext context) {
-    // TODO - Navigate to market details
+    Navigator.of(context).push(MaterialPageRoute(
+      builder: (context) => MarketDetailsView(
+        sId: _store.purchase.market!.sId,
+      ),
+    ));
   }
 }
