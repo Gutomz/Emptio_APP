@@ -5,6 +5,7 @@ import 'package:emptio/stores/connectivity.store.dart';
 import 'package:emptio/views/login/login.view.dart';
 import 'package:emptio/views/notifications/notifications.view.dart';
 import 'package:emptio/views/profile/profile.view.dart';
+import 'package:emptio/views/search_profile/profile_search.view.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:get_it/get_it.dart';
@@ -86,53 +87,72 @@ class MainDrawerActionList extends StatelessWidget {
       child: MediaQuery.removePadding(
         context: context,
         removeTop: true,
-        child: ListView(
-          children: [
-            Observer(builder: (_) {
-              return ListTile(
-                enabled: _authStore.isLogged,
-                onTap: () => _navigateToNotificationsView(context),
-                title: Text("Notificações"),
-                leading: Icon(
-                  Icons.notifications_none_outlined,
+        child: Observer(builder: (context) {
+          return ListView(
+            children: [
+              if (_authStore.isLogged)
+                _buildTile(
+                  onTap: () => _navigateToNotificationsView(context),
+                  title: "Notificações",
+                  icon: Icons.notifications_none_outlined,
                 ),
-                trailing: Icon(Icons.chevron_right_rounded),
-              );
-            }),
-            Divider(color: AppColors.lightGrey, height: 1),
-            Observer(builder: (_) {
-              return ListTile(
-                enabled: _authStore.isLogged,
-                onTap: () {},
-                title: Text("Seguidores"),
-                leading: Icon(
-                  Icons.group_rounded,
+              if (_authStore.isLogged)
+                _buildTile(
+                  onTap: () => _navigateToProfileSearchView(context),
+                  title: "Usuários",
+                  icon: Icons.group_add_outlined,
                 ),
-                trailing: Icon(Icons.chevron_right_rounded),
-              );
-            }),
-            Divider(color: AppColors.lightGrey, height: 1),
-            Observer(builder: (_) {
-              return ListTile(
-                enabled: _authStore.isLogged,
-                onTap: () {},
-                title: Text("Configurações"),
-                leading: Icon(
-                  Icons.settings,
+              if (!_authStore.isLogged)
+                _buildTile(
+                  onTap: () {/* TODO - list markets */},
+                  title: "Mercados",
+                  icon: Icons.store_outlined,
                 ),
-                trailing: Icon(Icons.chevron_right_rounded),
-              );
-            }),
-            Divider(color: AppColors.lightGrey, height: 1),
-          ],
-        ),
+              if (!_authStore.isLogged)
+                _buildTile(
+                  onTap: () {/* TODO - list products */},
+                  title: "Produtos",
+                  icon: Icons.fastfood_outlined,
+                ),
+              _buildTile(
+                onTap: () {/* TODO - configurations screen */},
+                title: "Configurações",
+                icon: Icons.settings,
+              ),
+            ],
+          );
+        }),
       ),
+    );
+  }
+
+  Widget _buildTile({
+    required String title,
+    required Function() onTap,
+    required IconData icon,
+  }) {
+    return Column(
+      children: [
+        ListTile(
+          onTap: onTap,
+          title: Text(title),
+          leading: Icon(icon),
+          trailing: Icon(Icons.chevron_right_rounded),
+        ),
+        Divider(color: AppColors.lightGrey, height: 1),
+      ],
     );
   }
 
   void _navigateToNotificationsView(BuildContext context) {
     Navigator.of(context).push(MaterialPageRoute(
       builder: (context) => NotificationsView(),
+    ));
+  }
+
+  void _navigateToProfileSearchView(BuildContext context) {
+    Navigator.of(context).push(MaterialPageRoute(
+      builder: (context) => ProfileSearchView(),
     ));
   }
 }

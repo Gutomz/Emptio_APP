@@ -4,12 +4,14 @@ import 'package:emptio/core/app_errors.dart';
 import 'package:emptio/helpers/logger.dart';
 import 'package:emptio/models/auth.model.dart';
 import 'package:emptio/models/profile.model.dart';
+import 'package:emptio/models/profile_search.model.dart';
 import 'package:emptio/models/profile_user.model.dart';
 import 'package:emptio/models/user.model.dart';
 import 'package:emptio/stores/auth.store.dart';
 import 'package:emptio/view-models/change_password.view-model.dart';
 import 'package:emptio/view-models/edit_profile.view-model.dart';
 import 'package:emptio/view-models/login.view-model.dart';
+import 'package:emptio/view-models/profile_search_filter.view-model.dart';
 import 'package:emptio/view-models/redefine_password.view-model.dart';
 import 'package:emptio/view-models/register.view-model.dart';
 import 'package:get_it/get_it.dart';
@@ -128,7 +130,7 @@ class UserRepository {
   Future<ProfileModel> getProfile(String userId) async {
     try {
       final data =
-          await _api.get('/users/profile/$userId') as Map<String, dynamic>;
+          await _api.get('/users/profiles/$userId') as Map<String, dynamic>;
       final profileModel = ProfileModel.fromJson(data);
 
       if (userId == _authStore.user!.sId) {
@@ -168,6 +170,23 @@ class UserRepository {
       if (AppApiErrors.isError(error)) {
         return Future.error("Senha atual inválida!");
       }
+
+      return Future.error(AppApiErrors.handleError(error));
+    }
+  }
+
+  Future<List<ProfileSearchModel>> getProfiles(
+      ProfileSearchFilterViewModel model) async {
+    try {
+      final data = await _api.get('/users/profiles/all',
+          queryParameters: model.toQuery()) as List<dynamic>;
+      final list = data
+          .map<ProfileSearchModel>((product) =>
+              ProfileSearchModel.fromJson(product as Map<String, dynamic>))
+          .toList();
+      return list;
+    } catch (error, stack) {
+      Logger.error(tag, 'getProfile', error, stack);
 
       return Future.error(AppApiErrors.handleError(error));
     }
