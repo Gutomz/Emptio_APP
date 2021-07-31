@@ -127,6 +127,25 @@ class UserRepository {
     }
   }
 
+  // ignore: avoid_positional_boolean_parameters
+  Future<UserModel> updateCanNotify(bool canNotify) async {
+    try {
+      final data =
+          await _api.patch("/users/canNotify", body: {"canNotify": canNotify})
+              as Map<String, dynamic>;
+
+      final user = UserModel.fromJson(data);
+
+      _authStore.user = await getMe();
+
+      return user;
+    } catch (error, stack) {
+      Logger.error(tag, 'getMe', error, stack);
+
+      return Future.error(AppApiErrors.handleError(error));
+    }
+  }
+
   Future<ProfileModel> getProfile(String userId) async {
     try {
       final data =

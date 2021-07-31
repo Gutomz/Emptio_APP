@@ -2,6 +2,7 @@ import 'package:emptio/common/widgets/user_avatar.widget.dart';
 import 'package:emptio/core/app_colors.dart';
 import 'package:emptio/stores/auth.store.dart';
 import 'package:emptio/stores/connectivity.store.dart';
+import 'package:emptio/views/configurations/configurations.view.dart';
 import 'package:emptio/views/login/login.view.dart';
 import 'package:emptio/views/notifications/notifications.view.dart';
 import 'package:emptio/views/profile/profile.view.dart';
@@ -115,7 +116,7 @@ class MainDrawerActionList extends StatelessWidget {
                   icon: Icons.fastfood_outlined,
                 ),
               _buildTile(
-                onTap: () {/* TODO - configurations screen */},
+                onTap: () => _navigateToConfigurationsView(context),
                 title: "Configurações",
                 icon: Icons.settings,
               ),
@@ -153,6 +154,12 @@ class MainDrawerActionList extends StatelessWidget {
   void _navigateToProfileSearchView(BuildContext context) {
     Navigator.of(context).push(MaterialPageRoute(
       builder: (context) => ProfileSearchView(),
+    ));
+  }
+
+  void _navigateToConfigurationsView(BuildContext context) {
+    Navigator.of(context).push(MaterialPageRoute(
+      builder: (context) => ConfigurationsView(),
     ));
   }
 }
@@ -200,7 +207,7 @@ class MainDrawerHeader extends StatelessWidget {
                       );
                     }
 
-                    if (!_authStore.isLogged) {
+                    if (!_authStore.offlineLogged) {
                       return TextButton(
                         onPressed: () {
                           Navigator.of(context).push(

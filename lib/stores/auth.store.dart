@@ -15,6 +15,7 @@ abstract class _AuthStoreBase with Store {
   final ConnectivityStore _connectivityStore = GetIt.I<ConnectivityStore>();
   final String _authKey = "auth_key";
   final String _keepLoggedOutKey = "keepLoggedOut_key";
+  final String _offlineModeKey = "offlineMode_key";
 
   @observable
   AuthModel? auth;
@@ -31,10 +32,14 @@ abstract class _AuthStoreBase with Store {
   @observable
   bool keepLoggedOut = false;
 
+  @observable
+  bool offlineMode = false;
+
   @action
   Future login(AuthModel authModel) async {
     loading = true;
     auth = authModel;
+    triggerOfflineMode(false);
 
     if (_connectivityStore.isConnected) {
       try {
@@ -83,6 +88,11 @@ abstract class _AuthStoreBase with Store {
         keepLoggedOut = _keepLoggedOut;
       }
 
+      final bool? _offlineMode = sharedPreferences.getBool(_offlineModeKey);
+      if (_offlineMode != null) {
+        offlineMode = _offlineMode;
+      }
+
       final String? authString = sharedPreferences.getString(_authKey);
       if (authString != null) {
         final AuthModel authModel =
@@ -123,9 +133,22 @@ abstract class _AuthStoreBase with Store {
     keepLoggedOut = true;
   }
 
+  @action
+  // ignore: avoid_positional_boolean_parameters
+  Future<void> triggerOfflineMode(bool value) async {
+    final SharedPreferences sharedPreferences =
+        await SharedPreferences.getInstance();
+
+    sharedPreferences.setBool(_offlineModeKey, value);
+    offlineMode = value;
+  }
+
   @computed
   bool get isLogged =>
-      _connectivityStore.isConnected && auth != null && user != null;
+      _connectivityStore.isConnected &&
+      !offlineMode &&
+      auth != null &&
+      user != null;
 
   @computed
   bool get offlineLogged => auth != null && user != null;

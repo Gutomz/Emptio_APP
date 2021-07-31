@@ -105,6 +105,21 @@ mixin _$AuthStore on _AuthStoreBase, Store {
     });
   }
 
+  final _$offlineModeAtom = Atom(name: '_AuthStoreBase.offlineMode');
+
+  @override
+  bool get offlineMode {
+    _$offlineModeAtom.reportRead();
+    return super.offlineMode;
+  }
+
+  @override
+  set offlineMode(bool value) {
+    _$offlineModeAtom.reportWrite(value, super.offlineMode, () {
+      super.offlineMode = value;
+    });
+  }
+
   final _$loginAsyncAction = AsyncAction('_AuthStoreBase.login');
 
   @override
@@ -143,6 +158,15 @@ mixin _$AuthStore on _AuthStoreBase, Store {
     return _$setKeepLoggedOutAsyncAction.run(() => super.setKeepLoggedOut());
   }
 
+  final _$triggerOfflineModeAsyncAction =
+      AsyncAction('_AuthStoreBase.triggerOfflineMode');
+
+  @override
+  Future<void> triggerOfflineMode(bool value) {
+    return _$triggerOfflineModeAsyncAction
+        .run(() => super.triggerOfflineMode(value));
+  }
+
   @override
   String toString() {
     return '''
@@ -151,6 +175,7 @@ user: ${user},
 loading: ${loading},
 isActive: ${isActive},
 keepLoggedOut: ${keepLoggedOut},
+offlineMode: ${offlineMode},
 isLogged: ${isLogged},
 offlineLogged: ${offlineLogged},
 loggedId: ${loggedId}
