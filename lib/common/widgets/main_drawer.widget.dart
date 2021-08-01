@@ -4,6 +4,7 @@ import 'package:emptio/stores/auth.store.dart';
 import 'package:emptio/stores/connectivity.store.dart';
 import 'package:emptio/views/configurations/configurations.view.dart';
 import 'package:emptio/views/login/login.view.dart';
+import 'package:emptio/views/markets_list/markets_list.view.dart';
 import 'package:emptio/views/notifications/notifications.view.dart';
 import 'package:emptio/views/products_list/products_list.view.dart';
 import 'package:emptio/views/profile/profile.view.dart';
@@ -106,14 +107,14 @@ class MainDrawerActionList extends StatelessWidget {
                 ),
               if (!_authStore.isLogged)
                 _buildTile(
-                  onTap: () {/* TODO - list markets */},
-                  title: "Mercados",
+                  onTap: () => _navigateToMarketsListView(context),
+                  title: "Lista de Mercados",
                   icon: Icons.store_outlined,
                 ),
               if (!_authStore.isLogged)
                 _buildTile(
                   onTap: () => _navigateToProductsListView(context),
-                  title: "Produtos",
+                  title: "Lista de Produtos",
                   icon: Icons.fastfood_outlined,
                 ),
               _buildTile(
@@ -167,6 +168,12 @@ class MainDrawerActionList extends StatelessWidget {
   void _navigateToProductsListView(BuildContext context) {
     Navigator.of(context).push(MaterialPageRoute(
       builder: (context) => ProductsListView(),
+    ));
+  }
+
+  void _navigateToMarketsListView(BuildContext context) {
+    Navigator.of(context).push(MaterialPageRoute(
+      builder: (context) => MarketsListView(),
     ));
   }
 }
