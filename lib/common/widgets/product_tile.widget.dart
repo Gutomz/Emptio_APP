@@ -9,10 +9,15 @@ class ProductTile extends StatelessWidget {
   final ProductModel product;
   final Function()? onTap;
   final bool hidePrice;
+  final bool isFavorite;
 
-  const ProductTile(this.product,
-      {Key? key, required this.onTap, this.hidePrice = false})
-      : super(key: key);
+  const ProductTile(
+    this.product, {
+    Key? key,
+    required this.onTap,
+    this.hidePrice = false,
+    this.isFavorite = false,
+  }) : super(key: key);
 
   String getDateText() {
     if (product.marketPrice != null) {
@@ -65,7 +70,9 @@ class ProductTile extends StatelessWidget {
                           ),
                         ),
                         Icon(
-                          Icons.double_arrow_rounded,
+                          isFavorite
+                              ? Icons.favorite
+                              : Icons.double_arrow_rounded,
                           color: AppColors.grey,
                           size: 16,
                         )

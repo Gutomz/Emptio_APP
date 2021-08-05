@@ -1,4 +1,4 @@
-import 'package:emptio/common/delegates/purchase_item_search/store/product_search.store.dart';
+import 'package:emptio/common/delegates/product_search/store/product_search.store.dart';
 import 'package:emptio/common/widgets/dismissible_background.widget.dart';
 import 'package:emptio/common/widgets/market_indicator.widget.dart';
 import 'package:emptio/common/widgets/product_tile.widget.dart';
@@ -19,19 +19,23 @@ class ProductSearchResponse {
 class ProductSearch extends SearchDelegate<ProductSearchResponse?> {
   late ProductSearchStore _store;
 
-  final Function(ProductModel) onQuickSelect;
+  final Function(ProductModel)? onQuickSelect;
   final MarketModel? connectedMarket;
+  final bool canAddNew;
 
   ProductSearch({
-    required this.onQuickSelect,
+    this.onQuickSelect,
     this.connectedMarket,
+    this.canAddNew = true,
     String purchaseId = "",
     String basePurchaseId = "",
+    bool isFavorite = false,
   }) {
     _store = ProductSearchStore(
       purchaseId: purchaseId,
       basePurchaseId: basePurchaseId,
       limit: 10,
+      isFavorite: isFavorite,
     );
   }
 
@@ -144,13 +148,13 @@ class ProductSearch extends SearchDelegate<ProductSearchResponse?> {
       }
 
       return ListView.separated(
-        itemCount: _store.itemCount + 1,
+        itemCount: canAddNew ? _store.itemCount + 1 : _store.itemCount,
         separatorBuilder: (context, index) => Divider(
           height: 1,
           color: AppColors.lightGrey,
         ),
         itemBuilder: (context, index) {
-          if (index == 0) {
+          if (canAddNew && index == 0) {
             return AddProductTile(
               title: 'Adicionar novo produto',
               onTap: () {
@@ -159,27 +163,38 @@ class ProductSearch extends SearchDelegate<ProductSearchResponse?> {
             );
           }
 
-          if (index - 1 < _store.productsList.length) {
-            final product = _store.productsList[index - 1];
+          final realIndex = canAddNew ? index - 1 : index;
 
-            return Dismissible(
-              key: Key(product.sId),
-              direction: DismissDirection.startToEnd,
-              onDismissed: (direction) {
-                onQuickSelect(product);
-                _store.removeProduct(product.sId);
-              },
-              background: DismissibleBackground(
-                icon: Icons.check_rounded,
-                title: "Adicionar",
-                color: AppColors.green,
-              ),
-              child: ProductTile(
-                product,
-                onTap: () =>
-                    close(context, ProductSearchResponse(product: product)),
-                hidePrice: connectedMarket == null,
-              ),
+          if (realIndex < _store.productsList.length) {
+            final product = _store.productsList[realIndex];
+
+            if (onQuickSelect != null) {
+              return Dismissible(
+                key: Key(product.sId),
+                direction: DismissDirection.startToEnd,
+                onDismissed: (direction) {
+                  onQuickSelect!(product);
+                  _store.removeProduct(product.sId);
+                },
+                background: DismissibleBackground(
+                  icon: Icons.check_rounded,
+                  title: "Adicionar",
+                  color: AppColors.green,
+                ),
+                child: ProductTile(
+                  product,
+                  onTap: () =>
+                      close(context, ProductSearchResponse(product: product)),
+                  hidePrice: connectedMarket == null,
+                ),
+              );
+            }
+
+            return ProductTile(
+              product,
+              onTap: () =>
+                  close(context, ProductSearchResponse(product: product)),
+              hidePrice: connectedMarket == null,
             );
           }
 

@@ -36,6 +36,12 @@ abstract class _AuthStoreBase with Store {
   bool offlineMode = false;
 
   @action
+  void clear() {
+    auth = null;
+    user = null;
+  }
+
+  @action
   Future login(AuthModel authModel) async {
     loading = true;
     auth = authModel;

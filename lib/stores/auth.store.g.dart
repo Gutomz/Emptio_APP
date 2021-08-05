@@ -167,6 +167,20 @@ mixin _$AuthStore on _AuthStoreBase, Store {
         .run(() => super.triggerOfflineMode(value));
   }
 
+  final _$_AuthStoreBaseActionController =
+      ActionController(name: '_AuthStoreBase');
+
+  @override
+  void clear() {
+    final _$actionInfo = _$_AuthStoreBaseActionController.startAction(
+        name: '_AuthStoreBase.clear');
+    try {
+      return super.clear();
+    } finally {
+      _$_AuthStoreBaseActionController.endAction(_$actionInfo);
+    }
+  }
+
   @override
   String toString() {
     return '''

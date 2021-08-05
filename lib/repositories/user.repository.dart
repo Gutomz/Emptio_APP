@@ -140,7 +140,7 @@ class UserRepository {
 
       return user;
     } catch (error, stack) {
-      Logger.error(tag, 'getMe', error, stack);
+      Logger.error(tag, 'updateCanNotify', error, stack);
 
       return Future.error(AppApiErrors.handleError(error));
     }

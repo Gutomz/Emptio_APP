@@ -12,6 +12,7 @@ abstract class _ProductSearchStoreBase with Store {
   _ProductSearchStoreBase({
     String purchaseId = "",
     String basePurchaseId = "",
+    bool isFavorite = false,
     this.limit = 10,
   }) {
     autorun((_) async {
@@ -23,6 +24,7 @@ abstract class _ProductSearchStoreBase with Store {
           skip: skip,
           purchaseId: purchaseId,
           basePurchaseId: basePurchaseId,
+          isFavorite: isFavorite,
         );
 
         await loadProducts(filter);

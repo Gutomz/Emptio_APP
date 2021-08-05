@@ -4,6 +4,7 @@ class ProductFilterViewModel {
   int skip;
   String purchaseId;
   String basePurchaseId;
+  bool isFavorite;
 
   ProductFilterViewModel({
     required this.search,
@@ -11,6 +12,7 @@ class ProductFilterViewModel {
     this.skip = 0,
     this.purchaseId = "",
     this.basePurchaseId = "",
+    this.isFavorite = false,
   });
 
   Map<String, dynamic> toJson() {
@@ -20,6 +22,7 @@ class ProductFilterViewModel {
     data['skip'] = skip;
     data['purchase_id'] = purchaseId;
     data['basePurchase_id'] = basePurchaseId;
+    data['isFavorite'] = isFavorite;
     return data;
   }
 
@@ -30,6 +33,7 @@ class ProductFilterViewModel {
     data['skip'] = skip.toString();
     data['purchase_id'] = purchaseId;
     data['basePurchase_id'] = basePurchaseId;
+    data['isFavorite'] = isFavorite.toString();
     return data;
   }
 }

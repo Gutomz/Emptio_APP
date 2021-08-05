@@ -1,5 +1,6 @@
 import 'package:emptio/models/purchase.model.dart';
 import 'package:emptio/views/base_purchases/store/base_purchases.store.dart';
+import 'package:emptio/views/favorites/store/favorites.store.dart';
 import 'package:emptio/views/home/store/home.store.dart';
 import 'package:emptio/views/purchases/store/purchases.store.dart';
 import 'package:mobx/mobx.dart';
@@ -13,4 +14,6 @@ class AppStore with Store {
       PurchasesStore(status: PurchaseStatusTypes.closed);
 
   BasePurchasesStore basePurchasesStore = BasePurchasesStore();
+
+  FavoritesStore favoritesStore = FavoritesStore();
 }

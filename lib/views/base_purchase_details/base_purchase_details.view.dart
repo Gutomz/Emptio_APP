@@ -1,4 +1,4 @@
-import 'package:emptio/common/delegates/purchase_item_search/purchase_item_search.dart';
+import 'package:emptio/common/delegates/product_search/product_search.dart';
 import 'package:emptio/common/widgets/search_dialog.widget.dart';
 import 'package:emptio/models/base_purchase.model.dart';
 import 'package:emptio/models/product.model.dart';

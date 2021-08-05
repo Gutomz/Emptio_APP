@@ -176,7 +176,7 @@ class NewPurchaseItemView extends StatelessWidget {
                           style: TextStyle(
                             color: AppColors.blue,
                             fontWeight: FontWeight.w600,
-                            fontSize: 16,
+                            fontSize: 14,
                           ),
                         ),
                         TextButton(
@@ -190,7 +190,7 @@ class NewPurchaseItemView extends StatelessWidget {
                           child: Row(
                             children: [
                               Icon(Icons.add, size: 16),
-                              Text('Adicionar'),
+                              Text('adicionar'),
                             ],
                           ),
                         )

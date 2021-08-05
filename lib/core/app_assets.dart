@@ -11,6 +11,7 @@ class AppAssets {
       "assets/svg/ic_notifications_empty.svg";
   static String get svgIcFollowersEmpty => "assets/svg/ic_followers_empty.svg";
   static String get svgIcError => "assets/svg/ic_error.svg";
+  static String get svgIcFavoritesEmpty => "assets/svg/ic_favorites_empty.svg";
 
   // Images
   static String get imageMarket => "assets/images/market.jpg";

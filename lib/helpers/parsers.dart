@@ -121,6 +121,19 @@ class JsonParser {
     }
   }
 
+  static List<MarketModel> parseToMarketList(dynamic value) {
+    final list = List<MarketModel>.empty(growable: true);
+    try {
+      if (value != null) {
+        final items = value as List<dynamic>;
+        for (final item in items) {
+          list.add(MarketModel.fromJson(item as Map<String, dynamic>));
+        }
+      }
+    } catch (_) {}
+    return list;
+  }
+
   static ProductModel? parseToProduct(dynamic value) {
     try {
       return ProductModel.fromJson(value as Map<String, dynamic>);

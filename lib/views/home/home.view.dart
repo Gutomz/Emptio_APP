@@ -1,5 +1,6 @@
 import 'dart:developer';
 
+import 'package:emptio/common/delegates/product_search/product_search.dart';
 import 'package:emptio/common/widgets/main_bottom_navigator.widget.dart';
 import 'package:emptio/common/widgets/main_drawer.widget.dart';
 import 'package:emptio/core/app_colors.dart';
@@ -9,6 +10,7 @@ import 'package:emptio/stores/connectivity.store.dart';
 import 'package:emptio/view-models/create_purchase.view-model.dart';
 import 'package:emptio/views/base_purchase_details/base_purchase_details.view.dart';
 import 'package:emptio/views/base_purchases/base_purchases.view.dart';
+import 'package:emptio/views/favorite_details/favorite_details.view.dart';
 import 'package:emptio/views/favorites/favorites.view.dart';
 import 'package:emptio/views/feed/feed.view.dart';
 import 'package:emptio/views/purchase_details/purchase_details.view.dart';
@@ -45,8 +47,6 @@ class _HomeViewState extends State<HomeView> {
   final List<Widget> screens = [
     PurchasesView(),
     BasePurchasesView(),
-    FavoritesView(),
-    FeedView(),
   ];
 
   final List<Future<void> Function(BuildContext)> actions = [];
@@ -65,6 +65,13 @@ class _HomeViewState extends State<HomeView> {
       favoritesViewAction,
       feedViewAction,
     ]);
+
+    if (_authStore.isLogged) {
+      screens.addAll([
+        FavoritesView(),
+        FeedView(),
+      ]);
+    }
 
     _disposer = reaction(
       (_) => _connectivityStore.isConnected,
@@ -152,8 +159,24 @@ class _HomeViewState extends State<HomeView> {
   }
 
   Future<void> favoritesViewAction(BuildContext context) async {
-    // TODO - Favorites View action
-    log('Add favorite');
+    final _favoritesStore = _appStore.favoritesStore;
+    final response = await showSearch(
+      context: context,
+      delegate: ProductSearch(
+        canAddNew: false,
+        isFavorite: true,
+      ),
+    );
+
+    if (response != null) {
+      final favorite = await _favoritesStore.create(response.product!.sId);
+
+      if (favorite != null) {
+        Navigator.of(context).push(MaterialPageRoute(
+            builder: (context) =>
+                FavoriteDetailsView(favoriteId: favorite.sId)));
+      }
+    }
   }
 
   Future<void> feedViewAction(BuildContext context) async {

@@ -23,7 +23,11 @@ class MarketSearchResponse {
 }
 
 class MarketSearch extends SearchDelegate<MarketSearchResponse?> {
-  final MarketSearchStore _store = MarketSearchStore();
+  final MarketSearchStore _store;
+
+  MarketSearch({
+    String? favoriteId,
+  }) : _store = MarketSearchStore(favoriteId: favoriteId);
 
   @override
   String? get searchFieldLabel => "Pesquisar mercado";

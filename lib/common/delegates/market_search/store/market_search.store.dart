@@ -11,6 +11,10 @@ part 'market_search.store.g.dart';
 class MarketSearchStore = _MarketSearchStoreBase with _$MarketSearchStore;
 
 abstract class _MarketSearchStoreBase with Store {
+  final String? favoriteId;
+
+  _MarketSearchStoreBase({required this.favoriteId});
+
   ObservableList<MarketSuggestion> suggestionList = ObservableList();
   ObservableList<MarketModel> marketsList = ObservableList();
 
@@ -41,6 +45,7 @@ abstract class _MarketSearchStoreBase with Store {
     setLoading(true);
 
     try {
+      filter.favoriteId = favoriteId;
       final list = await MarketRepository().get(filter);
       search = filter.search;
 

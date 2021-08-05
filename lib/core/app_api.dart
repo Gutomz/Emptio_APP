@@ -40,7 +40,7 @@ class AppApi extends HttpRequestService {
       return Future.value(body);
     } else if (code == HttpStatus.unauthorized) {
       final AuthStore store = GetIt.I<AuthStore>();
-      await store.logout();
+      store.clear();
     }
 
     return Future.error(body as Map<String, dynamic>);
