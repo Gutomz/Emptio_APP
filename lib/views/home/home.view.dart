@@ -3,10 +3,8 @@ import 'dart:developer';
 import 'package:emptio/common/delegates/product_search/product_search.dart';
 import 'package:emptio/common/widgets/main_bottom_navigator.widget.dart';
 import 'package:emptio/common/widgets/main_drawer.widget.dart';
-import 'package:emptio/core/app_colors.dart';
 import 'package:emptio/stores/app.store.dart';
 import 'package:emptio/stores/auth.store.dart';
-import 'package:emptio/stores/connectivity.store.dart';
 import 'package:emptio/view-models/create_purchase.view-model.dart';
 import 'package:emptio/views/base_purchase_details/base_purchase_details.view.dart';
 import 'package:emptio/views/base_purchases/base_purchases.view.dart';
@@ -18,7 +16,6 @@ import 'package:emptio/views/purchases/purchases.view.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:get_it/get_it.dart';
-import 'package:mobx/mobx.dart';
 
 class HomeView extends StatefulWidget {
   @override
@@ -26,7 +23,6 @@ class HomeView extends StatefulWidget {
 }
 
 class _HomeViewState extends State<HomeView> {
-  final _connectivityStore = GetIt.I<ConnectivityStore>();
   final _authStore = GetIt.I<AuthStore>();
   final _appStore = GetIt.I<AppStore>();
 
@@ -51,8 +47,6 @@ class _HomeViewState extends State<HomeView> {
 
   final List<Future<void> Function(BuildContext)> actions = [];
 
-  late ReactionDisposer _disposer;
-
   void onFabPressed(BuildContext context, int currentTab) {
     actions[currentTab](context);
   }
@@ -73,38 +67,7 @@ class _HomeViewState extends State<HomeView> {
       ]);
     }
 
-    _disposer = reaction(
-      (_) => _connectivityStore.isConnected,
-      (bool connected) {
-        if (_authStore.isActive) {
-          if (connected) {
-            _authStore.initAuthenticated();
-          }
-
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-              content: Text(
-                !connected
-                    ? 'Sem conexão com a internet!'
-                    : 'Conectado à internet!',
-              ),
-              backgroundColor: AppColors.darkGrey,
-              duration: Duration(seconds: 5),
-            ),
-          );
-
-          Navigator.of(context).popUntil((route) => route.isFirst);
-        }
-      },
-    );
-
     super.initState();
-  }
-
-  @override
-  void dispose() {
-    _disposer();
-    super.dispose();
   }
 
   @override

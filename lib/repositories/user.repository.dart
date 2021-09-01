@@ -210,4 +210,17 @@ class UserRepository {
       return Future.error(AppApiErrors.handleError(error));
     }
   }
+
+  Future<UserModel> updatePushToken(String token) async {
+    try {
+      final data =
+          await _api.patch("/users/pushToken", body: {"pushToken": token})
+              as Map<String, dynamic>;
+      return UserModel.fromJson(data);
+    } catch (error, stack) {
+      Logger.error(tag, 'updatePushToken', error, stack);
+
+      return Future.error(AppApiErrors.handleError(error));
+    }
+  }
 }

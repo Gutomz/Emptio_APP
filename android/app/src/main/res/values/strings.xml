@@ -1,0 +1,7 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+    <string name="app_name">Emptio</string>
+    <string name="package_name">com.gutomz.emptio</string>
+    <string name="custom_url_scheme">com.gutomz.emptio</string>
+    <string name="default_notification_channel_id">com.gutomz.emptio</string>
+</resources>

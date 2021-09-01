@@ -4,6 +4,7 @@ import 'package:emptio/models/auth.model.dart';
 import 'package:emptio/models/user.model.dart';
 import 'package:emptio/repositories/user.repository.dart';
 import 'package:emptio/stores/connectivity.store.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:get_it/get_it.dart';
 import 'package:mobx/mobx.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -49,7 +50,13 @@ abstract class _AuthStoreBase with Store {
 
     if (_connectivityStore.isConnected) {
       try {
-        user = await UserRepository().getMe();
+        final pushToken = await FirebaseMessaging.instance.getToken();
+
+        if (pushToken != null) {
+          user = await UserRepository().updatePushToken(pushToken);
+        } else {
+          user = await UserRepository().getMe();
+        }
 
         final SharedPreferences sharedPreferences =
             await SharedPreferences.getInstance();
