@@ -43,14 +43,14 @@ class ProductTile extends StatelessWidget {
               tag: 'product${product.sId}',
               child: ImageBuilder.fromString(
                 product.image,
-                size: 60,
+                size: 75,
                 iconSize: 22,
               ),
             ),
             SizedBox(width: 10),
             Expanded(
               child: SizedBox(
-                height: 60,
+                height: 75,
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   crossAxisAlignment: CrossAxisAlignment.start,

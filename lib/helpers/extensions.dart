@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'dart:io';
+import 'dart:typed_data';
 
 import 'package:intl/intl.dart';
 import 'package:mime_type/mime_type.dart';
@@ -61,8 +62,14 @@ extension FileExtension on File {
     final bytes = readAsBytesSync();
 
     final filename = path.split('/').last;
-    final mimeType = mime(filename) ?? "image/png";
+    final mimeType = mime(filename) ?? "image/jpeg";
 
     return "data:$mimeType;base64,${base64Encode(bytes)}";
+  }
+}
+
+extension Uint8ListExtension on Uint8List {
+  String parseToBase64() {
+    return "data:image/jpeg;base64,${base64Encode(this)}";
   }
 }

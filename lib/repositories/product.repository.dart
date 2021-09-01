@@ -5,6 +5,7 @@ import 'package:emptio/helpers/logger.dart';
 import 'package:emptio/models/product.model.dart';
 import 'package:emptio/stores/auth.store.dart';
 import 'package:emptio/view-models/product_filter.view-model.dart';
+import 'package:emptio/view-models/product_recognizer.view-model.dart';
 import 'package:get_it/get_it.dart';
 
 class ProductRepository {
@@ -37,6 +38,21 @@ class ProductRepository {
       return await ProductDao.getAllParsed(filter);
     } catch (error, stack) {
       Logger.error(tag, 'get', error, stack);
+
+      return Future.error(AppApiErrors.handleError(error));
+    }
+  }
+
+  Future<List<ProductModel>> recognize(ProductRecognizerViewModel model) async {
+    try {
+      final data = await _api.post('/products/recognize', body: model.toJson())
+          as List<dynamic>;
+      return data
+          .map<ProductModel>((product) =>
+              ProductModel.fromJson(product as Map<String, dynamic>))
+          .toList();
+    } catch (error, stack) {
+      Logger.error(tag, 'recognize', error, stack);
 
       return Future.error(AppApiErrors.handleError(error));
     }
