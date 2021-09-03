@@ -1,5 +1,6 @@
 import 'package:emptio/helpers/parsers.dart';
 import 'package:emptio/models/measurement.model.dart';
+import 'package:emptio/models/product_market.model.dart';
 
 class ProductModel {
   String sId;
@@ -12,9 +13,7 @@ class ProductModel {
   late String updatedAt;
   late String createdAt;
 
-  double? marketPrice;
-  String? marketPriceUpdatedAt;
-  String? marketPriceUpdatedBy;
+  ProductMarketModel? marketDetails;
 
   ProductModel({
     required this.sId,
@@ -26,9 +25,7 @@ class ProductModel {
     required this.tags,
     required this.updatedAt,
     required this.createdAt,
-    this.marketPrice,
-    this.marketPriceUpdatedAt,
-    this.marketPriceUpdatedBy,
+    this.marketDetails,
   });
 
   factory ProductModel.fromJson(Map<String, dynamic> json) {
@@ -40,18 +37,10 @@ class ProductModel {
       image: JsonParser.parseToImageUrl(json['image']),
       weight: JsonParser.parseToMeasurement(json['weight'])!,
       tags: JsonParser.parseToStringList(json['tags']),
+      marketDetails: JsonParser.parseToProductMarket(json['productMarket']),
       updatedAt: JsonParser.parseToString(json['updatedAt']),
       createdAt: JsonParser.parseToString(json['createdAt']),
     );
-
-    final productMarket =
-        JsonParser.parseToProductMarket(json['productMarket']);
-
-    if (productMarket != null) {
-      model.marketPrice = productMarket.price;
-      model.marketPriceUpdatedAt = productMarket.updatedAt;
-      model.marketPriceUpdatedBy = productMarket.updatedBy;
-    }
 
     return model;
   }

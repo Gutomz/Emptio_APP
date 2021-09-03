@@ -189,7 +189,7 @@ abstract class _PurchaseDetailsStoreBase with Store {
   int get totalProductsCount => checkedItems.length + items.length;
 
   @computed
-  bool get isClosed => PurchaseStatusTypes.closed.contains(purchase.status);
+  bool get isClosed => PurchaseStatusTypes.closed == purchase.status;
 
   @computed
   bool get conditionProductsCount => totalProductsCount > 0;

@@ -8,12 +8,15 @@ class PurchaseItemModel {
   int quantity;
   bool checked;
 
+  String? completedProductMarket;
+
   PurchaseItemModel({
     required this.sId,
     required this.product,
     required this.price,
     required this.quantity,
     required this.checked,
+    this.completedProductMarket,
   });
 
   factory PurchaseItemModel.fromJson(Map<String, dynamic> json) {
@@ -23,6 +26,8 @@ class PurchaseItemModel {
       price: JsonParser.parseToDouble(json['price']),
       quantity: JsonParser.parseToInt(json['quantity']),
       checked: JsonParser.parseToBool(json['checked']),
+      completedProductMarket:
+          JsonParser.parseToString(json["completedProductMarket"]),
     );
 
     return model;

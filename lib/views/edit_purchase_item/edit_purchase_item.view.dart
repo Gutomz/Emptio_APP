@@ -102,7 +102,7 @@ class EditPurchaseItemView extends StatelessWidget {
                     Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        if (product.marketPrice != null)
+                        if (product.marketDetails != null)
                           RichText(
                             text: TextSpan(
                               text: 'O valor encontrado foi de ',
@@ -114,7 +114,7 @@ class EditPurchaseItemView extends StatelessWidget {
                               children: [
                                 TextSpan(
                                   text:
-                                      'R\$ ${product.marketPrice!.formatMoney()}',
+                                      'R\$ ${product.marketDetails!.price.formatMoney()}',
                                   style: TextStyle(
                                     color: AppColors.black,
                                     fontWeight: FontWeight.w500,

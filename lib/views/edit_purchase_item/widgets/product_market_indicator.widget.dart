@@ -38,7 +38,7 @@ class ProductMarketIndicator extends StatelessWidget {
                 ),
                 overflow: TextOverflow.ellipsis,
               ),
-              if (product.marketPrice != null)
+              if (product.marketDetails != null)
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
@@ -51,7 +51,7 @@ class ProductMarketIndicator extends StatelessWidget {
                         ),
                         SizedBox(width: 5),
                         Text(
-                          product.marketPriceUpdatedAt!.formatDate(),
+                          product.marketDetails!.updatedAt.formatDate(),
                           style: TextStyle(
                             color: Colors.white,
                             fontSize: 12,
@@ -71,7 +71,7 @@ class ProductMarketIndicator extends StatelessWidget {
                           ),
                         ),
                         Text(
-                          product.marketPrice!.formatMoney(),
+                          product.marketDetails!.price.formatMoney(),
                           style: TextStyle(
                             fontSize: 14,
                             fontWeight: FontWeight.bold,

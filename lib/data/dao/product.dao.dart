@@ -103,10 +103,7 @@ class ProductDao {
           productKey: product.key as int,
         );
 
-        if (productMarket != null) {
-          product.marketPrice = productMarket.price;
-          product.marketPriceUpdatedAt = productMarket.updatedAt;
-        }
+        product.marketDetails = productMarket;
       }
     }
 
@@ -148,6 +145,9 @@ class ProductDao {
   }
 
   static Future<ProductModel> parseToProductModel(Product product) async {
+    final marketDetails =
+        await ProductMarketDao.parseToProductMarketModel(product.marketDetails);
+
     return ProductModel(
       sId: product.key.toString(),
       brand: product.brand,
@@ -161,8 +161,7 @@ class ProductDao {
       image: product.image,
       createdAt: product.createdAt,
       updatedAt: product.updatedAt,
-      marketPrice: product.marketPrice,
-      marketPriceUpdatedAt: product.marketPriceUpdatedAt,
+      marketDetails: marketDetails,
     );
   }
 }

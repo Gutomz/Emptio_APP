@@ -1,5 +1,6 @@
 import 'package:emptio/data/database.dart';
 import 'package:emptio/data/models/product_market/product_market.dart';
+import 'package:emptio/models/product_market.model.dart';
 import 'package:hive/hive.dart';
 import 'package:emptio/helpers/extensions.dart';
 
@@ -75,5 +76,17 @@ class ProductMarketDao {
 
     return _mBox!.values.safeFirstWhere(
         (e) => e.productKey == productKey && e.marketKey == marketKey);
+  }
+
+  static Future<ProductMarketModel?> parseToProductMarketModel(
+      ProductMarket? productMarket) async {
+    if (productMarket == null) return null;
+
+    return ProductMarketModel(
+      sId: productMarket.key.toString(),
+      price: productMarket.price,
+      updatedAt: productMarket.updatedAt,
+      updatedBy: "me",
+    );
   }
 }

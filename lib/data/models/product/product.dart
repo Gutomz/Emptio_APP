@@ -1,5 +1,6 @@
 import 'package:emptio/data/database.dart';
 import 'package:emptio/data/models/measurement/measurement.dart';
+import 'package:emptio/data/models/product_market/product_market.dart';
 import 'package:hive/hive.dart';
 
 part 'product.g.dart';
@@ -31,14 +32,10 @@ class Product extends HiveObject {
   String updatedAt;
 
   @HiveField(8)
-  double? marketPrice;
+  ProductMarket? marketDetails;
 
   @HiveField(9)
-  String? marketPriceUpdatedAt;
-
-  @HiveField(10)
   bool deleted = false;
-  
 
   Product({
     required this.brand,
@@ -49,7 +46,6 @@ class Product extends HiveObject {
     required this.tags,
     required this.createdAt,
     required this.updatedAt,
-    this.marketPrice,
-    this.marketPriceUpdatedAt,
+    this.marketDetails,
   });
 }

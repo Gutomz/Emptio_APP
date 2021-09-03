@@ -106,7 +106,10 @@ abstract class _PurchasesStoreBase with Store {
   void updatePurchase(PurchaseModel model) {
     final index =
         purchaseList.indexWhere((element) => element.sId == model.sId);
-    purchaseList[index] = model;
+
+    if (index != -1 && index < purchaseList.length) {
+      purchaseList[index] = model;
+    }
   }
 
   @action

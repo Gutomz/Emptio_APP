@@ -20,15 +20,15 @@ class ProductTile extends StatelessWidget {
   }) : super(key: key);
 
   String getDateText() {
-    if (product.marketPrice != null) {
-      return product.marketPriceUpdatedAt!.formatDate();
+    if (product.marketDetails != null) {
+      return product.marketDetails!.updatedAt.formatDate();
     }
 
     return "-";
   }
 
   String getPriceText() {
-    return (product.marketPrice ?? 0).formatMoney();
+    return (product.marketDetails?.price ?? 0).formatMoney();
   }
 
   @override

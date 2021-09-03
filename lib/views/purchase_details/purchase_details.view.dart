@@ -71,7 +71,7 @@ class PurchaseDetailsView extends StatelessWidget {
 
   void onQuickSelectProduct(ProductModel product) {
     _store.addItem(AddPurchaseItemViewModel(
-      price: product.marketPrice ?? 0,
+      price: product.marketDetails?.price ?? 0,
       quantity: 1,
       productId: product.sId,
     ));
@@ -99,7 +99,7 @@ class PurchaseDetailsView extends StatelessWidget {
         builder: (context) => EditPurchaseItemView(
           connectedMarket: _store.purchase.market,
           product: product,
-          initialPrice: product.marketPrice,
+          initialPrice: product.marketDetails?.price,
         ),
       ),
     );

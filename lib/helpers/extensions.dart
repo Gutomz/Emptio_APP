@@ -17,10 +17,14 @@ extension StringExtension on String {
     return "$date às $time";
   }
 
-  String customFormatDate(String format) {
-    final DateFormat dateFormat = DateFormat(format);
-    final DateTime date = DateTime.parse(replaceFirst("-03:00", ""));
-    return dateFormat.format(date);
+  String customFormatDate(String format, {String errorFormat = "-"}) {
+    try {
+      final DateFormat dateFormat = DateFormat(format);
+      final DateTime date = DateTime.parse(replaceFirst("-03:00", ""));
+      return dateFormat.format(date);
+    } catch (_) {
+      return errorFormat;
+    }
   }
 
   String formatTag() {
