@@ -1,11 +1,13 @@
 import 'package:emptio/common/delegates/product_search/product_search.dart';
 import 'package:emptio/common/widgets/search_dialog.widget.dart';
 import 'package:emptio/models/base_purchase.model.dart';
+import 'package:emptio/models/post_data.model.dart';
 import 'package:emptio/models/product.model.dart';
 import 'package:emptio/view-models/add_base_purchase_item.view-model.dart';
 import 'package:emptio/view-models/update_base_purchase_item.view-model.dart';
 import 'package:emptio/views/base_purchase_details/store/base_purchase_details.store.dart';
 import 'package:emptio/views/base_purchase_details/widgets/base_purchase_items_list.widget.dart';
+import 'package:emptio/views/create_post/create_post.view.dart';
 import 'package:emptio/views/edit_purchase_item/edit_purchase_item.view.dart';
 import 'package:emptio/views/new_purchase_item/new_purchase_item.view.dart';
 import 'package:flutter/material.dart';
@@ -100,6 +102,17 @@ class BasePurchaseDetailsView extends StatelessWidget {
     }
   }
 
+  Future<void> sharePurchase(BuildContext context) async {
+    Navigator.of(context).push(
+      MaterialPageRoute(
+        builder: (context) => CreatePostView(
+          type: PostDataTypes.purchase,
+          purchase: _store.purchase,
+        ),
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -127,7 +140,11 @@ class BasePurchaseDetailsView extends StatelessWidget {
           IconButton(
             onPressed: () => openEditPurchaseName(context),
             icon: Icon(Icons.edit_outlined),
-          )
+          ),
+          IconButton(
+            onPressed: () => sharePurchase(context),
+            icon: Icon(Icons.share_outlined),
+          ),
         ],
       ),
       body: BasePurchaseItemsList(store: _store),

@@ -1,5 +1,6 @@
 import 'package:emptio/helpers/parsers.dart';
 import 'package:emptio/models/product.model.dart';
+import 'package:emptio/models/product_market.model.dart';
 
 class PurchaseItemModel {
   String sId;
@@ -8,7 +9,7 @@ class PurchaseItemModel {
   int quantity;
   bool checked;
 
-  String? completedProductMarket;
+  ProductMarketModel? completedProductMarket;
 
   PurchaseItemModel({
     required this.sId,
@@ -27,7 +28,7 @@ class PurchaseItemModel {
       quantity: JsonParser.parseToInt(json['quantity']),
       checked: JsonParser.parseToBool(json['checked']),
       completedProductMarket:
-          JsonParser.parseToString(json["completedProductMarket"]),
+          JsonParser.parseToProductMarket(json["completedProductMarket"]),
     );
 
     return model;

@@ -1,9 +1,11 @@
 import 'package:emptio/core/app_api.dart';
+import 'package:emptio/models/base_purchase.model.dart';
 import 'package:emptio/models/base_purchase_item.model.dart';
 import 'package:emptio/models/friendship_request.model.dart';
 import 'package:emptio/models/location.model.dart';
 import 'package:emptio/models/market.model.dart';
 import 'package:emptio/models/measurement.model.dart';
+import 'package:emptio/models/post_data.model.dart';
 import 'package:emptio/models/product.model.dart';
 import 'package:emptio/models/product_market.model.dart';
 import 'package:emptio/models/profile_user.model.dart';
@@ -145,6 +147,22 @@ class JsonParser {
   static ProductMarketModel? parseToProductMarket(dynamic value) {
     try {
       return ProductMarketModel.fromJson(value as Map<String, dynamic>);
+    } catch (_) {
+      return null;
+    }
+  }
+
+  static BasePurchaseModel? parseToBasePurchase(dynamic value) {
+    try {
+      return BasePurchaseModel.fromJson(value as Map<String, dynamic>);
+    } catch (_) {
+      return null;
+    }
+  }
+
+  static PostDataModel? parseToPostData(dynamic value) {
+    try {
+      return PostDataModel.fromJson(value as Map<String, dynamic>);
     } catch (_) {
       return null;
     }

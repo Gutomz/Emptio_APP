@@ -1,3 +1,5 @@
+import 'package:emptio/data/dao/market.dao.dart';
+import 'package:emptio/data/dao/product.dao.dart';
 import 'package:emptio/data/database.dart';
 import 'package:emptio/data/models/product_market/product_market.dart';
 import 'package:emptio/models/product_market.model.dart';
@@ -82,8 +84,13 @@ class ProductMarketDao {
       ProductMarket? productMarket) async {
     if (productMarket == null) return null;
 
+    final product = await ProductDao.getParsed(productMarket.productKey);
+    final market = await MarketDao.getParsed(productMarket.marketKey);
+
     return ProductMarketModel(
       sId: productMarket.key.toString(),
+      product: product,
+      market: market,
       price: productMarket.price,
       updatedAt: productMarket.updatedAt,
       updatedBy: "me",

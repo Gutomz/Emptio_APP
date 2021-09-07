@@ -14,6 +14,9 @@ class AppApiErrors {
     AppErrors.purchaseItemNotFound: 'Item de compra não encontrado!',
     AppErrors.productNotFound: 'Produto não encontrado!',
     AppErrors.favoriteNotFound: 'Favorito não encontrado!',
+    AppErrors.productMarketNotFound:
+        'Relação produto e mercado não encontrada!',
+    AppErrors.postNotFound: 'Publicação não encontrada!',
     AppErrors.invalidField: 'Os seguintes campos estão inválidos:',
     AppErrors.missingField: 'Os seguintes campos são obrigatórios:',
     AppErrors.uniqueField: 'Os seguintes campos já estão sendo utilizados:',

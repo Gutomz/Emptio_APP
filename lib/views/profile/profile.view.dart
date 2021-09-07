@@ -7,6 +7,7 @@ import 'package:emptio/models/profile_user.model.dart';
 import 'package:emptio/views/edit_profile/edit_profile.view.dart';
 import 'package:emptio/views/followers/followers.view.dart';
 import 'package:emptio/views/profile/store/profile.store.dart';
+import 'package:emptio/views/profile_posts/profile_posts.view.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 
@@ -85,42 +86,100 @@ class ProfileView extends StatelessWidget {
 
         final profile = _store.profile!;
 
-        return Padding(
-          padding: const EdgeInsets.only(top: 50, left: 15, right: 15),
-          child: Column(
+        return NestedScrollView(
+          headerSliverBuilder: (context, _) {
+            return [
+              SliverList(
+                delegate: SliverChildListDelegate(
+                  [
+                    buildUserInfos(context, profile),
+                  ],
+                ),
+              ),
+            ];
+          },
+          body: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Padding(
-                padding: const EdgeInsets.only(bottom: 10),
-                child: _buildHeader(context, profile),
-              ),
-              Padding(
-                padding: EdgeInsets.only(bottom: 25),
-                child: _buildDetails(profile),
-              ),
-              if (profile.isMe)
-                OutlinedButton(
-                  onPressed: () => _onPressEditProfile(context, profile.user),
-                  style: ButtonStyle(
-                    foregroundColor:
-                        MaterialStateProperty.all<Color>(AppColors.orange),
-                    side: MaterialStateProperty.all(
-                        BorderSide(color: AppColors.orange)),
-                    overlayColor: MaterialStateProperty.all<Color>(
-                        AppColors.orange.withOpacity(0.1)),
-                    minimumSize: MaterialStateProperty.all<Size>(
-                      Size(
-                        double.infinity,
-                        50,
+              Material(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Padding(
+                      padding:
+                          EdgeInsets.symmetric(horizontal: 15, vertical: 10),
+                      child: Text(
+                        "Publicações",
+                        textAlign: TextAlign.start,
+                        style: TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.w700,
+                        ),
                       ),
                     ),
-                  ),
-                  child: Text("Editar Perfil"),
+                    Divider(
+                      color: AppColors.lightGrey,
+                      height: 1,
+                    ),
+                  ],
                 ),
+              ),
+              Expanded(
+                child: ProfilePostsView(
+                  profile.user.sId,
+                  isMe: profile.isMe,
+                  lock: !profile.isMe && !profile.isFollowing,
+                  onUpdateList: () => _store.loadProfile(),
+                ),
+              ),
             ],
           ),
         );
       }),
+    );
+  }
+
+  Widget buildUserInfos(BuildContext context, ProfileModel profile) {
+    return Padding(
+      padding: const EdgeInsets.only(top: 25, left: 15, right: 15, bottom: 15),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Padding(
+            padding: const EdgeInsets.only(bottom: 10),
+            child: _buildHeader(context, profile),
+          ),
+          Padding(
+            padding: EdgeInsets.only(bottom: 25),
+            child: _buildDetails(profile),
+          ),
+          if (profile.isMe)
+            OutlinedButton(
+              onPressed: () => _onPressEditProfile(context, profile.user),
+              style: ButtonStyle(
+                foregroundColor:
+                    MaterialStateProperty.all<Color>(AppColors.orange),
+                side: MaterialStateProperty.all(
+                    BorderSide(color: AppColors.orange)),
+                overlayColor: MaterialStateProperty.all<Color>(
+                    AppColors.orange.withOpacity(0.1)),
+                minimumSize: MaterialStateProperty.all<Size>(
+                  Size(
+                    double.infinity,
+                    40,
+                  ),
+                ),
+              ),
+              child: Text(
+                "Editar Perfil",
+                style: TextStyle(
+                  fontSize: 12,
+                  fontWeight: FontWeight.w600,
+                ),
+              ),
+            ),
+        ],
+      ),
     );
   }
 

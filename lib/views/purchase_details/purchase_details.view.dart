@@ -1,9 +1,12 @@
 import 'package:emptio/common/delegates/product_search/product_search.dart';
 import 'package:emptio/core/app_colors.dart';
+import 'package:emptio/models/base_purchase.model.dart';
+import 'package:emptio/models/post_data.model.dart';
 import 'package:emptio/models/product.model.dart';
 import 'package:emptio/models/purchase.model.dart';
 import 'package:emptio/view-models/add_purchase_item.view-model.dart';
 import 'package:emptio/view-models/update_purchase_item.view-model.dart';
+import 'package:emptio/views/create_post/create_post.view.dart';
 import 'package:emptio/views/edit_purchase_item/edit_purchase_item.view.dart';
 import 'package:emptio/views/new_purchase_item/new_purchase_item.view.dart';
 import 'package:emptio/views/purchase_details/store/purchase_details.store.dart';
@@ -113,6 +116,18 @@ class PurchaseDetailsView extends StatelessWidget {
     }
   }
 
+  Future<void> sharePurchase(BuildContext context) async {
+    await Navigator.of(context).push(
+      MaterialPageRoute(
+        builder: (context) => CreatePostView(
+          type: PostDataTypes.purchase,
+          isPurchase: true,
+          purchase: BasePurchaseModel.fromPurchase(_store.purchase),
+        ),
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Observer(builder: (context) {
@@ -159,7 +174,7 @@ class PurchaseDetailsView extends StatelessWidget {
             }),
             actions: [
               if (!_store.isClosed)
-                Observer(builder: (_) {
+                Observer(builder: (context) {
                   return IconButton(
                     onPressed: () => _store.toggleFilter(),
                     icon: Icon(_store.showChecked
@@ -168,6 +183,12 @@ class PurchaseDetailsView extends StatelessWidget {
                     tooltip: "Alterar Filtro",
                   );
                 }),
+              if (_store.isClosed)
+                IconButton(
+                  onPressed: () => sharePurchase(context),
+                  icon: Icon(Icons.share_outlined),
+                  tooltip: "Compartilhar",
+                ),
               Builder(
                 builder: (context) => IconButton(
                   onPressed: () => Scaffold.of(context).openEndDrawer(),

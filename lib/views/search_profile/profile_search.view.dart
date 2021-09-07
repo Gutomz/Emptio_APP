@@ -90,7 +90,7 @@ class ProfileSearchView extends StatelessWidget {
                     physics: AlwaysScrollableScrollPhysics(),
                     child: Center(
                       child: EmptyPlaceholder(
-                        title: "Ninguém está seguindo este perfil!",
+                        title: "Pesquise um perfil.",
                         subTitle: "Arraste para recarregar.",
                         asset: AppAssets.svgIcFollowersEmpty,
                       ),

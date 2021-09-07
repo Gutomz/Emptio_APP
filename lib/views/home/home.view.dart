@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:emptio/common/delegates/product_search/product_search.dart';
 import 'package:emptio/common/widgets/main_bottom_navigator.widget.dart';
 import 'package:emptio/common/widgets/main_drawer.widget.dart';
@@ -13,6 +11,7 @@ import 'package:emptio/views/favorites/favorites.view.dart';
 import 'package:emptio/views/feed/feed.view.dart';
 import 'package:emptio/views/purchase_details/purchase_details.view.dart';
 import 'package:emptio/views/purchases/purchases.view.dart';
+import 'package:emptio/views/search_profile/profile_search.view.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:get_it/get_it.dart';
@@ -82,10 +81,12 @@ class _HomeViewState extends State<HomeView> {
           floatingActionButton: FloatingActionButton(
             onPressed: () =>
                 onFabPressed(context, _appStore.homeStore.currentTab),
-            child: Icon(
-              Icons.add,
-              color: Colors.white,
-            ),
+            child: Observer(builder: (_) {
+              return Icon(
+                getScreenFABIcon(),
+                color: Colors.white,
+              );
+            }),
           ),
           drawer: MainDrawer(),
           floatingActionButtonLocation: FloatingActionButtonLocation.endDocked,
@@ -96,6 +97,21 @@ class _HomeViewState extends State<HomeView> {
         );
       }),
     );
+  }
+
+  IconData getScreenFABIcon() {
+    switch (_appStore.homeStore.currentTab) {
+      case 0:
+        return Icons.add_shopping_cart_rounded;
+      case 1:
+        return Icons.post_add_outlined;
+      case 2:
+        return Icons.favorite_border_rounded;
+      case 3:
+        return Icons.group_add_outlined;
+      default:
+        return Icons.add;
+    }
   }
 
   Future<void> purchasesViewAction(BuildContext context) async {
@@ -143,7 +159,10 @@ class _HomeViewState extends State<HomeView> {
   }
 
   Future<void> feedViewAction(BuildContext context) async {
-    // TODO - Feed View action
-    log('Add post');
+    Navigator.of(context).push(
+      MaterialPageRoute(
+        builder: (context) => ProfileSearchView(),
+      ),
+    );
   }
 }

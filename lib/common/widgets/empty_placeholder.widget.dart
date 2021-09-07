@@ -67,12 +67,14 @@ class EmptyPlaceholder extends StatelessWidget {
   final String title;
   final String subTitle;
   final String asset;
+  final bool hideScrollIndicator;
 
   EmptyPlaceholder({
     Key? key,
     required this.title,
     required this.subTitle,
     required this.asset,
+    this.hideScrollIndicator = false,
   }) : super(key: key);
 
   @override
@@ -84,14 +86,16 @@ class EmptyPlaceholder extends StatelessWidget {
         SizedBox(height: 15),
         Text(title, style: _spanStyle),
         Text(subTitle, style: _spanStyle),
-        SizedBox(height: 15),
-        Transform.rotate(
-          angle: 90 * (pi / 180),
-          child: Icon(
-            Icons.double_arrow_rounded,
-            color: AppColors.grey,
+        if (!hideScrollIndicator) ...[
+          SizedBox(height: 15),
+          Transform.rotate(
+            angle: 90 * (pi / 180),
+            child: Icon(
+              Icons.double_arrow_rounded,
+              color: AppColors.grey,
+            ),
           ),
-        ),
+        ]
       ],
     );
   }

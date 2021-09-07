@@ -20,11 +20,15 @@ extension StringExtension on String {
   String customFormatDate(String format, {String errorFormat = "-"}) {
     try {
       final DateFormat dateFormat = DateFormat(format);
-      final DateTime date = DateTime.parse(replaceFirst("-03:00", ""));
+      final DateTime date = toDate();
       return dateFormat.format(date);
     } catch (_) {
       return errorFormat;
     }
+  }
+
+  DateTime toDate() {
+    return DateTime.parse(replaceFirst("-03:00", ""));
   }
 
   String formatTag() {

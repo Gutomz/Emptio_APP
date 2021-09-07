@@ -1,5 +1,6 @@
 import 'package:emptio/helpers/parsers.dart';
 import 'package:emptio/models/product.model.dart';
+import 'package:emptio/models/purchase_item.model.dart';
 
 class BasePurchaseItemModel {
   String sId;
@@ -17,6 +18,17 @@ class BasePurchaseItemModel {
       sId: JsonParser.parseToString(json['_id']),
       product: JsonParser.parseToProduct(json['product'])!,
       quantity: JsonParser.parseToInt(json['quantity']),
+    );
+
+    return model;
+  }
+
+  factory BasePurchaseItemModel.fromPurchaseItem(
+      PurchaseItemModel purchaseItemModel) {
+    final model = BasePurchaseItemModel(
+      sId: purchaseItemModel.sId,
+      product: purchaseItemModel.product,
+      quantity: purchaseItemModel.quantity,
     );
 
     return model;

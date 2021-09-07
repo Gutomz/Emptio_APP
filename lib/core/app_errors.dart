@@ -10,6 +10,8 @@ class AppErrors {
   static const purchaseItemNotFound = "purchase_item_not_found_error";
   static const productNotFound = "product_not_found_error";
   static const favoriteNotFound = "favorite_not_found_error";
+  static const productMarketNotFound = 'product_market_not_found_error';
+  static const postNotFound = 'post_not_found_error';
   static const invalidField = "invalid_field_error";
   static const missingField = "missing_field_error";
   static const uniqueField = "unique_field_error";

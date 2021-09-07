@@ -13,14 +13,18 @@ class ProfileSearchStore = _ProfileSearchStoreBase with _$ProfileSearchStore;
 abstract class _ProfileSearchStoreBase with Store {
   _ProfileSearchStoreBase() {
     autorun((_) async {
-      setLoading(true);
-      final filter = ProfileSearchFilterViewModel(
-        search: search,
-        skip: skip,
-      );
+      if (search.isNotEmpty) {
+        setLoading(true);
+        final filter = ProfileSearchFilterViewModel(
+          search: search,
+          skip: skip,
+        );
 
-      await load(filter);
-      setLoading(false);
+        await load(filter);
+        setLoading(false);
+      } else {
+        reset();
+      }
     });
   }
 

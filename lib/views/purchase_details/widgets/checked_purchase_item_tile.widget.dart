@@ -2,7 +2,9 @@ import 'package:emptio/common/widgets/dismissible_background.widget.dart';
 import 'package:emptio/common/widgets/image_builder.widget.dart';
 import 'package:emptio/common/widgets/subtitle_item.widget.dart';
 import 'package:emptio/core/app_colors.dart';
+import 'package:emptio/models/post_data.model.dart';
 import 'package:emptio/models/purchase_item.model.dart';
+import 'package:emptio/views/create_post/create_post.view.dart';
 import 'package:emptio/views/purchase_details/store/purchase_details.store.dart';
 import 'package:emptio/views/purchase_details/store/purchase_item.store.dart';
 import 'package:flutter/material.dart';
@@ -30,11 +32,27 @@ class CheckedPurchaseItemTile extends StatelessWidget {
     store.toggleChecked();
   }
 
+  Future<void> confirmShare(BuildContext context) async {
+    await Navigator.of(context).push(
+      MaterialPageRoute(
+        builder: (context) => CreatePostView(
+          type: PostDataTypes.productMarket,
+          productMarket: item.completedProductMarket,
+        ),
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Observer(builder: (context) {
       if (store.purchaseStore.isClosed) {
-        return buildItem();
+        return InkWell(
+          onTap: item.completedProductMarket != null
+              ? () => confirmShare(context)
+              : null,
+          child: buildItem(sharing: item.completedProductMarket != null),
+        );
       }
 
       return Dismissible(
@@ -52,7 +70,7 @@ class CheckedPurchaseItemTile extends StatelessWidget {
     });
   }
 
-  Widget buildItem() {
+  Widget buildItem({bool sharing = false}) {
     return Container(
       padding: EdgeInsets.symmetric(horizontal: 10, vertical: 10),
       decoration: BoxDecoration(
@@ -89,7 +107,9 @@ class CheckedPurchaseItemTile extends StatelessWidget {
                         ),
                       ),
                       Icon(
-                        Icons.double_arrow_rounded,
+                        sharing
+                            ? Icons.share_outlined
+                            : Icons.double_arrow_rounded,
                         color: AppColors.darkBlue,
                         size: 16,
                       ),

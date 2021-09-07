@@ -1,5 +1,6 @@
 import 'package:emptio/helpers/parsers.dart';
 import 'package:emptio/models/base_purchase_item.model.dart';
+import 'package:emptio/models/purchase.model.dart';
 
 class BasePurchaseModel {
   String sId;
@@ -23,6 +24,24 @@ class BasePurchaseModel {
       items: JsonParser.parseToBasePurchaseItemList(json['items']),
       createdAt: JsonParser.parseToString(json['createdAt']),
       updatedAt: JsonParser.parseToString(json['updatedAt']),
+    );
+
+    return model;
+  }
+
+  factory BasePurchaseModel.fromPurchase(
+    PurchaseModel purchaseModel, {
+    String name = "Cópia da lista",
+  }) {
+    final model = BasePurchaseModel(
+      sId: purchaseModel.sId,
+      name: name,
+      items: purchaseModel.items
+          .map<BasePurchaseItemModel>(
+              (e) => BasePurchaseItemModel.fromPurchaseItem(e))
+          .toList(),
+      createdAt: purchaseModel.createdAt,
+      updatedAt: purchaseModel.updatedAt,
     );
 
     return model;
