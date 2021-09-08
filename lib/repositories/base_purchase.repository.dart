@@ -6,6 +6,7 @@ import 'package:emptio/models/base_purchase.model.dart';
 import 'package:emptio/stores/auth.store.dart';
 import 'package:emptio/view-models/add_base_purchase_item.view-model.dart';
 import 'package:emptio/view-models/base_purchase_filter.view-model.dart';
+import 'package:emptio/view-models/copy_base_purchase.view_model.dart';
 import 'package:emptio/view-models/update_base_purchase.view-model.dart';
 import 'package:emptio/view-models/update_base_purchase_item.view-model.dart';
 import 'package:get_it/get_it.dart';
@@ -22,6 +23,23 @@ class BasePurchaseRepository {
         return BasePurchaseModel.fromJson(data);
       }
 
+      return await BasePurchaseDao.createParsed();
+    } catch (error, stack) {
+      Logger.error(tag, 'create', error, stack);
+
+      return Future.error(AppApiErrors.handleError(error));
+    }
+  }
+
+  Future<BasePurchaseModel> copy(CopyBasePurchaseViewModel model) async {
+    try {
+      if (_authStore.isLogged) {
+        final data = await _api.post("/base-purchases/copy",
+            body: model.toJson()) as Map<String, dynamic>;
+        return BasePurchaseModel.fromJson(data);
+      }
+
+      // TODO - copy base purchase locally
       return await BasePurchaseDao.createParsed();
     } catch (error, stack) {
       Logger.error(tag, 'create', error, stack);

@@ -3,9 +3,11 @@ import 'package:emptio/common/widgets/profile_avatar.widget.dart';
 import 'package:emptio/common/widgets/simple_confirm_dialog.widget.dart';
 import 'package:emptio/common/widgets/subtitle_item.widget.dart';
 import 'package:emptio/core/app_colors.dart';
+import 'package:emptio/models/base_purchase.model.dart';
 import 'package:emptio/models/post.model.dart';
 import 'package:emptio/models/post_data.model.dart';
 import 'package:emptio/views/feed/store/post_widget.store.dart';
+import 'package:emptio/views/post_purchase_details/post_purchase_details.view.dart';
 import 'package:emptio/views/profile/profile.view.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
@@ -193,7 +195,7 @@ class _PostWidgetState extends State<PostWidget> {
       final purchase = widget._store.post.data.purchase!;
 
       return InkWell(
-        onTap: () {},
+        onTap: () => navigateToPurchaseDetails(context, purchase),
         child: Padding(
           padding: EdgeInsets.only(top: 20, left: 15, right: 15, bottom: 10),
           child: Column(
@@ -523,5 +525,14 @@ class _PostWidgetState extends State<PostWidget> {
       await widget._store.delete(widget._store.post.sId);
       widget.onDelete!();
     }
+  }
+
+  void navigateToPurchaseDetails(
+      BuildContext context, BasePurchaseModel purchase) {
+    Navigator.of(context).push(
+      MaterialPageRoute(
+        builder: (context) => PostPurchaseDetailsView(purchase: purchase),
+      ),
+    );
   }
 }

@@ -4,6 +4,7 @@ import 'package:emptio/repositories/base_purchase.repository.dart';
 import 'package:emptio/stores/app.store.dart';
 import 'package:emptio/stores/auth.store.dart';
 import 'package:emptio/view-models/base_purchase_filter.view-model.dart';
+import 'package:emptio/view-models/copy_base_purchase.view_model.dart';
 import 'package:emptio/view-models/create_purchase.view-model.dart';
 import 'package:get_it/get_it.dart';
 import 'package:mobx/mobx.dart';
@@ -97,6 +98,23 @@ abstract class _BasePurchasesStoreBase with Store {
       final model = await BasePurchaseRepository().create();
       purchaseList.insert(0, model);
       return model;
+    } on String catch (_error) {
+      error = _error;
+    }
+
+    loading = false;
+  }
+
+  @action
+  Future<BasePurchaseModel?> copyPurchase(
+      CopyBasePurchaseViewModel model) async {
+    loading = true;
+    error = "";
+
+    try {
+      final purchaseModel = await BasePurchaseRepository().copy(model);
+      purchaseList.insert(0, purchaseModel);
+      return purchaseModel;
     } on String catch (_error) {
       error = _error;
     }

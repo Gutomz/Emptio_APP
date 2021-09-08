@@ -137,6 +137,14 @@ mixin _$BasePurchasesStore on _BasePurchasesStoreBase, Store {
     return _$createPurchaseAsyncAction.run(() => super.createPurchase());
   }
 
+  final _$copyPurchaseAsyncAction =
+      AsyncAction('_BasePurchasesStoreBase.copyPurchase');
+
+  @override
+  Future<BasePurchaseModel?> copyPurchase(CopyBasePurchaseViewModel model) {
+    return _$copyPurchaseAsyncAction.run(() => super.copyPurchase(model));
+  }
+
   final _$deletePurchaseAsyncAction =
       AsyncAction('_BasePurchasesStoreBase.deletePurchase');
 
