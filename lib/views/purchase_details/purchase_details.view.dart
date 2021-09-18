@@ -5,6 +5,7 @@ import 'package:emptio/models/post_data.model.dart';
 import 'package:emptio/models/product.model.dart';
 import 'package:emptio/models/purchase.model.dart';
 import 'package:emptio/stores/app.store.dart';
+import 'package:emptio/stores/auth.store.dart';
 import 'package:emptio/view-models/add_purchase_item.view-model.dart';
 import 'package:emptio/view-models/copy_base_purchase.view_model.dart';
 import 'package:emptio/view-models/update_purchase_item.view-model.dart';
@@ -27,6 +28,7 @@ import 'package:get_it/get_it.dart';
 class PurchaseDetailsView extends StatelessWidget {
   final BasePurchasesStore _basePurchasesStore =
       GetIt.I<AppStore>().basePurchasesStore;
+  final AuthStore _authStore = GetIt.I<AuthStore>();
   final PurchaseDetailsStore _store;
   final ValueNotifier<bool> isDialOpen = ValueNotifier(false);
 
@@ -242,42 +244,57 @@ class PurchaseDetailsView extends StatelessWidget {
                 bottomNavigationBar: PurchaseDetailsBottomAppBar(store: _store),
                 floatingActionButtonLocation:
                     FloatingActionButtonLocation.centerDocked,
-                floatingActionButton: _store.isClosed
-                    ? FloatingActionButton(
-                        onPressed: () => copyPurchase(rootContext),
-                        tooltip: "Salvar lista",
-                        child:
-                            Icon(Icons.download_outlined, color: Colors.white),
-                      )
-                    : SpeedDial(
-                        openCloseDial: isDialOpen,
-                        curve: Curves.bounceInOut,
-                        animatedIcon: AnimatedIcons.search_ellipsis,
-                        foregroundColor: Colors.white,
-                        spaceBetweenChildren: 10,
-                        overlayColor: Colors.black,
-                        children: [
-                          SpeedDialChild(
-                            backgroundColor: AppColors.lightBlue,
-                            foregroundColor: Colors.white,
-                            onTap: () => searchProduct(context),
-                            label: "Texto",
-                            child: Icon(Icons.search_outlined),
-                          ),
-                          SpeedDialChild(
-                            backgroundColor: AppColors.lightBlue,
-                            foregroundColor: Colors.white,
-                            onTap: () => recognizeProduct(context),
-                            label: "Imagem",
-                            child: Icon(Icons.camera_alt_outlined),
-                          ),
-                        ],
-                      ),
+                floatingActionButton: getFloatingActionButton(rootContext),
               ),
             );
           });
         },
       ),
     );
+  }
+
+  Widget getFloatingActionButton(BuildContext rootContext) {
+    return Observer(builder: (context) {
+      if (!_authStore.isLogged) {
+        return FloatingActionButton(
+          onPressed: () => searchProduct(context),
+          tooltip: "Buscar Produto",
+          child: Icon(Icons.search_outlined, color: Colors.white),
+        );
+      }
+
+      if (_store.isClosed) {
+        return FloatingActionButton(
+          onPressed: () => copyPurchase(rootContext),
+          tooltip: "Salvar lista",
+          child: Icon(Icons.download_outlined, color: Colors.white),
+        );
+      } else {
+        return SpeedDial(
+          openCloseDial: isDialOpen,
+          curve: Curves.bounceInOut,
+          animatedIcon: AnimatedIcons.search_ellipsis,
+          foregroundColor: Colors.white,
+          spaceBetweenChildren: 10,
+          overlayColor: Colors.black,
+          children: [
+            SpeedDialChild(
+              backgroundColor: AppColors.lightBlue,
+              foregroundColor: Colors.white,
+              onTap: () => searchProduct(context),
+              label: "Texto",
+              child: Icon(Icons.search_outlined),
+            ),
+            SpeedDialChild(
+              backgroundColor: AppColors.lightBlue,
+              foregroundColor: Colors.white,
+              onTap: () => recognizeProduct(context),
+              label: "Imagem",
+              child: Icon(Icons.camera_alt_outlined),
+            ),
+          ],
+        );
+      }
+    });
   }
 }

@@ -126,7 +126,7 @@ class ProfileView extends StatelessWidget {
               ),
               Expanded(
                 child: ProfilePostsView(
-                  profile.user.sId,
+                  userId,
                   isMe: profile.isMe,
                   lock: !profile.isMe && !profile.isFollowing,
                   onUpdateList: () => _store.loadProfile(),

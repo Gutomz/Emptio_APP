@@ -59,7 +59,12 @@ abstract class _PostWidgetStoreBase with Store {
     if (loading) return;
 
     try {
-      post = await PostRepository().getById(post.sId);
+      final updateData = await PostRepository().getById(post.sId);
+
+      if (updateData != null) {
+        post = updateData;
+      }
+      
       error = "";
     } on String catch (_) {
       dispose();

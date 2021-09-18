@@ -23,6 +23,17 @@ class ProfilePostsView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    if (_store.lock) {
+      return Center(
+        child: EmptyPlaceholder(
+          asset: AppAssets.svgIcError,
+          title: "As publicações são privadas.",
+          subTitle: "Siga este usuário para poder visualizar!",
+          hideScrollIndicator: true,
+        ),
+      );
+    }
+    
     return Observer(builder: (context) {
       if (_store.firstLoading) {
         return Center(
@@ -44,13 +55,11 @@ class ProfilePostsView extends StatelessWidget {
 
       if (_store.list.isEmpty) {
         return Center(
-          child: Center(
-            child: EmptyPlaceholder(
-              asset: AppAssets.svgIcFollowersEmpty,
-              title: "Nenhuma publicação encontrada.",
-              subTitle: "Volte mais tarde para mais atualizações!",
-              hideScrollIndicator: true,
-            ),
+          child: EmptyPlaceholder(
+            asset: AppAssets.svgIcFollowersEmpty,
+            title: "Nenhuma publicação encontrada.",
+            subTitle: "Volte mais tarde para mais atualizações!",
+            hideScrollIndicator: true,
           ),
         );
       }

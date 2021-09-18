@@ -50,6 +50,7 @@ class EnterPoint extends StatefulWidget {
 
 class _EnterPointState extends State<EnterPoint> {
   final AuthStore _authStore = GetIt.I<AuthStore>();
+  final AppStore _appStore = GetIt.I<AppStore>();
   final ConnectivityStore _connectivityStore = GetIt.I<ConnectivityStore>();
 
   ReactionDisposer? _disposer;
@@ -64,6 +65,8 @@ class _EnterPointState extends State<EnterPoint> {
         if (_authStore.isActive) {
           if (connected) {
             _authStore.initAuthenticated();
+          } else {
+            _appStore.homeStore.changeTab(0);
           }
 
           ScaffoldMessenger.of(context).showSnackBar(

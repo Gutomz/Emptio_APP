@@ -2,13 +2,16 @@ import 'package:emptio/core/app_api_errors.dart';
 import 'package:emptio/core/app_api.dart';
 import 'package:emptio/helpers/logger.dart';
 import 'package:emptio/models/post.model.dart';
+import 'package:emptio/stores/auth.store.dart';
 import 'package:emptio/view-models/create_post.view-model.dart';
 import 'package:emptio/view-models/get_feed_filter.view-model.dart';
 import 'package:emptio/view-models/get_post_profile_filter.view-model.dart';
+import 'package:get_it/get_it.dart';
 
 class PostRepository {
   static const String tag = "PostRepository";
   final AppApi _api = AppApi();
+  final AuthStore _authStore = GetIt.I<AuthStore>();
 
   Future<PostModel> create(CreatePostViewModel model) async {
     try {
@@ -35,10 +38,14 @@ class PostRepository {
     }
   }
 
-  Future<PostModel> getById(String postId) async {
+  Future<PostModel?> getById(String postId) async {
     try {
-      final data = await _api.get('/posts/$postId') as Map<String, dynamic>;
-      return PostModel.fromJson(data);
+      if (_authStore.isLogged) {
+        final data = await _api.get('/posts/$postId') as Map<String, dynamic>;
+        return PostModel.fromJson(data);
+      }
+
+      return null;
     } catch (error, stack) {
       Logger.error(tag, 'getById', error, stack);
       return Future.error(AppApiErrors.handleError(error));

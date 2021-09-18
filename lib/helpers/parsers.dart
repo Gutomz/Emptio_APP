@@ -1,6 +1,7 @@
 import 'package:emptio/core/app_api.dart';
 import 'package:emptio/models/base_purchase.model.dart';
 import 'package:emptio/models/base_purchase_item.model.dart';
+import 'package:emptio/models/favorites.model.dart';
 import 'package:emptio/models/friendship_request.model.dart';
 import 'package:emptio/models/location.model.dart';
 import 'package:emptio/models/market.model.dart';
@@ -130,6 +131,21 @@ class JsonParser {
         final items = value as List<dynamic>;
         for (final item in items) {
           list.add(MarketModel.fromJson(item as Map<String, dynamic>));
+        }
+      }
+    } catch (_) {}
+    return list;
+  }
+
+  static List<FavoriteMarketPriceModel> parseToFavoriteMarketPriceList(
+      dynamic value) {
+    final list = List<FavoriteMarketPriceModel>.empty(growable: true);
+    try {
+      if (value != null) {
+        final items = value as List<dynamic>;
+        for (final item in items) {
+          list.add(
+              FavoriteMarketPriceModel.fromJson(item as Map<String, dynamic>));
         }
       }
     } catch (_) {}

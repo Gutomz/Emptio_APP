@@ -5,7 +5,7 @@ import 'package:emptio/common/widgets/image_builder.widget.dart';
 import 'package:emptio/common/widgets/product_header.widget.dart';
 import 'package:emptio/common/widgets/subtitle_item.widget.dart';
 import 'package:emptio/core/app_colors.dart';
-import 'package:emptio/models/market.model.dart';
+import 'package:emptio/models/favorites.model.dart';
 import 'package:emptio/views/favorite_details/store/favorite_details.store.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
@@ -117,38 +117,46 @@ class FavoriteDetailsView extends StatelessWidget {
   }
 
   List<Widget> _buildMarketList(
-          BuildContext context, List<MarketModel> markets) =>
-      markets
-          .map<Widget>((market) => Column(
-                children: [
-                  Dismissible(
-                    key: Key(market.sId),
-                    onDismissed: (direction) => _store.removeMarket(market.sId),
-                    background: DismissibleBackground(
-                      color: AppColors.red,
-                      icon: Icons.delete,
-                      title: "Remover",
-                      secondary: true,
+          BuildContext context, List<FavoriteMarketPriceModel> markets) =>
+      markets.map<Widget>((model) {
+        final market = model.market;
+
+        return Column(
+          children: [
+            Dismissible(
+              key: Key(market.sId),
+              onDismissed: (direction) => _store.removeMarket(market.sId),
+              background: DismissibleBackground(
+                color: AppColors.red,
+                icon: Icons.delete,
+                title: "Remover",
+                secondary: true,
+              ),
+              direction: DismissDirection.endToStart,
+              child: Padding(
+                padding: EdgeInsets.symmetric(horizontal: 15, vertical: 10),
+                child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    ImageBuilder.fromString(
+                      market.image,
+                      size: 60,
+                      iconSize: 22,
                     ),
-                    direction: DismissDirection.endToStart,
-                    child: ListTile(
-                      contentPadding:
-                          EdgeInsets.symmetric(horizontal: 16, vertical: 10),
-                      leading: ImageBuilder.fromString(
-                        market.image,
-                        size: 60,
-                        iconSize: 22,
-                      ),
-                      title: Text(
-                        market.name,
-                        style: TextStyle(
-                          color: AppColors.blue,
-                          fontWeight: FontWeight.w600,
-                        ),
-                      ),
-                      subtitle: Column(
+                    SizedBox(width: 10),
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          SizedBox(height: 10),
+                          Text(
+                            market.name,
+                            style: TextStyle(
+                              color: AppColors.blue,
+                              fontWeight: FontWeight.w600,
+                              fontSize: 12,
+                            ),
+                            maxLines: 1,
+                          ),
                           SubtitleItem(
                             icon: Icons.location_on_outlined,
                             text: market.address,
@@ -157,11 +165,50 @@ class FavoriteDetailsView extends StatelessWidget {
                         ],
                       ),
                     ),
-                  ),
-                  Divider(height: 1, color: AppColors.lightGrey),
-                ],
-              ))
-          .toList();
+                    SizedBox(width: 10),
+                    SizedBox(
+                      height: 60,
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        crossAxisAlignment: CrossAxisAlignment.end,
+                        children: [
+                          Icon(
+                            Icons.double_arrow_rounded,
+                            size: 16,
+                            color: AppColors.grey,
+                          ),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.end,
+                            crossAxisAlignment: CrossAxisAlignment.end,
+                            children: [
+                              Text(
+                                "R\$",
+                                style: TextStyle(
+                                  fontSize: 10,
+                                  color: AppColors.lightGrey,
+                                ),
+                              ),
+                              Text(
+                                model.price.formatMoney(),
+                                style: TextStyle(
+                                  fontSize: 18,
+                                  fontWeight: FontWeight.bold,
+                                  color: AppColors.orange,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+            Divider(height: 1, color: AppColors.lightGrey),
+          ],
+        );
+      }).toList();
 
   Future<void> _searchMarket(BuildContext context) async {
     final response = await showSearch(
@@ -171,8 +218,8 @@ class FavoriteDetailsView extends StatelessWidget {
 
     if (response == null) return;
 
-    if (_store.favorite!.markets.containElement(
-        (e) => (e.placeId == response.sId) || (e.sId == response.sId))) {
+    if (_store.favorite!.markets.containElement((e) =>
+        (e.market.placeId == response.sId) || (e.market.sId == response.sId))) {
       ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(content: Text("Este mercado já está conectado!")));
       return;
