@@ -55,7 +55,7 @@ class FeedView extends StatelessWidget {
                     physics: AlwaysScrollableScrollPhysics(),
                     child: Center(
                       child: EmptyPlaceholder(
-                        asset: AppAssets.svgIcFollowersEmpty,
+                        asset: AppAssets.svgIcPostsEmpty,
                         title: "Nenhuma publicação encontrada.",
                         subTitle: "Volte mais tarde para mais atualizações!",
                       ),

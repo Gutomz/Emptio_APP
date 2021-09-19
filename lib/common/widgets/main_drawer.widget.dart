@@ -1,10 +1,8 @@
 import 'package:emptio/common/widgets/user_avatar.widget.dart';
 import 'package:emptio/core/app_colors.dart';
-import 'package:emptio/stores/app.store.dart';
 import 'package:emptio/stores/auth.store.dart';
 import 'package:emptio/stores/connectivity.store.dart';
 import 'package:emptio/views/configurations/configurations.view.dart';
-import 'package:emptio/views/home/store/home.store.dart';
 import 'package:emptio/views/login/login.view.dart';
 import 'package:emptio/views/markets_list/markets_list.view.dart';
 import 'package:emptio/views/notifications/notifications.view.dart';
@@ -44,10 +42,8 @@ class MainDrawerBottom extends StatelessWidget {
   }) : super(key: key);
 
   final AuthStore _authStore = GetIt.I<AuthStore>();
-  final HomeStore _homeStore = GetIt.I<AppStore>().homeStore;
 
   void onLogout(BuildContext context) {
-    _homeStore.changeTab(0);
     _authStore.logout();
   }
 

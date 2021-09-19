@@ -70,6 +70,8 @@ class _HomeViewState extends State<HomeView> {
         screens.removeAt(3);
         screens.removeAt(2);
       }
+
+      _appStore.homeStore.changeTab(0);
     });
 
     if (_authStore.isLogged) {
