@@ -3,6 +3,7 @@ import 'package:emptio/data/database.dart';
 import 'package:emptio/data/database_errors.dart';
 import 'package:emptio/data/models/market/market.dart';
 import 'package:emptio/models/market.model.dart';
+import 'package:emptio/view-models/create_market.view-model.dart';
 import 'package:emptio/view-models/market_filter.view-model.dart';
 import 'package:hive/hive.dart';
 
@@ -17,6 +18,22 @@ class MarketDao {
     await _openBox();
 
     return _mBox!;
+  }
+
+  static Future<Market> create(MarketCreateViewModel model) async {
+    await _openBox();
+
+    final String createdAt = DateTime.now().toIso8601String();
+    final market = Market(
+      name: model.name,
+      image: model.image,
+      createdAt: createdAt,
+      updatedAt: createdAt,
+    );
+
+    final key = await _mBox!.add(market);
+
+    return _mBox!.get(key)!;
   }
 
   static Future<Market> get(int key) async {
@@ -46,6 +63,12 @@ class MarketDao {
     return markets;
   }
 
+  static Future<MarketModel> createParsed(MarketCreateViewModel model) async {
+    final Market market = await create(model);
+
+    return parseToMarketModel(market);
+  }
+
   static Future<MarketModel> getParsed(int key) async {
     final Market market = await get(key);
 
@@ -68,6 +91,7 @@ class MarketDao {
       sId: market.key.toString(),
       placeId: market.key.toString(),
       name: market.name,
+      image: market.image,
       openingHours: [],
       updatedAt: market.updatedAt,
       createdAt: market.createdAt,

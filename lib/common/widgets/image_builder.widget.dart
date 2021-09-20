@@ -4,6 +4,7 @@ import 'package:emptio/core/app_colors.dart';
 import 'package:emptio/stores/auth.store.dart';
 import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
+import 'package:emptio/helpers/extensions.dart';
 
 class ImageBuilder {
   static final AuthStore _authStore = GetIt.I<AuthStore>();
@@ -51,8 +52,12 @@ class ImageBuilder {
   }) {
     ImageProvider<Object>? provider;
 
-    if (image != null && _authStore.isLogged) {
-      provider = NetworkImage(image);
+    if (image != null && image.isNotEmpty) {
+      if (_authStore.isLogged) {
+        provider = NetworkImage(image);
+      } else {
+        provider = MemoryImage(image.dataFromBase64String());
+      }
     }
 
     return buildImage(

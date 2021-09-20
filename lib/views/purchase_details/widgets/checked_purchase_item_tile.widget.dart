@@ -4,14 +4,17 @@ import 'package:emptio/common/widgets/subtitle_item.widget.dart';
 import 'package:emptio/core/app_colors.dart';
 import 'package:emptio/models/post_data.model.dart';
 import 'package:emptio/models/purchase_item.model.dart';
+import 'package:emptio/stores/auth.store.dart';
 import 'package:emptio/views/create_post/create_post.view.dart';
 import 'package:emptio/views/purchase_details/store/purchase_details.store.dart';
 import 'package:emptio/views/purchase_details/store/purchase_item.store.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:emptio/helpers/extensions.dart';
+import 'package:get_it/get_it.dart';
 
 class CheckedPurchaseItemTile extends StatelessWidget {
+  final AuthStore _authStore = GetIt.I<AuthStore>();
   final PurchaseItemStore store;
   final PurchaseItemModel item;
 
@@ -47,12 +50,18 @@ class CheckedPurchaseItemTile extends StatelessWidget {
   Widget build(BuildContext context) {
     return Observer(builder: (context) {
       if (store.purchaseStore.isClosed) {
-        return InkWell(
-          onTap: item.completedProductMarket != null
-              ? () => confirmShare(context)
-              : null,
-          child: buildItem(sharing: item.completedProductMarket != null),
-        );
+        return Observer(builder: (_) {
+          if (_authStore.isLogged) {
+            return InkWell(
+              onTap: item.completedProductMarket != null
+                  ? () => confirmShare(context)
+                  : null,
+              child: buildItem(sharing: item.completedProductMarket != null),
+            );
+          }
+
+          return buildItem();
+        });
       }
 
       return Dismissible(

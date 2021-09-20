@@ -6,6 +6,7 @@ import 'package:emptio/models/market.model.dart';
 import 'package:emptio/models/market_suggestion.model.dart';
 import 'package:emptio/services/google_places_api.dart';
 import 'package:emptio/stores/auth.store.dart';
+import 'package:emptio/view-models/create_market.view-model.dart';
 import 'package:emptio/view-models/market_filter.view-model.dart';
 import 'package:emptio/view-models/market_suggestions_filter.view-model.dart';
 import 'package:get_it/get_it.dart';
@@ -59,7 +60,7 @@ class MarketRepository {
         return list;
       }
 
-      return await MarketDao.getAllParsed(filter);
+      return MarketDao.getAllParsed(filter);
     } catch (error, stack) {
       Logger.error(tag, 'get', error, stack);
 
@@ -76,9 +77,19 @@ class MarketRepository {
         return MarketModel.fromJson(data);
       }
 
-      return await MarketDao.getParsed(int.parse(marketId));
+      return MarketDao.getParsed(int.parse(marketId));
     } catch (error, stack) {
       Logger.error(tag, 'getDetails', error, stack);
+
+      return Future.error(AppApiErrors.handleError(error));
+    }
+  }
+
+  Future<MarketModel> create(MarketCreateViewModel model) async {
+    try {
+      return MarketDao.createParsed(model);
+    } catch (error, stack) {
+      Logger.error(tag, 'create', error, stack);
 
       return Future.error(AppApiErrors.handleError(error));
     }

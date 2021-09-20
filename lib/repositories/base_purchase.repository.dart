@@ -39,8 +39,7 @@ class BasePurchaseRepository {
         return BasePurchaseModel.fromJson(data);
       }
 
-      // TODO - copy base purchase locally
-      return await BasePurchaseDao.createParsed();
+      return await BasePurchaseDao.copyParsed(model);
     } catch (error, stack) {
       Logger.error(tag, 'create', error, stack);
 

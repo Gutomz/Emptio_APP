@@ -210,7 +210,7 @@ class PurchaseDetailsView extends StatelessWidget {
                           tooltip: "Alterar Filtro",
                         );
                       }),
-                    if (_store.isClosed)
+                    if (_store.isClosed && _authStore.isLogged)
                       IconButton(
                         onPressed: () => sharePurchase(context),
                         icon: Icon(Icons.share_outlined),
@@ -255,19 +255,19 @@ class PurchaseDetailsView extends StatelessWidget {
 
   Widget getFloatingActionButton(BuildContext rootContext) {
     return Observer(builder: (context) {
-      if (!_authStore.isLogged) {
-        return FloatingActionButton(
-          onPressed: () => searchProduct(context),
-          tooltip: "Buscar Produto",
-          child: Icon(Icons.search_outlined, color: Colors.white),
-        );
-      }
-
       if (_store.isClosed) {
         return FloatingActionButton(
           onPressed: () => copyPurchase(rootContext),
           tooltip: "Salvar lista",
           child: Icon(Icons.download_outlined, color: Colors.white),
+        );
+      }
+
+      if (!_authStore.isLogged) {
+        return FloatingActionButton(
+          onPressed: () => searchProduct(context),
+          tooltip: "Buscar Produto",
+          child: Icon(Icons.search_outlined, color: Colors.white),
         );
       } else {
         return SpeedDial(

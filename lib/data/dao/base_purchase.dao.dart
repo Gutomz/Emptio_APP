@@ -1,5 +1,6 @@
 import 'package:emptio/core/app_errors.dart';
 import 'package:emptio/data/dao/base_purchase_item.dao.dart';
+import 'package:emptio/data/dao/purchase.dao.dart';
 import 'package:emptio/data/database.dart';
 import 'package:emptio/data/database_errors.dart';
 import 'package:emptio/data/models/base_purchase/base_purchase.dart';
@@ -8,6 +9,7 @@ import 'package:emptio/models/base_purchase.model.dart';
 import 'package:emptio/models/base_purchase_item.model.dart';
 import 'package:emptio/view-models/add_base_purchase_item.view-model.dart';
 import 'package:emptio/view-models/base_purchase_filter.view-model.dart';
+import 'package:emptio/view-models/copy_base_purchase.view_model.dart';
 import 'package:emptio/view-models/update_base_purchase.view-model.dart';
 import 'package:emptio/view-models/update_base_purchase_item.view-model.dart';
 import 'package:hive/hive.dart';
@@ -19,12 +21,13 @@ class BasePurchaseDao {
     _mBox ??= await Hive.openBox<BasePurchase>(Database.basePurchaseBoxName);
   }
 
-  static Future<BasePurchase> create() async {
+  static Future<BasePurchase> create({String? name}) async {
     await _openBox();
 
     final createdAt = DateTime.now().toIso8601String();
     final int key = await _mBox!.add(BasePurchase(
-      name: "Lista ${_mBox!.length + 1}",
+      name:
+          name != null && name.isNotEmpty ? name : "Lista ${_mBox!.length + 1}",
       itemsKey: List.empty(growable: true),
       createdAt: createdAt,
       updatedAt: createdAt,
@@ -162,6 +165,52 @@ class BasePurchaseDao {
     return purchase;
   }
 
+  static Future<BasePurchase> copyFromPurchase(int key, String name) async {
+    await _openBox();
+
+    final purchase = await PurchaseDao.get(key);
+
+    final copyPurchase = await create(name: name);
+
+    for (final itemKey in purchase.itemsKey) {
+      final item = await BasePurchaseItemDao.copyFromPurchaseItem(itemKey);
+
+      copyPurchase.itemsKey.add(item.key as int);
+    }
+
+    await copyPurchase.save();
+
+    return copyPurchase;
+  }
+
+  static Future<BasePurchase> copyFromBasePurchase(int key, String name) async {
+    await _openBox();
+
+    final purchase = await get(key);
+
+    final copyPurchase = await create(name: name);
+
+    for (final itemKey in purchase.itemsKey) {
+      final item = await BasePurchaseItemDao.copyFromBasePurchaseItem(itemKey);
+
+      copyPurchase.itemsKey.add(item.key as int);
+    }
+
+    await copyPurchase.save();
+
+    return copyPurchase;
+  }
+
+  static Future<BasePurchase> copy(CopyBasePurchaseViewModel model) async {
+    await _openBox();
+
+    if (model.purchaseId != null) {
+      return copyFromPurchase(int.parse(model.purchaseId!), model.name);
+    }
+
+    return copyFromBasePurchase(int.parse(model.basePurchaseId!), model.name);
+  }
+
   static Future<BasePurchaseModel> createParsed() async {
     final purchase = await create();
     return parseToBasePurchaseModel(purchase);
@@ -206,6 +255,12 @@ class BasePurchaseDao {
   static Future<BasePurchaseModel> updateItemParsed(
       int key, int itemKey, UpdateBasePurchaseItemViewModel model) async {
     final purchase = await updateItem(key, itemKey, model);
+    return parseToBasePurchaseModel(purchase);
+  }
+
+  static Future<BasePurchaseModel> copyParsed(
+      CopyBasePurchaseViewModel model) async {
+    final purchase = await copy(model);
     return parseToBasePurchaseModel(purchase);
   }
 

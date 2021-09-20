@@ -64,6 +64,7 @@ class FavoritesView extends StatelessWidget {
                         title: "Nenhum favorito foi encontrado!",
                         subTitleBefore: "Clique em",
                         subTitleAfter: "para adicionar um novo!",
+                        icon: Icons.favorite_border_rounded,
                       ),
                     ),
                   ),

@@ -126,6 +126,18 @@ class ProductSearch extends SearchDelegate<ProductSearchResponse?> {
       }
 
       if (_store.productsList.isEmpty) {
+        if (!canAddNew) {
+          return Center(
+            child: Text(
+              "Nenhum produto encontrado!",
+              style: TextStyle(
+                color: AppColors.grey,
+              ),
+              textAlign: TextAlign.center,
+            ),
+          );
+        }
+
         return Column(
           children: [
             AddProductTile(

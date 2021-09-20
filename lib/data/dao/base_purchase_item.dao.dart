@@ -1,5 +1,6 @@
 import 'package:emptio/core/app_errors.dart';
 import 'package:emptio/data/dao/product.dao.dart';
+import 'package:emptio/data/dao/purchase_item.dao.dart';
 import 'package:emptio/data/database.dart';
 import 'package:emptio/data/database_errors.dart';
 import 'package:emptio/data/models/base_purchase_item/base_purchase_item.dart';
@@ -13,8 +14,8 @@ class BasePurchaseItemDao {
   static Box<BasePurchaseItem>? _mBox;
 
   static Future<void> _openBox() async {
-    _mBox ??= await Hive.openBox<BasePurchaseItem>(
-          Database.basePurchaseItemsBoxName);
+    _mBox ??=
+        await Hive.openBox<BasePurchaseItem>(Database.basePurchaseItemsBoxName);
   }
 
   static Future<Box<BasePurchaseItem>> get instance async {
@@ -43,6 +44,32 @@ class BasePurchaseItemDao {
     final itemKey = await _mBox!.add(BasePurchaseItem(
       productKey: product.key as int,
       quantity: model.quantity,
+    ));
+
+    return _mBox!.get(itemKey)!;
+  }
+
+  static Future<BasePurchaseItem> copyFromPurchaseItem(int key) async {
+    await _openBox();
+
+    final item = await PurchaseItemDao.get(key);
+
+    final itemKey = await _mBox!.add(BasePurchaseItem(
+      productKey: item.productKey,
+      quantity: item.quantity,
+    ));
+
+    return _mBox!.get(itemKey)!;
+  }
+
+  static Future<BasePurchaseItem> copyFromBasePurchaseItem(int key) async {
+    await _openBox();
+
+    final item = await get(key);
+
+    final itemKey = await _mBox!.add(BasePurchaseItem(
+      productKey: item.productKey,
+      quantity: item.quantity,
     ));
 
     return _mBox!.get(itemKey)!;

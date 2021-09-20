@@ -9,6 +9,7 @@ import 'package:emptio/core/app_assets.dart';
 import 'package:emptio/core/app_colors.dart';
 import 'package:emptio/models/market.model.dart';
 import 'package:emptio/models/product.model.dart';
+import 'package:emptio/views/create_market/create_market.view.dart';
 import 'package:emptio/views/market_details/market_details.view.dart';
 import 'package:emptio/views/markets_list/store/markets_list.store.dart';
 import 'package:flutter/material.dart';
@@ -169,6 +170,13 @@ class MarketsListView extends StatelessWidget {
                 ),
         );
       }),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () => _navigateToCreateMarket(context),
+        child: Icon(
+          Icons.add,
+          color: Colors.white,
+        ),
+      ),
     );
   }
 
@@ -193,5 +201,14 @@ class MarketsListView extends StatelessWidget {
       MaterialPageRoute(
           builder: (context) => MarketDetailsView(sId: model.sId)),
     );
+  }
+
+  Future<void> _navigateToCreateMarket(BuildContext context) async {
+    await Navigator.push<ProductModel>(
+      context,
+      MaterialPageRoute(builder: (context) => CreateMarketView()),
+    );
+
+    _store.reset();
   }
 }

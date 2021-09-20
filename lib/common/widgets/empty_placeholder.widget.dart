@@ -14,6 +14,7 @@ class EmptyPlaceholderCreation extends StatelessWidget {
   final String subTitleBefore;
   final String subTitleAfter;
   final String asset;
+  final IconData icon;
 
   EmptyPlaceholderCreation({
     Key? key,
@@ -21,6 +22,7 @@ class EmptyPlaceholderCreation extends StatelessWidget {
     required this.subTitleBefore,
     required this.subTitleAfter,
     required this.asset,
+    this.icon = Icons.add,
   }) : super(key: key);
 
   @override
@@ -43,9 +45,9 @@ class EmptyPlaceholderCreation extends StatelessWidget {
                 heroTag: 'none',
                 onPressed: null,
                 child: Icon(
-                  Icons.add,
+                  icon,
                   color: Colors.white,
-                  size: 16,
+                  size: 14,
                 ),
               ),
             ),

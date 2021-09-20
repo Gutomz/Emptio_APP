@@ -3,6 +3,7 @@ import 'package:emptio/common/widgets/search_dialog.widget.dart';
 import 'package:emptio/models/base_purchase.model.dart';
 import 'package:emptio/models/post_data.model.dart';
 import 'package:emptio/models/product.model.dart';
+import 'package:emptio/stores/auth.store.dart';
 import 'package:emptio/view-models/add_base_purchase_item.view-model.dart';
 import 'package:emptio/view-models/update_base_purchase_item.view-model.dart';
 import 'package:emptio/views/base_purchase_details/store/base_purchase_details.store.dart';
@@ -12,8 +13,10 @@ import 'package:emptio/views/edit_purchase_item/edit_purchase_item.view.dart';
 import 'package:emptio/views/new_purchase_item/new_purchase_item.view.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
+import 'package:get_it/get_it.dart';
 
 class BasePurchaseDetailsView extends StatelessWidget {
+  final AuthStore _authStore = GetIt.I<AuthStore>();
   final BasePurchaseDetailsStore _store;
 
   BasePurchaseDetailsView({
@@ -115,44 +118,47 @@ class BasePurchaseDetailsView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        leading: IconButton(
-          icon: Icon(Icons.arrow_back),
-          onPressed: () {
-            Navigator.of(context).pop();
-          },
-        ),
-        title: GestureDetector(
-          onTap: () => openEditPurchaseName(context),
-          child: LayoutBuilder(
-            builder: (context, constraints) {
-              return SizedBox(
-                width: constraints.biggest.width,
-                child: Observer(builder: (_) {
-                  return Text(_store.name);
-                }),
-              );
+    return Observer(builder: (context) {
+      return Scaffold(
+        appBar: AppBar(
+          leading: IconButton(
+            icon: Icon(Icons.arrow_back),
+            onPressed: () {
+              Navigator.of(context).pop();
             },
           ),
+          title: GestureDetector(
+            onTap: () => openEditPurchaseName(context),
+            child: LayoutBuilder(
+              builder: (context, constraints) {
+                return SizedBox(
+                  width: constraints.biggest.width,
+                  child: Observer(builder: (_) {
+                    return Text(_store.name);
+                  }),
+                );
+              },
+            ),
+          ),
+          actions: [
+            IconButton(
+              onPressed: () => openEditPurchaseName(context),
+              icon: Icon(Icons.edit_outlined),
+            ),
+            if (_authStore.isLogged)
+              IconButton(
+                onPressed: () => sharePurchase(context),
+                icon: Icon(Icons.share_outlined),
+              ),
+          ],
         ),
-        actions: [
-          IconButton(
-            onPressed: () => openEditPurchaseName(context),
-            icon: Icon(Icons.edit_outlined),
-          ),
-          IconButton(
-            onPressed: () => sharePurchase(context),
-            icon: Icon(Icons.share_outlined),
-          ),
-        ],
-      ),
-      body: BasePurchaseItemsList(store: _store),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () => searchProduct(context),
-        foregroundColor: Colors.white,
-        child: Icon(Icons.add),
-      ),
-    );
+        body: BasePurchaseItemsList(store: _store),
+        floatingActionButton: FloatingActionButton(
+          onPressed: () => searchProduct(context),
+          foregroundColor: Colors.white,
+          child: Icon(Icons.add),
+        ),
+      );
+    });
   }
 }

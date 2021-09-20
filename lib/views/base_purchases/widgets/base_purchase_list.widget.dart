@@ -98,6 +98,7 @@ class _BasePurchaseListState extends State<BasePurchaseList> {
                       title: "Nenhuma compra foi encontrada!",
                       subTitleBefore: "Clique em",
                       subTitleAfter: "para adicionar uma nova!",
+                      icon: Icons.post_add_outlined,
                     ),
                   ),
                 ),

@@ -83,6 +83,7 @@ class _PurchaseListState extends State<PurchaseList> {
                       title: "Nenhuma compra foi encontrada!",
                       subTitleBefore: "Clique em",
                       subTitleAfter: "para adicionar uma nova!",
+                      icon: Icons.add_shopping_cart_rounded,
                     ),
                   ),
                 ),

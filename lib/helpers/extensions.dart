@@ -34,6 +34,14 @@ extension StringExtension on String {
   String formatTag() {
     return trim().toLowerCase().replaceAll(" ", "-");
   }
+
+  Uint8List dataFromBase64String() {
+    if (startsWith("data:")) {
+      return base64Decode(split("base64,")[1]);
+    }
+    
+    return base64Decode(this);
+  }
 }
 
 extension IterableExtension<T> on Iterable<T> {
