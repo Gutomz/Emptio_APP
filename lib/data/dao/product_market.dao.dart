@@ -26,7 +26,7 @@ class ProductMarketDao {
   }) async {
     await _openBox();
 
-    final key = _mBox!.add(ProductMarket(
+    final key = await _mBox!.add(ProductMarket(
       marketKey: marketKey,
       productKey: productKey,
       price: price,
@@ -81,10 +81,12 @@ class ProductMarketDao {
   }
 
   static Future<ProductMarketModel?> parseToProductMarketModel(
-      ProductMarket? productMarket) async {
+      ProductMarket? productMarket,
+      {int index = 0}) async {
     if (productMarket == null) return null;
 
-    final product = await ProductDao.getParsed(productMarket.productKey);
+    final product =
+        await ProductDao.getParsed(productMarket.productKey, index: index + 1);
     final market = await MarketDao.getParsed(productMarket.marketKey);
 
     return ProductMarketModel(

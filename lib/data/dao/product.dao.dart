@@ -1,4 +1,6 @@
 import 'package:emptio/core/app_errors.dart';
+import 'package:emptio/data/dao/base_purchase.dao.dart';
+import 'package:emptio/data/dao/base_purchase_item.dao.dart';
 import 'package:emptio/data/dao/product_market.dao.dart';
 import 'package:emptio/data/dao/purchase.dao.dart';
 import 'package:emptio/data/dao/purchase_item.dao.dart';
@@ -9,6 +11,7 @@ import 'package:emptio/data/models/product/product.dart';
 import 'package:emptio/data/models/purchase/purchase.dart';
 import 'package:emptio/models/measurement.model.dart';
 import 'package:emptio/models/product.model.dart';
+import 'package:emptio/models/product_market.model.dart';
 import 'package:emptio/view-models/product_create.view-model.dart';
 import 'package:emptio/view-models/product_filter.view-model.dart';
 import 'package:hive/hive.dart';
@@ -65,11 +68,20 @@ class ProductDao {
     if (filter.purchaseId.isNotEmpty) {
       final Purchase purchase =
           await PurchaseDao.get(int.parse(filter.purchaseId));
+
       for (final itemKey in purchase.itemsKey) {
         final productKey = (await PurchaseItemDao.get(itemKey)).productKey;
         excludeIds.add(productKey);
       }
       marketKey = purchase.marketKey;
+    } else if (filter.basePurchaseId.isNotEmpty) {
+      final purchase =
+          await BasePurchaseDao.get(int.parse(filter.basePurchaseId));
+
+      for (final itemKey in purchase.itemsKey) {
+        final productKey = (await BasePurchaseItemDao.get(itemKey)).productKey;
+        excludeIds.add(productKey);
+      }
     }
 
     final Iterable<Product> list = _mBox!.values;
@@ -139,14 +151,20 @@ class ProductDao {
     return models;
   }
 
-  static Future<ProductModel> getParsed(int key) async {
+  static Future<ProductModel> getParsed(int key, {int index = 0}) async {
     final Product product = await get(key);
-    return parseToProductModel(product);
+    return parseToProductModel(product, index: index);
   }
 
-  static Future<ProductModel> parseToProductModel(Product product) async {
-    final marketDetails =
-        await ProductMarketDao.parseToProductMarketModel(product.marketDetails);
+  static Future<ProductModel> parseToProductModel(Product product,
+      {int index = 0}) async {
+    ProductMarketModel? marketDetails;
+    if (index == 0) {
+      marketDetails = await ProductMarketDao.parseToProductMarketModel(
+        product.marketDetails,
+        index: index + 1,
+      );
+    }
 
     return ProductModel(
       sId: product.key.toString(),

@@ -110,7 +110,8 @@ class PurchaseDetailsView extends StatelessWidget {
         builder: (context) => EditPurchaseItemView(
           connectedMarket: _store.purchase.market,
           product: product,
-          initialPrice: product.marketDetails?.price,
+          initialPrice:
+              _store.isMarketConnected ? product.marketDetails?.price : null,
         ),
       ),
     );

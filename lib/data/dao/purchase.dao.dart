@@ -177,11 +177,6 @@ class PurchaseDao {
 
     final Purchase purchase = await get(key);
 
-    purchase.status = PurchaseStatusTypes.closed;
-    purchase.updatedAt = DateTime.now().toIso8601String();
-
-    await purchase.save();
-
     if (purchase.marketKey != null) {
       for (final itemKey in purchase.itemsKey) {
         final item = await PurchaseItemDao.get(itemKey);
@@ -193,6 +188,11 @@ class PurchaseDao {
         );
       }
     }
+
+    purchase.status = PurchaseStatusTypes.closed;
+    purchase.updatedAt = DateTime.now().toIso8601String();
+
+    await purchase.save();
 
     return _mBox!.get(key)!;
   }

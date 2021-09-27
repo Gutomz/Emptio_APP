@@ -102,7 +102,8 @@ class EditPurchaseItemView extends StatelessWidget {
                     Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        if (product.marketDetails != null)
+                        if (connectedMarket != null &&
+                            product.marketDetails != null)
                           RichText(
                             text: TextSpan(
                               text: 'O valor encontrado foi de ',
