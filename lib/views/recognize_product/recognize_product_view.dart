@@ -296,38 +296,41 @@ class _RecognizeProductViewState extends State<RecognizeProductView>
             },
           ),
           Divider(height: 1, color: AppColors.lightGrey),
-          Padding(
-            padding: const EdgeInsets.only(top: 50),
-            child: SingleChildScrollView(
-              child: Column(
-                children: [
-                  buildPicturePreview(
-                    context,
-                    height: height,
-                    width: width,
-                    radius: radius,
-                  ),
-                  SizedBox(height: 25),
-                  SizedBox(
-                    width: size.width * 0.75,
-                    child: Text(
-                      'Não foi possível identificar nenhum produto nessa imagem.',
-                      style: TextStyle(
-                        color: AppColors.black,
-                        fontWeight: FontWeight.w600,
+          Expanded(
+            child: Center(
+              child: SingleChildScrollView(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    buildPicturePreview(
+                      context,
+                      height: height,
+                      width: width,
+                      radius: radius,
+                    ),
+                    SizedBox(height: 25),
+                    SizedBox(
+                      width: size.width * 0.75,
+                      child: Text(
+                        'Não foi possível identificar nenhum produto nessa imagem.',
+                        style: TextStyle(
+                          color: AppColors.black,
+                          fontWeight: FontWeight.w600,
+                        ),
+                        textAlign: TextAlign.center,
                       ),
-                      textAlign: TextAlign.center,
                     ),
-                  ),
-                  SizedBox(height: 35),
-                  ElevatedButton(
-                    onPressed: _store.reset,
-                    style: ButtonStyle(
-                      backgroundColor: MaterialStateProperty.all(AppColors.red),
+                    SizedBox(height: 35),
+                    ElevatedButton(
+                      onPressed: _store.reset,
+                      style: ButtonStyle(
+                        backgroundColor:
+                            MaterialStateProperty.all(AppColors.red),
+                      ),
+                      child: Text("Tentar Novamente!"),
                     ),
-                    child: Text("Tentar Novamente!"),
-                  ),
-                ],
+                  ],
+                ),
               ),
             ),
           ),
@@ -360,6 +363,7 @@ class _RecognizeProductViewState extends State<RecognizeProductView>
           onTap: () {
             close(ProductSearchResponse(product: product));
           },
+          hidePrice: widget.connectedMarket == null,
         );
       },
     );
@@ -368,7 +372,11 @@ class _RecognizeProductViewState extends State<RecognizeProductView>
   Future<void> initCamera() async {
     final cameras = await availableCameras();
     final firstCamera = cameras.first;
-    _controller = CameraController(firstCamera, ResolutionPreset.high);
+    _controller = CameraController(
+      firstCamera,
+      ResolutionPreset.high,
+      imageFormatGroup: ImageFormatGroup.yuv420,
+    );
     _initController = _controller!.initialize();
 
     if (!mounted) {

@@ -16,13 +16,13 @@ class NotificationActionButton extends StatelessWidget {
       if (_authStore.isLogged) {
         return Badge(
           badgeContent: Text(
-            "${_authStore.user!.alertsCount}",
+            "${_authStore.notificationCount}",
             style: TextStyle(
               fontSize: 10,
               color: Colors.white,
             ),
           ),
-          showBadge: _authStore.user!.notificationCount > 0,
+          showBadge: _authStore.notificationCount > 0,
           position: BadgePosition.topEnd(top: 7, end: 7),
           child: IconButton(
             onPressed: () => _navigateToNotificationsView(context),

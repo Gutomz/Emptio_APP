@@ -168,4 +168,8 @@ abstract class _AuthStoreBase with Store {
 
   @computed
   String get loggedId => user?.sId ?? "";
+
+  @computed
+  int get notificationCount =>
+      isLogged ? user!.notificationCount + user!.requestsCount : 0;
 }

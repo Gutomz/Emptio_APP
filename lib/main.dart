@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:emptio/core/app_colors.dart';
 import 'package:emptio/data/database.dart';
 import 'package:emptio/helpers/location.dart';
@@ -54,6 +56,9 @@ class _EnterPointState extends State<EnterPoint> {
   final ConnectivityStore _connectivityStore = GetIt.I<ConnectivityStore>();
 
   ReactionDisposer? _disposer;
+  ReactionDisposer? _authDisposer;
+
+  Timer? _timerDisposer;
 
   @override
   void initState() {
@@ -85,12 +90,25 @@ class _EnterPointState extends State<EnterPoint> {
         }
       },
     );
+
+    _authDisposer = reaction((_) => _authStore.isLogged, (bool isLogged) {
+      if (isLogged) {
+        _timerDisposer = Timer.periodic(
+            Duration(seconds: 30), (_) => _authStore.updateLoggedUser());
+      } else {
+        _timerDisposer?.cancel();
+      }
+    });
   }
 
   @override
   void dispose() {
     if (_disposer != null) {
       _disposer!();
+    }
+
+    if (_authDisposer != null) {
+      _authDisposer!();
     }
 
     super.dispose();
@@ -153,6 +171,8 @@ class _EnterPointState extends State<EnterPoint> {
       if (message.notification != null) {
         LocalNotificationService.display(message);
       }
+
+      _authStore.updateLoggedUser();
     });
 
     FirebaseMessaging.onMessageOpenedApp.listen((message) {

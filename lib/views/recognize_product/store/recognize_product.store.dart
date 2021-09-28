@@ -1,5 +1,7 @@
 import 'dart:typed_data';
 
+import 'package:emptio/core/app_api_errors.dart';
+import 'package:emptio/core/app_errors.dart';
 import 'package:emptio/models/product.model.dart';
 import 'package:emptio/repositories/product.repository.dart';
 import 'package:emptio/view-models/product_recognizer.view-model.dart';
@@ -82,7 +84,12 @@ abstract class _RecognizeProductStoreBase with Store {
       list.addAll(response);
       setLoaded(true);
     } on String catch (_error) {
-      setError(_error);
+      if (_error == AppApiErrors.getMessage(AppErrors.productNotFound)) {
+        list.clear();
+        setLoaded(true);
+      } else {
+        setError(_error);
+      }
     } finally {
       setLoading(false);
     }

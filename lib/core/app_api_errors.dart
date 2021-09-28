@@ -38,6 +38,10 @@ class AppApiErrors {
     'password': 'Senha',
   };
 
+  static String? getMessage(String code) {
+    return _errors[code];
+  }
+
   static String _parseFields(List fields) {
     return fields.map((field) => _fields[field]).toString();
   }
