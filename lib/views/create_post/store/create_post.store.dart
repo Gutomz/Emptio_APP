@@ -1,11 +1,20 @@
+import 'package:emptio/models/post_data.model.dart';
 import 'package:emptio/repositories/post.repository.dart';
+import 'package:emptio/stores/app.store.dart';
 import 'package:emptio/view-models/create_post.view-model.dart';
+import 'package:emptio/views/feed/store/feed.store.dart';
+import 'package:get_it/get_it.dart';
 import 'package:mobx/mobx.dart';
 part 'create_post.store.g.dart';
 
 class CreatePostStore = _CreatePostStoreBase with _$CreatePostStore;
 
 abstract class _CreatePostStoreBase with Store {
+  String type;
+  final FeedStore _feedStore = GetIt.I<AppStore>().feedStore;
+
+  _CreatePostStoreBase(this.type);
+
   @observable
   bool loading = false;
 
@@ -33,6 +42,7 @@ abstract class _CreatePostStoreBase with Store {
     setError("");
     try {
       await PostRepository().create(model);
+      _feedStore.resetPage();
     } on String catch (_error) {
       setError(_error);
     } finally {
@@ -44,14 +54,16 @@ abstract class _CreatePostStoreBase with Store {
   bool get isDescriptionValid => description.isNotEmpty;
 
   @computed
-  bool get isPurchaseNameValid => purchaseName?.isNotEmpty ?? false;
+  bool get isPurchaseNameValid =>
+      type == PostDataTypes.productMarket ||
+      (purchaseName?.isNotEmpty ?? false);
 
   @computed
   bool get canCreate => isDescriptionValid && isPurchaseNameValid;
 
   @computed
   String get canCreateError {
-    if (!isPurchaseNameValid) {
+    if (type == PostDataTypes.purchase && !isPurchaseNameValid) {
       return "Insira o nome da lista para continuar.";
     }
 

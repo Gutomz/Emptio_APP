@@ -11,7 +11,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 
 class CreatePostView extends StatelessWidget {
-  final CreatePostStore _store = CreatePostStore();
+  final CreatePostStore _store;
 
   final String type;
   final ProductMarketModel? productMarket;
@@ -24,7 +24,8 @@ class CreatePostView extends StatelessWidget {
     this.productMarket,
     this.purchase,
     this.isPurchase = false,
-  }) : super(key: key);
+  })  : _store = CreatePostStore(type),
+        super(key: key);
 
   @override
   Widget build(BuildContext context) {

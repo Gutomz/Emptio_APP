@@ -7,10 +7,12 @@ import 'package:emptio/services/local_notification_service.dart';
 import 'package:emptio/stores/app.store.dart';
 import 'package:emptio/stores/auth.store.dart';
 import 'package:emptio/stores/connectivity.store.dart';
+import 'package:emptio/stores/environment.store.dart';
 import 'package:emptio/views/entry/entry.view.dart';
 import 'package:emptio/views/home/home.view.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:firebase_remote_config/firebase_remote_config.dart';
 import 'package:flutter/material.dart';
 import 'package:emptio/theme.dart';
 import 'package:emptio/views/splash/splash.view.dart';
@@ -27,13 +29,40 @@ Future<void> main() async {
   FirebaseMessaging.onBackgroundMessage(backgroundMessageHandler);
   await Database.init();
   setupStores();
+
+  await initEnvironment();
+
   runApp(MyApp());
 }
 
 void setupStores() {
+  GetIt.I.registerSingleton(EnvironmentStore());
   GetIt.I.registerSingleton(ConnectivityStore());
   GetIt.I.registerSingleton(AuthStore());
   GetIt.I.registerSingleton(AppStore());
+}
+
+Future<void> initEnvironment() async {
+  final remoteConfig = RemoteConfig.instance;
+
+  await remoteConfig.setConfigSettings(RemoteConfigSettings(
+    fetchTimeout: Duration(seconds: 10),
+    minimumFetchInterval: Duration(minutes: 1),
+  ));
+
+  await remoteConfig.setDefaults(<String, dynamic>{
+    'api_url': '192.168.0.194:3000',
+    "google_places_key": "",
+  });
+
+  await remoteConfig.fetchAndActivate();
+
+  final apiUrl = RemoteConfig.instance.getString("api_url");
+  final googlePlacesKey = RemoteConfig.instance.getString("google_places_key");
+
+  final _envStore = GetIt.I<EnvironmentStore>();
+  _envStore.setApiUrl(apiUrl);
+  _envStore.setGooglePlacesKey(googlePlacesKey);
 }
 
 class MyApp extends StatelessWidget {

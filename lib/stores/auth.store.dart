@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:emptio/helpers/logger.dart';
 import 'package:emptio/models/auth.model.dart';
 import 'package:emptio/models/user.model.dart';
 import 'package:emptio/repositories/user.repository.dart';
@@ -51,7 +52,7 @@ abstract class _AuthStoreBase with Store {
     if (_connectivityStore.isConnected) {
       try {
         final pushToken = await FirebaseMessaging.instance.getToken();
-
+        Logger.info("AuthStore", "login", "Push Token: $pushToken");
         if (pushToken != null) {
           user = await UserRepository().updatePushToken(pushToken);
         } else {

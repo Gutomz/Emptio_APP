@@ -29,6 +29,13 @@ mixin _$AuthStore on _AuthStoreBase, Store {
       (_$loggedIdComputed ??= Computed<String>(() => super.loggedId,
               name: '_AuthStoreBase.loggedId'))
           .value;
+  Computed<int>? _$notificationCountComputed;
+
+  @override
+  int get notificationCount => (_$notificationCountComputed ??= Computed<int>(
+          () => super.notificationCount,
+          name: '_AuthStoreBase.notificationCount'))
+      .value;
 
   final _$authAtom = Atom(name: '_AuthStoreBase.auth');
 
@@ -192,7 +199,8 @@ keepLoggedOut: ${keepLoggedOut},
 offlineMode: ${offlineMode},
 isLogged: ${isLogged},
 offlineLogged: ${offlineLogged},
-loggedId: ${loggedId}
+loggedId: ${loggedId},
+notificationCount: ${notificationCount}
     ''';
   }
 }

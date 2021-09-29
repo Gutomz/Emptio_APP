@@ -2,10 +2,12 @@ import 'dart:convert';
 
 import 'package:emptio/helpers/parsers.dart';
 import 'package:emptio/services/http_request_service.dart';
+import 'package:emptio/stores/environment.store.dart';
+import 'package:get_it/get_it.dart';
 import 'package:http/http.dart' as http;
 
 class GooglePlacesApi extends HttpRequestService {
-  final String _key = "AIzaSyDGo24Qa5Dpwt-zqpGD8It7OdoCXsOoZtY";
+  final String _key = GetIt.I<EnvironmentStore>().googlePlacesKey;
 
   GooglePlacesApi() : super(url: 'maps.googleapis.com');
 

@@ -3,11 +3,12 @@ import 'dart:io';
 
 import 'package:emptio/services/http_request_service.dart';
 import 'package:emptio/stores/auth.store.dart';
+import 'package:emptio/stores/environment.store.dart';
 import 'package:get_it/get_it.dart';
 import 'package:http/http.dart' as http;
 
 class AppApi extends HttpRequestService {
-  AppApi() : super(url: '192.168.0.194:3000');
+  AppApi() : super(url: GetIt.I<EnvironmentStore>().apiUrl);
 
   @override
   String getPath(String? pathExtension) {

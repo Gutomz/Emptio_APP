@@ -1,33 +1,33 @@
 {
   "project_info": {
-    "project_number": "820681801791",
-    "project_id": "emptio-309403",
-    "storage_bucket": "emptio-309403.appspot.com"
+    "project_number": "643524661364",
+    "project_id": "emptio-app-pr",
+    "storage_bucket": "emptio-app-pr.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:820681801791:android:ced823c40dc1ddec03f88a",
+        "mobilesdk_app_id": "1:643524661364:android:5b3e290507980c57a5c121",
         "android_client_info": {
           "package_name": "com.gutomz.emptio"
         }
       },
       "oauth_client": [
         {
-          "client_id": "820681801791-l4iqqhbn1hsr51mep4tho4q4juuhq6j8.apps.googleusercontent.com",
+          "client_id": "643524661364-nkvd66ruj765vc4fr1r4dc1e03p6khm6.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyAYMKJyfRbOSXgQY-wPnZo474gFDOwa584"
+          "current_key": "AIzaSyAaJiL6LAq1oAiHb8TNg_QEXpO6MtPlYLE"
         }
       ],
       "services": {
         "appinvite_service": {
           "other_platform_oauth_client": [
             {
-              "client_id": "820681801791-l4iqqhbn1hsr51mep4tho4q4juuhq6j8.apps.googleusercontent.com",
+              "client_id": "643524661364-nkvd66ruj765vc4fr1r4dc1e03p6khm6.apps.googleusercontent.com",
               "client_type": 3
             }
           ]

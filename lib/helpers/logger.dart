@@ -10,4 +10,12 @@ class Logger {
     log("$time - Stack: $stackTrace", name: tag);
     log("#############################################", name: tag);
   }
+
+  static void info(String tag, String methodName, String message) {
+    final time = DateTime.now().toString();
+    log("-------------------- INFO -------------------", name: tag);
+    log("$time - Logged at '$methodName'", name: tag);
+    log("$time - $message", name: tag);
+    log("---------------------------------------------", name: tag);
+  }
 }
