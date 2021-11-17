@@ -18,6 +18,7 @@ import 'package:emptio/theme.dart';
 import 'package:emptio/views/splash/splash.view.dart';
 import 'package:get_it/get_it.dart';
 import 'package:mobx/mobx.dart';
+import 'package:permission_handler/permission_handler.dart';
 
 Future<void> backgroundMessageHandler(RemoteMessage message) async {
   // * Handle messages when app is closed on background
@@ -180,6 +181,7 @@ class _EnterPointState extends State<EnterPoint> {
   Future<bool> _init() async {
     try {
       await initFirebase();
+      await requestPermissions();
       await requestLocation();
       final bool authenticated = await validateAuth();
       return Future.value(authenticated);
@@ -212,5 +214,14 @@ class _EnterPointState extends State<EnterPoint> {
   Future<bool> validateAuth() async {
     final bool authenticated = await _authStore.initAuthenticated();
     return Future.value(authenticated);
+  }
+
+  Future<bool> requestPermissions() async {
+    if (await Permission.camera.request().isGranted) {
+
+      return true;
+    }
+
+    return openAppSettings();
   }
 }

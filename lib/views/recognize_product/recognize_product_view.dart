@@ -376,6 +376,7 @@ class _RecognizeProductViewState extends State<RecognizeProductView>
       firstCamera,
       ResolutionPreset.high,
       imageFormatGroup: ImageFormatGroup.yuv420,
+      enableAudio: false,
     );
     _initController = _controller!.initialize();
 
