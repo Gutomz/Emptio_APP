@@ -1,14 +1,17 @@
 import 'package:emptio/core/app_colors.dart';
 import 'package:emptio/stores/auth.store.dart';
+import 'package:emptio/stores/environment.store.dart';
 import 'package:emptio/views/home/home.view.dart';
 import 'package:emptio/views/login/login.view.dart';
 import 'package:emptio/views/register/register.view.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:get_it/get_it.dart';
 import 'widgets/entry_header.widget.dart';
 
 class EntryView extends StatelessWidget {
   final AuthStore _authStore = GetIt.I<AuthStore>();
+  final EnvironmentStore _envStore = GetIt.I<EnvironmentStore>();
 
   @override
   Widget build(BuildContext context) {
@@ -28,24 +31,28 @@ class EntryView extends StatelessWidget {
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text(
-                        'Bem-vindo(a)!',
-                        textAlign: TextAlign.left,
-                        style: TextStyle(
-                          color: Colors.white,
-                          fontSize: 26,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
+                      Observer(builder: (_) {
+                        return Text(
+                          _envStore.entryTitle,
+                          textAlign: TextAlign.left,
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 26,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        );
+                      }),
                       SizedBox(height: 5),
-                      Text(
-                        'Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero…',
-                        style: TextStyle(
-                          color: Colors.white,
-                          fontSize: 14,
-                          fontWeight: FontWeight.normal,
-                        ),
-                      ),
+                      Observer(builder: (_) {
+                        return Text(
+                          _envStore.entryDescription,
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 14,
+                            fontWeight: FontWeight.normal,
+                          ),
+                        );
+                      }),
                     ],
                   ),
                   SizedBox(height: 75),

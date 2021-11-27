@@ -24,6 +24,53 @@ mixin _$EnvironmentStore on _EnvironmentStoreBase, Store {
     });
   }
 
+  final _$googlePlacesKeyAtom =
+      Atom(name: '_EnvironmentStoreBase.googlePlacesKey');
+
+  @override
+  String get googlePlacesKey {
+    _$googlePlacesKeyAtom.reportRead();
+    return super.googlePlacesKey;
+  }
+
+  @override
+  set googlePlacesKey(String value) {
+    _$googlePlacesKeyAtom.reportWrite(value, super.googlePlacesKey, () {
+      super.googlePlacesKey = value;
+    });
+  }
+
+  final _$entryTitleAtom = Atom(name: '_EnvironmentStoreBase.entryTitle');
+
+  @override
+  String get entryTitle {
+    _$entryTitleAtom.reportRead();
+    return super.entryTitle;
+  }
+
+  @override
+  set entryTitle(String value) {
+    _$entryTitleAtom.reportWrite(value, super.entryTitle, () {
+      super.entryTitle = value;
+    });
+  }
+
+  final _$entryDescriptionAtom =
+      Atom(name: '_EnvironmentStoreBase.entryDescription');
+
+  @override
+  String get entryDescription {
+    _$entryDescriptionAtom.reportRead();
+    return super.entryDescription;
+  }
+
+  @override
+  set entryDescription(String value) {
+    _$entryDescriptionAtom.reportWrite(value, super.entryDescription, () {
+      super.entryDescription = value;
+    });
+  }
+
   final _$_EnvironmentStoreBaseActionController =
       ActionController(name: '_EnvironmentStoreBase');
 
@@ -39,9 +86,45 @@ mixin _$EnvironmentStore on _EnvironmentStoreBase, Store {
   }
 
   @override
+  void setGooglePlacesKey(String _value) {
+    final _$actionInfo = _$_EnvironmentStoreBaseActionController.startAction(
+        name: '_EnvironmentStoreBase.setGooglePlacesKey');
+    try {
+      return super.setGooglePlacesKey(_value);
+    } finally {
+      _$_EnvironmentStoreBaseActionController.endAction(_$actionInfo);
+    }
+  }
+
+  @override
+  void setEntryTitle(String _value) {
+    final _$actionInfo = _$_EnvironmentStoreBaseActionController.startAction(
+        name: '_EnvironmentStoreBase.setEntryTitle');
+    try {
+      return super.setEntryTitle(_value);
+    } finally {
+      _$_EnvironmentStoreBaseActionController.endAction(_$actionInfo);
+    }
+  }
+
+  @override
+  void setEntryDescription(String _value) {
+    final _$actionInfo = _$_EnvironmentStoreBaseActionController.startAction(
+        name: '_EnvironmentStoreBase.setEntryDescription');
+    try {
+      return super.setEntryDescription(_value);
+    } finally {
+      _$_EnvironmentStoreBaseActionController.endAction(_$actionInfo);
+    }
+  }
+
+  @override
   String toString() {
     return '''
-apiUrl: ${apiUrl}
+apiUrl: ${apiUrl},
+googlePlacesKey: ${googlePlacesKey},
+entryTitle: ${entryTitle},
+entryDescription: ${entryDescription}
     ''';
   }
 }

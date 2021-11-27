@@ -52,18 +52,25 @@ Future<void> initEnvironment() async {
   ));
 
   await remoteConfig.setDefaults(<String, dynamic>{
-    'api_url': '192.168.0.194:3000',
+    "api_url": "192.168.0.194:3000",
     "google_places_key": "",
+    "entry_title": "Bem-vindo(a)!",
+    "entry_description":
+        "Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero…"
   });
 
   await remoteConfig.fetchAndActivate();
 
-  final apiUrl = RemoteConfig.instance.getString("api_url");
-  final googlePlacesKey = RemoteConfig.instance.getString("google_places_key");
+  final apiUrl = remoteConfig.getString("api_url");
+  final googlePlacesKey = remoteConfig.getString("google_places_key");
+  final entryTitle = remoteConfig.getString("entry_title");
+  final entryDescription = remoteConfig.getString("entry_description");
 
   final _envStore = GetIt.I<EnvironmentStore>();
   _envStore.setApiUrl(apiUrl);
   _envStore.setGooglePlacesKey(googlePlacesKey);
+  _envStore.setEntryTitle(entryTitle);
+  _envStore.setEntryDescription(entryDescription);
 }
 
 class MyApp extends StatelessWidget {
@@ -218,7 +225,7 @@ class _EnterPointState extends State<EnterPoint> {
 
   Future<bool> requestPermissions() async {
     if (await Permission.camera.request().isGranted) {
-
+      
       return true;
     }
 
