@@ -1,6 +1,30 @@
-# emptio
+# Emptio APP
 
-A new Flutter project.
+<img src="./imgs/EMPTIO_006.png" alt="Architecture" title="Project Architecture"/>
+
+> Project Architecture
+
+<img src="./imgs/EMPTIO_001.png" alt="welcome" title="Welcome Screen" height="500"/>
+
+> Welcome screen
+
+<img src="./imgs/EMPTIO_002.png" alt="login" title="Login Screen" height="500"/>
+
+> Login screen
+
+<img src="./imgs/EMPTIO_003.png" alt="list" title="Purchases List Screen" height="500"/>
+
+> Purchases list screen
+
+<img src="./imgs/EMPTIO_004.png" alt="camera" title="Recognize Products" height="500"/>
+
+> Recognize products using the camera
+
+<img src="./imgs/EMPTIO_005.png" alt="products" title="Products List Screen" height="500"/>
+
+> Manage your purchases
+
+Flutter Project
 
 ## Getting Started
 
